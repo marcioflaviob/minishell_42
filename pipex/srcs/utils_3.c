@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 13:48:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/16 14:36:02 by trimize          ###   ########.fr       */
+/*   Updated: 2024/03/29 23:40:11 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	here_doc_piping3(t_tmp *tmp, char **argv, int pos)
 	fill_cmd(tmp->cmd, argv[pos], tmp);
 	tmp->pid_here1 = fork();
 	if (tmp->pid_here1 == -1)
-		(ft_printf("Fork error"), free_here_doc(tmp));
+		(printf("Fork error"), free_here_doc(tmp));
 	if (!tmp->pid_here1)
 	{
 		dup2(tmp->pipe_fd[0], STDIN_FILENO);

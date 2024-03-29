@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/23 01:10:54 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/03/29 23:37:24 by trimize          ###   ########.fr       */
+/*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
+/*   Updated: 2024/03/29 23:44:35 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "../includes/minishell.h"
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <fcntl.h>
-# include <unistd.h>
+char	*get_input(void)
+{
+	char	*buffer;
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 30
-# endif
+	while (1)
+	{
+		buffer = get_next_line(STDIN_FILENO);
+		if (buffer[ft_strlen_gnl(buffer) - 1] == '\n')
+			break ;
+	}
+	return (buffer);
+}
 
-int		has_end(char *str);
-int		ft_strlen_gnl(const char *s);
-char	*ft_strjoin_gnl(char *s1, char *s2);
-char	*line_dealer(char *updated);
-char	*get_next_line(int fd);
-
-#endif

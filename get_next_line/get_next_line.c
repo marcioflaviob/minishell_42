@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 21:46:03 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/03/29 22:49:59 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/03/29 23:37:35 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*helper_ft(int fd, char *updated)
 			return (NULL);
 		}
 		previous[char_num] = 0;
-		updated = ft_strjoin(updated, previous);
+		updated = ft_strjoin_gnl(updated, previous);
 	}
 	free(previous);
 	return (updated);

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 18:14:18 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/07 16:22:53 by trimize          ###   ########.fr       */
+/*   Updated: 2024/03/29 23:34:53 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <string.h>
-# include "ft_printf.h"
 
 int		ft_atoi(const char *nptr);
 int		ft_tolower(int c);

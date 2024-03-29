@@ -6,11 +6,11 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 12:28:48 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/16 14:35:56 by trimize          ###   ########.fr       */
+/*   Updated: 2024/03/29 23:40:22 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/pipex.h" //ko
+#include "../includes/pipex.h"
 
 void	pipe_init(t_tmp *tmp, char **argv, int argc)
 {
@@ -21,7 +21,7 @@ void	pipe_init(t_tmp *tmp, char **argv, int argc)
 	err = 0;
 	tmp->fd_input = open(argv[1], O_RDONLY);
 	if (tmp->fd_input == -1)
-		(ft_printf("no such file or directory: %s\n", argv[1]), err = 1);
+		(printf("no such file or directory: %s\n", argv[1]), err = 1);
 	open_files(tmp, argv, argc);
 	while (i < argc - 1)
 	{
@@ -47,7 +47,7 @@ void	piping(int i, t_tmp *tmp, int argc)
 		(ft_putstr_fd("pipe error", 2), free_exit(tmp, 0));
 	tmp->pid[i - 2] = fork();
 	if (tmp->pid[i - 2] == -1)
-		(ft_printf("Fork error"), free_exit(tmp, 0));
+		(printf("Fork error"), free_exit(tmp, 0));
 	if (tmp->pid[i - 2])
 		piping_ex(tmp);
 	else if (!tmp->pid[i - 2])
@@ -105,7 +105,7 @@ void	here_doc_piping4(t_tmp *tmp, char **argv, int argc, int pos)
 		(ft_putstr_fd("Error creating output file\n", 2), free_here_doc(tmp));
 	tmp->pid_here2 = fork();
 	if (tmp->pid_here2 == -1)
-		(ft_printf("Fork error"), free_here_doc(tmp));
+		(printf("Fork error"), free_here_doc(tmp));
 	else if (!tmp->pid_here2)
 	{
 		dup2(tmp->pipe_fd2[0], STDIN_FILENO);

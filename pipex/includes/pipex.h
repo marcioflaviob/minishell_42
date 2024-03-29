@@ -6,20 +6,21 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 13:40:18 by teorimize         #+#    #+#             */
-/*   Updated: 2024/03/16 13:39:32 by trimize          ###   ########.fr       */
+/*   Updated: 2024/03/29 23:40:42 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include "../libft/libft.h"
-# include "./get_next_line.h"
+# include "../../libft/libft.h"
+# include "../../get_next_line/get_next_line.h"
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <string.h>
 # include <errno.h>
 # include <stdint.h>
+# include <stdio.h>
 
 typedef struct s_tmp
 {
