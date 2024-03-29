@@ -2,14 +2,16 @@ NAME = pipex
 LIBFT = $(LIBFT_PATH)libft.a
 LIBFT_PATH = ../libft/
 INCDIR = ./includes/
+GNLDIR = ../get_next_line/
 SRCSDIR = ./srcs/
 OBJDIR = ./objs/
 
 SOURCES = $(wildcard $(SRCSDIR)*.c)
+SOURCES += $(wildcard $(GNLDIR)*.c)
 OBJECTS = $(addprefix $(OBJDIR), $(notdir $(SOURCES:.c=.o)))
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I$(INCDIR) -g3
+CFLAGS = -Wall -Wextra -Werror -I$(INCDIR)$(GNL_DIR) -g3
 
 all: $(NAME)
 
