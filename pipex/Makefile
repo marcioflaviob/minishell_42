@@ -1,6 +1,6 @@
 NAME = pipex
 LIBFT = $(LIBFT_PATH)libft.a
-LIBFT_PATH = ./libft/
+LIBFT_PATH = ../libft/
 INCDIR = ./includes/
 SRCSDIR = ./srcs/
 OBJDIR = ./objs/
