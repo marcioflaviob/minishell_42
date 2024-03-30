@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handlers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 12:41:46 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/03/30 13:24:19 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/03/30 19:59:11 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ctrl_c_handler(int signum)
 {
 	(void) signum;
-	write(1, "^C\n", 3);
+	printf("^C\n");
 }
 
 void	signal_initializer(void)
@@ -33,7 +33,7 @@ void	signal_initializer(void)
 	sigaction(SIGINT, &sa, NULL);
 
 	sa.sa_handler = SIG_IGN;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sigaction(SIGQUIT, &sa, NULL);
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGQUIT, &sa, NULL);
 }

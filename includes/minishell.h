@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 17:32:01 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/03/30 19:51:02 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "../get_next_line/get_next_line.h"
+# include "../libft/libft.h"
 # include <signal.h>
 # include <termios.h>
 # include <readline/readline.h>
@@ -28,6 +29,7 @@
 # define BLUE "\033[1;34m"
 # define INDIGO "\033[1;35m"
 # define RESET "\033[0m"
+# define CYAN_BACK "\033[48;5;9m"
 
 typedef struct s_sh {
 	char	*current_dir;
@@ -35,12 +37,15 @@ typedef struct s_sh {
 
 int		get_random_number(void);
 char	*get_a_line(char *filename, int line_number);
-char	*get_input(void);
+char	*get_input(t_sh *shell);
 void	print_minishell_art(void);
 void	print_minishell_art(void);
 void	signal_initializer(void);
-
+void	fill_color(char **color);
+void	freetab(char **tab);
 char	*get_cwd(void);
 void	pwd(void);
+char	*get_curr_dir(char *path);
+void	str_add(char *str, char *add);
 
 #endif

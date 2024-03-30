@@ -1,44 +1,51 @@
+NAME = minishell
+LIBFT = $(LIBFT_PATH)libft.a
+LIBFT_PATH = ./libft/
+INCDIR = ./includes/
+GNLDIR = ./get_next_line/
+SRCSDIR = ./srcs/
+OBJDIR = ./objs/
 
-CC := cc
+SOURCES = $(wildcard $(SRCSDIR)*.c)
+SOURCES += $(wildcard $(GNLDIR)*.c)
+OBJECTS = $(addprefix $(OBJDIR), $(notdir $(SOURCES:.c=.o)))
 
-SRCDIR := srcs
-OBJDIR := objs
-INCDIR := includes
-GNL_DIR := get_next_line
-
-SRCS := $(wildcard $(SRCDIR)/*.c) $(wildcard $(GNL_DIR)/*.c)
-OBJS := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
-
-
-TARGET := minishell
-
-CFLAGS := -Wall -Wextra -Werror -g -I$(INCDIR)
+CC = cc
 LDFLAGS := -lreadline
+CFLAGS = -Wall -Wextra -Werror -I$(INCDIR)$(GNL_DIR) -g3
 
-.PHONY: all clean fclean re
+all: $(NAME)
 
-all: $(TARGET)
+bonus: $(NAME)
 
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+$(NAME): $(LIBFT) $(OBJECTS)
+	@echo "Linking $@"
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJECTS) -L$(LIBFT_PATH) -lft
+	@echo "$@ has been successfully built!"
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
+$(LIBFT):
+	@echo "Building $(LIBFT) library"
+	@make -C $(LIBFT_PATH) >/dev/null 2>&1
+
+$(OBJDIR)%.o: $(SRCSDIR)%.c | $(OBJDIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)%.o: $(GNLDIR)%.c | $(OBJDIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR):
 	@mkdir -p $(OBJDIR)
-	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) -r $(OBJDIR)
+	@echo "Cleaning objects"
+	@rm -rf $(OBJDIR)
+	@make -C $(LIBFT_PATH) clean >/dev/null 2>&1
 
 fclean: clean
-	$(RM) $(TARGET)
+	@echo "Cleaning $(NAME)"
+	@rm -f $(NAME)
+	@make -C $(LIBFT_PATH) fclean >/dev/null 2>&1
 
 re: fclean all
 
-pipex:
-	@$(MAKE) -C pipex
-
-libft:
-	@$(MAKE) -C libft
-
-get_next_line:
-	@$(MAKE) -C $(GNL_DIR)
+.PHONY: all clean fclean re bonus

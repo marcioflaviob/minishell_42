@@ -6,20 +6,28 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 17:06:53 by trimize          ###   ########.fr       */
+/*   Updated: 2024/03/30 19:46:15 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*get_input(void)
+char	*get_input(t_sh *shell)
 {
 	int		random;
 	char	*random_line;
 	char	*buffer;
+	char	*curr_dir;
 
 	random = get_random_number();
 	random_line = get_a_line("./assets/emojis", random);
+	curr_dir = get_curr_dir(shell->current_dir);
+	random_line = ft_strjoin_gnl(random_line, CYAN_BACK);
+	random_line = ft_strjoin_gnl(random_line, curr_dir);
+	random_line = ft_strjoin_gnl(random_line, " ➤");
+	random_line = ft_strjoin_gnl(random_line, RESET);
+	random_line = ft_strjoin_gnl(random_line, " ");
+	free(curr_dir);
 	buffer = readline(random_line);
 	if (buffer || buffer[0])
 		add_history(buffer);
@@ -44,7 +52,7 @@ char	*get_a_line(char *filename, int line_number)
 	while (current_line_number != line_number)
 	{
 		line = get_next_line(fd);
-		line[ft_strlen_gnl(line) - 1] = 0;
+		line[ft_strlen_gnl(line) - 1] = ' ';
 		current_line_number++;
 		if (current_line_number != line_number)
 			free(line);
@@ -69,4 +77,28 @@ int	get_random_number(void)
 	if (random <= 0)
 		random = 1;
 	return (random);
+}
+
+char	*get_curr_dir(char *path)
+{
+	int		i;
+	int		y;
+	char	*curr_dir;
+
+	i = 0;
+	y = 0;
+	while (path[i])
+		i++;
+	while (path[i] != '/')
+	{
+		y++;
+		i--;
+	}
+	i++;
+	curr_dir = (char *)malloc(y * sizeof(char));
+	y = 0;
+	while (path[i])
+		curr_dir[y++] = path[i++];
+	curr_dir[y] = 0;
+	return (curr_dir);
 }
