@@ -1,21 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/30 15:26:55 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/03/30 17:44:13 by mbrandao         ###   ########.fr       */
+/*   Created: 2024/03/30 17:17:31 by mbrandao          #+#    #+#             */
+/*   Updated: 2024/03/30 17:32:55 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	cd(t_sh *sh, char *folder) //TODO
+void	pwd(void)
 {
-	if (chdir(folder) == -1)
+	char	*dir;
+
+	dir = get_cwd();
+	if (!dir)
+		return ;
+	printf("%s\n", dir);
+}
+
+char	*get_cwd(void)
+{
+	char	*buffer;
+
+	buffer = (char *) malloc(1024 * sizeof(char));
+	if (!buffer)
+		return (NULL);
+	if (getcwd(buffer, 1024) != NULL)
+		return (buffer);
+	else
 	{
-		printf("minishell: cd: %s: No such file or directory", folder);
+		free(buffer);
+		return (NULL);
 	}
 }

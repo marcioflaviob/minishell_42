@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 17:07:06 by trimize          ###   ########.fr       */
+/*   Updated: 2024/03/30 17:32:01 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <dirent.h>
+
 # define RED "\033[1;31m"
 # define ORANGE "\e[0;91m"
 # define YELLOW "\033[1;33m"
@@ -28,11 +29,18 @@
 # define INDIGO "\033[1;35m"
 # define RESET "\033[0m"
 
+typedef struct s_sh {
+	char	*current_dir;
+}	t_sh;
+
 int		get_random_number(void);
 char	*get_a_line(char *filename, int line_number);
 char	*get_input(void);
 void	print_minishell_art(void);
 void	print_minishell_art(void);
 void	signal_initializer(void);
+
+char	*get_cwd(void);
+void	pwd(void);
 
 #endif
