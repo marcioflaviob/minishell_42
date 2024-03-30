@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/29 23:44:35 by trimize          ###   ########.fr       */
+/*   Updated: 2024/03/30 13:57:56 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,13 @@ char	*get_input(void)
 
 	while (1)
 	{
-		buffer = get_next_line(STDIN_FILENO);
-		if (buffer[ft_strlen_gnl(buffer) - 1] == '\n')
-			break ;
+		buffer = readline(">> ");
+		if (buffer) 
+		{
+			printf("Command received: %s\n", buffer);
+			if (buffer[0] != '\0')
+				add_history(buffer);
+		}
 	}
 	return (buffer);
 }

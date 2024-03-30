@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 13:28:26 by mbrandao         ###   ########.fr       */
+/*   Created: 2024/03/30 15:26:55 by mbrandao          #+#    #+#             */
+/*   Updated: 2024/03/30 16:19:29 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	main(void)
+void	cd(char *folder)
 {
-	print_minishell_art();
-	signal_initializer();
-	get_input();
-	return (0);
+	DIR* dir = opendir(folder);
+	if (!dir)
+		printf("minishell: cd: %s: No such file or directory", folder);
+	else
+		//Change the DIR of the structure to this dir.
 }
