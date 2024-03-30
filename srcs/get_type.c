@@ -1,41 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   get_type.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/30 15:26:55 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/03/30 23:23:17 by mbrandao         ###   ########.fr       */
+/*   Created: 2024/03/30 19:11:54 by mbrandao          #+#    #+#             */
+/*   Updated: 2024/03/30 23:14:45 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	cd(t_sh *sh, char *folder)
-{
-	int	type;
+// This function gets the type of what was passed as a path,
+// returns 0 for files, 1 for directories and 2 for other files.
 
-	type = get_type(folder);
-	if (type == -1)
+int	get_type(char *path)
+{
+	struct stat	st;
+
+	if (stat(path, &st) == 0)
 	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		perror(folder);
-		return ;
+		if (S_ISREG(st.st_mode))
+			return (0);
+		else if (S_ISDIR(st.st_mode))
+			return (1);
+		else
+			return (2);
 	}
-	else if (type != 1)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(folder, 2);
-		ft_putstr_fd(": Not a directory", 2);
-		return ;
-	}
-	if (chdir(folder) == -1)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		perror(folder);
-		return ;
-	}
-	free(sh->current_dir);
-	sh->current_dir = get_cwd();
+	else
+		return (-1);
 }

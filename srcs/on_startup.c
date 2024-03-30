@@ -3,35 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 19:46:15 by trimize          ###   ########.fr       */
+/*   Updated: 2024/03/30 23:48:25 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*get_input(t_sh *shell)
+char	*get_prompt(void)
 {
 	int		random;
 	char	*random_line;
-	char	*buffer;
 	char	*curr_dir;
+	char	*fixed_dir;
 
 	random = get_random_number();
 	random_line = get_a_line("./assets/emojis", random);
-	curr_dir = get_curr_dir(shell->current_dir);
+	curr_dir = get_cwd();
+	fixed_dir = get_curr_dir(curr_dir);
+	free(curr_dir);
 	random_line = ft_strjoin_gnl(random_line, CYAN_BACK);
-	random_line = ft_strjoin_gnl(random_line, curr_dir);
+	random_line = ft_strjoin_gnl(random_line, fixed_dir);
 	random_line = ft_strjoin_gnl(random_line, " ➤");
 	random_line = ft_strjoin_gnl(random_line, RESET);
 	random_line = ft_strjoin_gnl(random_line, " ");
-	free(curr_dir);
-	buffer = readline(random_line);
-	if (buffer || buffer[0])
+	free(fixed_dir);
+	return (random_line);
+}
+
+char	*get_input(void)
+{
+	char	*buffer;
+	char	*prompt;
+
+	prompt = get_prompt();
+	write(STDOUT_FILENO, "\033[s", 3);
+	buffer = readline(prompt);
+	if (!buffer || ft_equalstr(buffer, "exit"))
+	{
+		printf("exit");
+		if (buffer)
+			free(buffer);
+		free(prompt);
+		exit(0);
+	}
+	if (buffer && buffer[0])
 		add_history(buffer);
-	free(random_line);
+	free(prompt);
 	return (buffer);
 }
 
@@ -48,7 +68,7 @@ char	*get_a_line(char *filename, int line_number)
 	if (line_number > 128)
 		line_number = 128;
 	if (fd == -1)
-		return (perror("Error opening file"), NULL);
+		return (perror("Error opening file"), NULL); //TODO Fix problem when changing directory, the path to emojis would change and it won't open
 	while (current_line_number != line_number)
 	{
 		line = get_next_line(fd);

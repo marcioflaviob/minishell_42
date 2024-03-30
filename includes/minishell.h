@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 19:51:02 by trimize          ###   ########.fr       */
+/*   Updated: 2024/03/30 23:30:49 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/types.h>
+# include <sys/stat.h>
+# include <unistd.h>
 # include <dirent.h>
 
 # define RED "\033[1;31m"
@@ -37,15 +39,25 @@ typedef struct s_sh {
 
 int		get_random_number(void);
 char	*get_a_line(char *filename, int line_number);
-char	*get_input(t_sh *shell);
+char	*get_input(void);
 void	print_minishell_art(void);
-void	print_minishell_art(void);
+char	*get_prompt(void);
 void	signal_initializer(void);
 void	fill_color(char **color);
 void	freetab(char **tab);
 char	*get_cwd(void);
-void	pwd(void);
+int		get_type(char *path);
 char	*get_curr_dir(char *path);
+
+//Utils
+int		tab_len(char **tab);
 void	str_add(char *str, char *add);
+
+//Built-in functions
+void	pwd(void);
+void	cd(t_sh *sh, char *folder);
+void	echo(char **args);
+
+
 
 #endif

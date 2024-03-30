@@ -1,41 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/30 15:26:55 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/03/30 23:23:17 by mbrandao         ###   ########.fr       */
+/*   Created: 2024/03/30 23:24:42 by mbrandao          #+#    #+#             */
+/*   Updated: 2024/03/30 23:54:19 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	cd(t_sh *sh, char *folder)
+void	echo(char **args)
 {
-	int	type;
+	int	i;
 
-	type = get_type(folder);
-	if (type == -1)
+	i = 1;
+	if (!args[i])
+		write(1, "\n", 1);
+	else if (ft_equalstr(args[i++], "-n"))
 	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		perror(folder);
-		return ;
+		while (args[i])
+		{
+			printf("%s", args[i++]);
+			if (args[i])
+				printf(" ");
+		}
 	}
-	else if (type != 1)
+	else
 	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(folder, 2);
-		ft_putstr_fd(": Not a directory", 2);
-		return ;
+		i = 1;
+		while (args[i])
+		{
+			printf("%s", args[i++]);
+			if (args[i])
+				printf(" ");
+		}
+		printf("\n");
 	}
-	if (chdir(folder) == -1)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		perror(folder);
-		return ;
-	}
-	free(sh->current_dir);
-	sh->current_dir = get_cwd();
 }
