@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 15:30:53 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/03/30 17:07:06 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,18 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <dirent.h>
+# define RED "\033[1;31m"
+# define ORANGE "\e[0;91m"
+# define YELLOW "\033[1;33m"
+# define GREEN "\033[1;32m"
+# define BLUE "\033[1;34m"
+# define INDIGO "\033[1;35m"
+# define RESET "\033[0m"
 
+int		get_random_number(void);
+char	*get_a_line(char *filename, int line_number);
 char	*get_input(void);
+void	print_minishell_art(void);
 void	print_minishell_art(void);
 void	signal_initializer(void);
 
