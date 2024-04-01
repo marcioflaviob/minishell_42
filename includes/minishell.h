@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/01 17:53:54 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/02 00:39:33 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,19 @@ char	*get_cwd(void);
 int		get_type(char *path);
 char	*get_curr_dir(char *path);
 
+void	dollar_sign_dealer(char ***commands);
+void	quotes_removal(char ***cmds);
+
 //Utils
 int		tab_len(char **tab);
 void	str_add(char *str, char *add);
 char	**ft_better_split(char const *s);
+int		ft_isalnum_or_score(int c);
+void	ft_strerase(char **str, int start, int num);
+char	*ft_stradd(char *str, int start, char *add);
+int		is_around_squotes(char *str, int pos);
+int		is_around_dquotes(char *str, int pos);
+int		find_first_squote_back(char *str, int pos);
 
 //Built-in functions
 void	pwd(void);

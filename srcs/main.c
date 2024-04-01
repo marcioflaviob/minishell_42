@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/01 18:02:51 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/02 00:41:43 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,28 @@ void	builtin_dealer(t_sh *sh, char *cmd)
 	char	**args;
 
 	args = ft_better_split(cmd);
+
 	// int i = 0;
-	// printf("\n\n");
+	// printf("\nBEFORE\n");
 	// while (args[i])
 	// {
 	// 	printf("Arg %d: %s\n", i, args[i]);
 	// 	i++;
 	// }
 	// printf("\n\n");
+
+	// dollar_sign_dealer(&args);
+	// quotes_removal(&args);
+
+	// i = 0;
+	// printf("\nAFTER\n");
+	// while (args[i])
+	// {
+	// 	printf("Arg %d: %s\n", i, args[i]);
+	// 	i++;
+	// }
+	// printf("\n\n");
+
 	if (ft_equalstr(args[0], "pwd"))
 		(freetab(args), free(cmd), pwd());
 	else if (ft_equalstr(args[0], "cd") && !args[1])
