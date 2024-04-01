@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 23:30:49 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:53:54 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,14 @@
 
 typedef struct s_sh {
 	char	*current_dir;
+	char	*emoji_path;
 }	t_sh;
 
 int		get_random_number(void);
 char	*get_a_line(char *filename, int line_number);
-char	*get_input(void);
+char	*get_input(t_sh *sh);
 void	print_minishell_art(void);
-char	*get_prompt(void);
+char	*get_prompt(t_sh *sh);
 void	signal_initializer(void);
 void	fill_color(char **color);
 void	freetab(char **tab);
@@ -52,6 +53,7 @@ char	*get_curr_dir(char *path);
 //Utils
 int		tab_len(char **tab);
 void	str_add(char *str, char *add);
+char	**ft_better_split(char const *s);
 
 //Built-in functions
 void	pwd(void);

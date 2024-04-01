@@ -6,13 +6,13 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 23:48:25 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/01 13:14:52 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*get_prompt(void)
+char	*get_prompt(t_sh *sh)
 {
 	int		random;
 	char	*random_line;
@@ -20,7 +20,7 @@ char	*get_prompt(void)
 	char	*fixed_dir;
 
 	random = get_random_number();
-	random_line = get_a_line("./assets/emojis", random);
+	random_line = get_a_line(sh->emoji_path, random);
 	curr_dir = get_cwd();
 	fixed_dir = get_curr_dir(curr_dir);
 	free(curr_dir);
@@ -33,12 +33,12 @@ char	*get_prompt(void)
 	return (random_line);
 }
 
-char	*get_input(void)
+char	*get_input(t_sh *sh)
 {
 	char	*buffer;
 	char	*prompt;
 
-	prompt = get_prompt();
+	prompt = get_prompt(sh);
 	write(STDOUT_FILENO, "\033[s", 3);
 	buffer = readline(prompt);
 	if (!buffer || ft_equalstr(buffer, "exit"))
@@ -68,7 +68,7 @@ char	*get_a_line(char *filename, int line_number)
 	if (line_number > 128)
 		line_number = 128;
 	if (fd == -1)
-		return (perror("Error opening file"), NULL); //TODO Fix problem when changing directory, the path to emojis would change and it won't open
+		return (perror("Error opening file"), NULL);
 	while (current_line_number != line_number)
 	{
 		line = get_next_line(fd);

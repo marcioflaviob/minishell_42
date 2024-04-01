@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/03/30 23:35:29 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/01 18:02:51 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,15 @@ void	builtin_dealer(t_sh *sh, char *cmd)
 {
 	char	**args;
 
-	args = ft_split(cmd, ' ');
+	args = ft_better_split(cmd);
+	// int i = 0;
+	// printf("\n\n");
+	// while (args[i])
+	// {
+	// 	printf("Arg %d: %s\n", i, args[i]);
+	// 	i++;
+	// }
+	// printf("\n\n");
 	if (ft_equalstr(args[0], "pwd"))
 		(freetab(args), free(cmd), pwd());
 	else if (ft_equalstr(args[0], "cd") && !args[1])
@@ -44,11 +52,12 @@ int	main(void)
 	shell.current_dir = get_cwd();
 	if (!shell.current_dir)
 		return (0); //RETURN ERROR HERE
+	shell.emoji_path = ft_strjoin(shell.current_dir, "/assets/emojis");
 	print_minishell_art();
 	signal_initializer();
 	while (1)
 	{
-		command = get_input();
+		command = get_input(&shell);
 		builtin_dealer(&shell, command);
 	}
 	return (0);
