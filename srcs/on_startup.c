@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/01 13:14:52 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:01:14 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_prompt(t_sh *sh)
 	return (random_line);
 }
 
-char	*get_input(t_sh *sh)
+void	get_input(t_sh *sh)
 {
 	char	*buffer;
 	char	*prompt;
@@ -47,12 +47,14 @@ char	*get_input(t_sh *sh)
 		if (buffer)
 			free(buffer);
 		free(prompt);
+		free(sh->current_dir);
 		exit(0);
 	}
 	if (buffer && buffer[0])
 		add_history(buffer);
+	builtin_dealer(sh, buffer);
 	free(prompt);
-	return (buffer);
+	return ;
 }
 
 char	*get_a_line(char *filename, int line_number)
@@ -97,28 +99,4 @@ int	get_random_number(void)
 	if (random <= 0)
 		random = 1;
 	return (random);
-}
-
-char	*get_curr_dir(char *path)
-{
-	int		i;
-	int		y;
-	char	*curr_dir;
-
-	i = 0;
-	y = 0;
-	while (path[i])
-		i++;
-	while (path[i] != '/')
-	{
-		y++;
-		i--;
-	}
-	i++;
-	curr_dir = (char *)malloc(y * sizeof(char));
-	y = 0;
-	while (path[i])
-		curr_dir[y++] = path[i++];
-	curr_dir[y] = 0;
-	return (curr_dir);
 }

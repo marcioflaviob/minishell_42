@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes_removal.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 00:27:17 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/02 14:59:31 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:06:08 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 
 //TODO Fix quote removal
 
-int	qrh_init(int *i, int *j, int *iq, char **result)
+int	qrh_init(int *i, int *j, char *str, char **result)
 {
 	*i = 0;
 	*j = 0;
-	*iq = 0;
-	*result = malloc(strlen(*str) + 1);
+	*result = malloc(ft_strlen(str) + 1);
 	if (!(*result))
 		return -1;
 	return (0);
@@ -45,7 +44,8 @@ void	quotes_removal_helper(char **str)
 	char	quote_char;
 	char	*result;
 
-	quote_char = qrh_init(&i, &j, &in_quotes, &result);
+	in_quotes = 0;
+	quote_char = qrh_init(&i, &j, *str, &result);
 	while ((*str)[i])
 	{
 		if ((*str)[i] == '\'' || (*str)[i] == '\"')

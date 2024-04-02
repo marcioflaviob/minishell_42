@@ -3,26 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 18:50:22 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/01 23:34:52 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/02 17:55:18 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	str_add(char *str, char *add)
-{
-	int	i;
-
-	i = 0;
-	while (add[i])
-	{
-		str[i] = add[i];
-		i++;
-	}
-}
 
 int	tab_len(char **tab)
 {
@@ -31,7 +19,7 @@ int	tab_len(char **tab)
 	i = 0;
 	while (tab[i])
 		i++;
-	return (i);
+	return (i + 1);
 }
 
 int	ft_isalnum_or_score(int c)
@@ -90,48 +78,4 @@ void	mod_checker(int *checker)
 		*checker = 1;
 	else
 		*checker = 0;
-}
-
-int	is_around_dquotes(char *str, int pos)
-{
-	int	i;
-	int	checker;
-
-	i = 0;
-	checker = 0;
-	while (i < pos)
-		if (str[i++] == '"')
-			mod_checker(&checker);
-	return (checker);
-}
-
-int	is_around_squotes(char *str, int pos)
-{
-	int	i;
-	int	checker;
-
-	i = 0;
-	checker = 0;
-	while (i < pos)
-		if (str[i++] == '\'')
-			mod_checker(&checker);
-	if (checker)
-	{
-		while (str[i])
-			if (str[i++] == '\'')
-				return (checker);
-		return (0);
-	}
-	return (checker);
-}
-
-int	find_first_squote_back(char *str, int pos)
-{
-	while (pos >= 0)
-	{
-		if (str[pos] == '\'')
-			return (pos);
-		pos--;
-	}
-	return (-1);
 }
