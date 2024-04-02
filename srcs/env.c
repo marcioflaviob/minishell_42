@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 17:27:31 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/02 21:01:37 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	export(t_sh *shell, char *str)
 		{
 			free(str1);
 			free(str2);
-			free(shell->env[i + 1]);
-			shell->env[i + 1] = ft_strdup(str);
+			free(shell->env[i]);
+			shell->env[i] = ft_strdup(str);
 			return ;
 		}
 		i++;

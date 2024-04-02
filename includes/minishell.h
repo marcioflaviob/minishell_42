@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 18:07:23 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/02 22:27:27 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,13 @@
 # define CYAN_BACK "\033[48;5;9m"
 
 typedef struct s_sh {
+	int		pipe_read[2];
+	int		pipe_write[2];
 	char	*current_dir;
 	char	*emoji_path;
+	char	**args;
 	char	**env;
+	char	**variables;
 	char	**term_command;
 }	t_sh;
 
@@ -52,7 +56,8 @@ char	*get_cwd(void);
 int		get_type(char *path);
 char	*get_curr_dir(char *path);
 void	builtin_dealer(t_sh *sh, char *cmd);
-void	dollar_sign_dealer(char ***commands);
+void	dollar_sign_dealer(char ***commands, t_sh *sh);
+void	quotes_removal_helper(char **str);
 void	quotes_removal(char ***cmds);
 void	new_terminal(t_sh *shell, char *buffer);
 
@@ -73,15 +78,24 @@ void	rm_tab_line(char ***tab, char *line);
 void	print_tab(char **tab);
 void	mod_checker(int *checker);
 
+//Redirection functions
+void	redir_out_trunc(int first, char *outfile);
+void	redir_out_app(int first, char *outfile);
+char	*redir_in(char *infile, char **args);
+
 //env functions
 char	*get_env(char *str, t_sh *shell);
 void	set_env(t_sh *shell);
 void	un_set(t_sh *shell, char *str);
 
+//Parsing functions
+void	first_arg(t_sh *sh);
+
 //Built-in functions
 void	pwd(void);
 void	cd(t_sh *sh, char *folder, t_sh *shell);
 void	echo(char **args);
+void	export(t_sh *shell, char *str);
 
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 18:10:20 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/02 22:30:08 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	builtin_dealer(t_sh *sh, char *cmd)
 {
-	char	**args;
-
-	args = ft_better_split(cmd);
+	sh->args = ft_better_split(cmd);
+	//function to add the variables
+	dollar_sign_dealer(&sh->args, sh);
+	quotes_removal(&sh->args);
+	first_arg(sh);
 
 	//int i = 0;
 	//printf("\nBEFORE\n");
@@ -27,8 +29,6 @@ void	builtin_dealer(t_sh *sh, char *cmd)
 	//}
 	//printf("\n\n");
 
-	//dollar_sign_dealer(&args);
-	//quotes_removal(&args);
 
 	//i = 0;
 	//printf("\nAFTER\n");
@@ -39,23 +39,23 @@ void	builtin_dealer(t_sh *sh, char *cmd)
 	//}
 	//printf("\n\n");
 
-	if (ft_equalstr(args[0], "pwd"))
-		(freetab(args), free(cmd), pwd());
-	else if (ft_equalstr(args[0], "cd") && !args[1])
-		return (freetab(args), free(cmd));
-	else if (ft_equalstr(args[0], "cd") && args[1])
+	if (ft_equalstr(sh->args[0], "pwd"))
+		(freetab(sh->args), free(cmd), pwd());
+	else if (ft_equalstr(sh->args[0], "cd") && !sh->args[1])
+		return (freetab(sh->args), free(cmd));
+	else if (ft_equalstr(sh->args[0], "cd") && sh->args[1])
 	{
-		if (tab_len(args) > 3)
+		if (tab_len(sh->args) > 3)
 		{
 			printf("minishell: cd: too many arguments\n");
-			(freetab(args), free(cmd), get_input(sh));
+			(freetab(sh->args), free(cmd), get_input(sh));
 			return ;
 		}
-		cd(sh, args[1], sh);
-		(freetab(args), free(cmd));
+		cd(sh, sh->args[1], sh);
+		(freetab(sh->args), free(cmd));
 	}
-	else if (ft_equalstr(args[0], "echo"))
-		(echo(args), freetab(args), free(cmd));
+	else if (ft_equalstr(sh->args[0], "echo"))
+		(echo(sh->args), freetab(sh->args), free(cmd));
 	get_input(sh);
 }
 
@@ -65,6 +65,10 @@ int	main(void)
 	int		permission_fd;
 	char	*buffer;
 
+	sh.variables = (char **)malloc(1 * sizeof(char));
+	sh.variables[0] = NULL;
+	pipe(sh.pipe_read);
+	pipe(sh.pipe_write);
 	permission_fd = open("./assets/permission", O_RDWR);
 	if (permission_fd == -1)
 		(write(2, "Failed opening permission file", 30));
