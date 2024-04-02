@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 18:30:25 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/01 23:23:23 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/02 13:14:35 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	replace_env(char **str)
 	while (j != -1)
 	{	
 		if (is_around_squotes(*str, j) && !is_around_dquotes(*str, j))
-			printf("whatever");
+			;
 		else
 			replace_env_helper(&str);
 		j = has_dollar_sign(*str + (j + 1));
