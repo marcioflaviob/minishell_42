@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/07 16:59:38 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 18:45:05 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@
 int	main(void)
 {
 	t_sh	shell;
-	//int		permission_fd;
-	//char	*buffer;
+	int		permission_fd;
+	char	*buffer;
 
 	shell.true_stdin = dup(STDIN_FILENO);
 	shell.true_stdout = dup(STDOUT_FILENO);
@@ -73,22 +73,22 @@ int	main(void)
 	shell.variables = (char **)malloc(1 * sizeof(char));
 	shell.variables[0] = NULL;
 	shell.refresh = 0;
-	//permission_fd = open("./assets/permission", O_RDWR);
-	//if (permission_fd == -1)
-	//	(write(2, "Failed opening permission file", 30));
-	//else
+	permission_fd = open("./assets/permission", O_RDWR);
+	if (permission_fd == -1)
+		(write(2, "Failed opening permission file", 30));
+	else
 	{
-		//buffer = get_next_line(permission_fd);
-		//if (buffer[15] == '1')
-		//	new_terminal(&shell, buffer);
-		//else
+		buffer = get_next_line(permission_fd);
+		if (buffer[15] == '1')
+			new_terminal(&shell, buffer);
+		else
 		{
 			shell.current_dir = get_cwd();
 			if (!shell.current_dir)
 				return (0); //RETURN ERROR HERE
 			shell.emoji_path = ft_strjoin(shell.current_dir, "/assets/emojis");
 			printf("emojis path : %s\n\n", shell.emoji_path);
-			//(print_minishell_art(), free(buffer));
+			(print_minishell_art(), free(buffer));
 			set_env(&shell);
 			signal_initializer();
 			get_input(&shell);
