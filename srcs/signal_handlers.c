@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handlers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 12:41:46 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/06 23:29:30 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/07 18:18:49 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	ctrl_c_handler(int signum)
 {
 	struct termios		term;
-
 	(void) signum;
 	tcgetattr(STDIN_FILENO, &term);
 	term.c_lflag |= ECHOCTL;

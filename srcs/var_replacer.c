@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_replacer.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 17:59:46 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/06 22:59:56 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/07 18:23:42 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	add_env(t_sh *sh, char *variable)
 	name = get_var_name(variable);
 	index = find_variable_index(sh->variables, name);
 	if (index != -1)
-		export(sh, variable);
+		export(sh, &variable);
 	else
 		add_to_tab(&(sh->variables), variable);
 	free(name);

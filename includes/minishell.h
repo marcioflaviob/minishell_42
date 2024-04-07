@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/07 16:24:37 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 17:39:45 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ char	*get_var_name(char *str);
 //Redirection functions
 void	redir_out_trunc(char *outfile, char **args, t_sh *sh);
 void	redir_out_app(char *outfile, char **args, t_sh *sh);
+void	redir_out_trunc_p(char *outfile, char **args, t_sh *sh);
+void	redir_out_app_p(char *outfile, char **args, t_sh *sh);
 void	redir_in(char *infile, char **args, t_sh *sh);
 char	*redir_in_heredoc(char *delimiter);
 

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/07 16:26:13 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 17:47:46 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,31 @@ int	find_sp(char **args)
 		i++;
 	}
 	return (0);
+}
+
+int	find_sp_str(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (ft_int_strstr_wc(str, "<<") != -1)
+		return (ft_int_strstr_wc(str, "<<"));
+	else if (ft_int_strstr_wc(str, ">>") != -1)
+		return (ft_int_strstr_wc(str, ">>"));
+	else if (ft_int_strstr_wc(str, "||") != -1)
+		return (ft_int_strstr_wc(str, "||"));
+	else if (ft_int_strstr_wc(str, "&&") != -1)
+		return (ft_int_strstr_wc(str, "&&"));
+	else
+	{
+		while (str[i])
+		{
+			if (str[i] == '<' || str[i] == '>' || str[i] == '|')
+				return (i);
+			i++;
+		}
+		return (-1);
+	}
 }
 
 char	*find_path(char *command, t_sh *sh)
@@ -243,6 +268,7 @@ void	exec_cmd(char **args, t_sh *sh)
 		}
 		else
 		{
+			dup2(sh->true_stdout, STDOUT_FILENO);
 			if (sh->fd_input != -2)
 				close(sh->fd_input);
 			if (sh->fd_output != -2)
@@ -251,7 +277,7 @@ void	exec_cmd(char **args, t_sh *sh)
 			close(sh->pipe[1]);
 			run_builtin(args[0], args, sh);
 			if (is_builtin(args[0]))
-					exit(0);
+				exit(0);
 			cmd = cmd_args(sh, args);
 			execve(cmd[0], cmd, NULL);
 			//cmd didn't execute
@@ -263,7 +289,7 @@ void	exec_cmd(char **args, t_sh *sh)
 		i = find_sp(args);
 		if (!find_sp(args))
 		{
-			waitpid(-1, &sh->last_cmd_st, 0);
+			waitpid(pid, &sh->last_cmd_st, 0);
 			close(sh->pipe[1]);
 			close(sh->pipe[0]);
 			sh->position = tab_len(sh->args) - 1;
@@ -274,7 +300,7 @@ void	exec_cmd(char **args, t_sh *sh)
 			{
 				if (!find_sp(&args[find_sp(args) + 1]))
 					waitpid(pid, &sh->last_cmd_st, 0);
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
+				if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
 					close(sh->pipe[1]);
 				if (find_sp(&args[find_sp(args) + 1]) == 0)
 					sh->position = tab_len(sh->args) - 1;
@@ -341,6 +367,7 @@ void	exec_cmd(char **args, t_sh *sh)
 			}
 			else if (is_builtin(args[0]))
 			{
+				waitpid(pid, &sh->last_cmd_st, 0);
 				if (find_sp(args) == 0)
 					sh->position = tab_len(sh->args) - 1;
 				else

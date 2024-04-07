@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/07 16:22:23 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 18:18:08 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,13 @@
 
 char	*get_prompt(t_sh *sh)
 {
-	// int		random;
+	 int		random;
 	char	*random_line;
 	char	*curr_dir;
 	char	*fixed_dir;
 
-	(void)sh;
-	// random = get_random_number();
-	// random_line = get_a_line(sh->emoji_path, random);
-	random_line = NULL;
+	random = get_random_number();
+	random_line = get_a_line(sh->emoji_path, random);
 	curr_dir = get_cwd();
 	fixed_dir = get_curr_dir(curr_dir);
 	free(curr_dir);
@@ -63,9 +61,12 @@ void	get_input(t_sh *sh)
 	if (buffer && buffer[0])
 		add_history(buffer);
 	sh->args = ft_better_split(buffer);
+	while (wildcard(sh))
+		;
+	replace_var(sh, &sh->args);
 	quotes_removal(&sh->args);
 	dollar_sign_dealer(&sh->args, sh);
-	free(buffer);
+	//free(buffer);
 	//builtin_dealer(sh, buffer);
 	arg(sh);
 	free(prompt);

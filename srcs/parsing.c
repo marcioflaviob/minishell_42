@@ -6,64 +6,62 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/07 16:26:39 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 18:19:48 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// int	ft_find_first(const char *s, int c)
-// {
-// 	int	i;
+ int	ft_find_first(const char *s, int c)
+ {
+ 	int	i;
 
-// 	i = 0;
-// 	while (s[i])
-// 	{
-// 		if (s[i] == (unsigned char)c)
-// 			return (i);
-// 		i++;
-// 	}
-// 	return (0);
-// }
+ 	i = 0;
+ 	while (s[i])
+ 	{
+ 		if (s[i] == (unsigned char)c)
+ 			return (i);
+ 		i++;
+ 	}
+ 	return (0);
+ }
 
-// int	arg_checker(char *str)
-// {
-// 	char	*sub;
+ int	arg_checker(char *str)
+ {
+ 	char	*sub;
 
-// 	if (!ft_find_first(str, '='))
-// 		return (0);
-// 	sub = get_substring_b(str, '=');
-// 	if (ft_find_first(sub, '\'') || ft_find_first(sub, '"'))
-// 		return (0);
-// 	return (1);
-// }
+ 	if (!ft_find_first(str, '='))
+ 		return (0);
+ 	sub = get_substring_b(str, '=');
+ 	if (ft_find_first(sub, '\'') || ft_find_first(sub, '"'))
+ 		return (0);
+ 	return (1);
+ }
 
-// int	check_special(char *str)
-// {
-// 	if (ft_equalstr(str, ">"))
-// 		return (1);
-// 	else if (ft_equalstr(str, ">>"))
-// 		return (2);
-// 	else if (ft_equalstr(str, "<"))
-// 		return (3);
-// 	else if (ft_equalstr(str, "<<"))
-// 		return (4);
-// 	else if (ft_equalstr(str, "|"))
-// 		return (5);
-// 	else if (ft_equalstr(str, "||"))
-// 		return (6);
-// 	else if (ft_equalstr(str, "&&"))
-// 		return (7);
-// 	return (0);
-// }
+ int	check_special(char *str)
+ {
+ 	if (ft_equalstr(str, ">"))
+ 		return (1);
+ 	else if (ft_equalstr(str, ">>"))
+ 		return (2);
+ 	else if (ft_equalstr(str, "<"))
+ 		return (3);
+ 	else if (ft_equalstr(str, "<<"))
+ 		return (4);
+ 	else if (ft_equalstr(str, "|"))
+ 		return (5);
+ 	else if (ft_equalstr(str, "||"))
+ 		return (6);
+ 	else if (ft_equalstr(str, "&&"))
+ 		return (7);
+ 	return (0);
+ }
 
 void	arg(t_sh *sh)
 {
 	int		special;
 	int		fd;
 	char	*buffer;
-	char	*tmp;
-	char	*substr;
 
 	fd = 0;
 	dup2(sh->true_stdin, STDIN_FILENO);
@@ -74,19 +72,7 @@ void	arg(t_sh *sh)
 	{
 		special = check_special(sh->args[sh->position]);
 		if (arg_checker(sh->args[sh->position]) && !special)
-		{
-			quotes_removal_helper(&(sh->args[sh->position]));
-			substr = get_substring_b(sh->args[sh->position], '=');
-			tmp = get_env(substr, sh);
-			if (tmp)
-				(free(tmp), free(substr), export(sh, &substr));
-			else
-			{
-				
-				add_to_tab(&sh->variables, sh->args[sh->position]);
-			}
 			sh->position++;
-		}
 		else if (special && !sh->args[sh->position + 1])
 		{
 			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
@@ -98,13 +84,13 @@ void	arg(t_sh *sh)
 		{
 			if (special == 1)
 			{
-				redir_out_trunc(sh->args[sh->position + 1], &sh->args[sh->position], sh);
+				redir_out_trunc_p(sh->args[sh->position + 1], &sh->args[sh->position], sh);
 				sh->position += 2;
 				exec_cmd(&sh->args[sh->position], sh);
 			}
 			else if (special == 2)
 			{
-				redir_out_app(sh->args[sh->position + 1], &sh->args[sh->position], sh);
+				redir_out_app_p(sh->args[sh->position + 1], &sh->args[sh->position], sh);
 				sh->position += 2;
 				exec_cmd(&sh->args[sh->position], sh);
 			}

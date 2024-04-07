@@ -6,17 +6,42 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 14:26:14 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/06 22:15:22 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 17:39:21 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+void	redir_out_trunc_p(char *outfile, char **args, t_sh *sh)
+{
+	char	*buffer;
+
+	sh->fd_output = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (sh->fd_output == -1)
+	{
+		printf("Couldn't open file.");
+		return ;
+	}
+	dup2(sh->fd_output, STDOUT_FILENO);
+	if (!args[2])
+	{
+		while (1)
+		{
+			buffer = get_next_line(STDIN_FILENO);
+			if (!buffer)
+				break ;
+			write(1, buffer, ft_strlen(buffer));
+			free(buffer);
+		}
+	}
+	close(sh->fd_output);
+}
+
 void	redir_out_trunc(char *outfile, char **args, t_sh *sh)
 {
 	char	*buffer;
 
-	sh->fd_output = open(outfile, O_WRONLY | O_TRUNC);
+	sh->fd_output = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (sh->fd_output == -1)
 	{
 		printf("Couldn't open file.");
@@ -41,7 +66,7 @@ void	redir_out_app(char *outfile, char **args, t_sh *sh)
 {
 	char	*buffer;
 
-	sh->fd_output = open(outfile, O_WRONLY | O_APPEND);
+	sh->fd_output = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (sh->fd_output == -1)
 	{
 		printf("Couldn't open file.");
@@ -49,6 +74,31 @@ void	redir_out_app(char *outfile, char **args, t_sh *sh)
 	}
 	dup2(sh->fd_output, STDOUT_FILENO);
 	if (!args[1])
+	{
+		while (1)
+		{
+			buffer = get_next_line(STDIN_FILENO);
+			if (!buffer)
+				break ;
+			write(1, buffer, ft_strlen(buffer));
+			free(buffer);
+		}
+	}
+	close(sh->fd_output);
+}
+
+void	redir_out_app_p(char *outfile, char **args, t_sh *sh)
+{
+	char	*buffer;
+
+	sh->fd_output = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	if (sh->fd_output == -1)
+	{
+		printf("Couldn't open file.");
+		return ;
+	}
+	dup2(sh->fd_output, STDOUT_FILENO);
+	if (!args[2])
 	{
 		while (1)
 		{

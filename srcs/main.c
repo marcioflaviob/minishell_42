@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/07 16:21:41 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 16:59:38 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,13 @@ int	main(void)
 			if (!shell.current_dir)
 				return (0); //RETURN ERROR HERE
 			shell.emoji_path = ft_strjoin(shell.current_dir, "/assets/emojis");
+			printf("emojis path : %s\n\n", shell.emoji_path);
 			//(print_minishell_art(), free(buffer));
 			set_env(&shell);
 			signal_initializer();
 			get_input(&shell);
 			free(shell.current_dir);
 		}
-		// print_tab(sh.args);
 	}
 	return (0);
 }
