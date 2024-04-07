@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes_removal.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 00:27:17 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/02 18:06:08 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/06 22:39:29 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,3 +108,4 @@ void	quotes_removal(char ***cmds)
 		i++;
 	}
 }
+//ls | cat file1 && cat M*k* *READ* *i

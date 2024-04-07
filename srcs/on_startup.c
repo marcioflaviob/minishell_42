@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 18:01:14 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/05 17:17:15 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 char	*get_prompt(t_sh *sh)
 {
-	int		random;
+	// int		random;
 	char	*random_line;
 	char	*curr_dir;
 	char	*fixed_dir;
 
-	random = get_random_number();
-	random_line = get_a_line(sh->emoji_path, random);
+	(void)sh;
+	// random = get_random_number();
+	// random_line = get_a_line(sh->emoji_path, random);
+	random_line = NULL;
 	curr_dir = get_cwd();
 	fixed_dir = get_curr_dir(curr_dir);
 	free(curr_dir);
@@ -52,7 +54,8 @@ void	get_input(t_sh *sh)
 	}
 	if (buffer && buffer[0])
 		add_history(buffer);
-	builtin_dealer(sh, buffer);
+	// builtin_dealer(sh, buffer);
+	sh->args = ft_better_split(buffer);
 	free(prompt);
 	return ;
 }

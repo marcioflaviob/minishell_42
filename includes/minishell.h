@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 22:27:27 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/06 23:18:18 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <sys/stat.h>
 # include <unistd.h>
 # include <dirent.h>
+# include <wait.h>
 
 # define RED "\033[1;31m"
 # define ORANGE "\e[0;91m"
@@ -33,15 +34,22 @@
 # define RESET "\033[0m"
 # define CYAN_BACK "\033[48;5;9m"
 
+typedef struct s_wc {
+	char	*segment;
+	int		pos;
+}	t_wc;
+
 typedef struct s_sh {
 	int		pipe_read[2];
 	int		pipe_write[2];
+	int		*sp_bool;
 	char	*current_dir;
 	char	*emoji_path;
 	char	**args;
 	char	**env;
 	char	**variables;
 	char	**term_command;
+	t_wc	*wc;
 }	t_sh;
 
 int		get_random_number(void);
@@ -51,6 +59,8 @@ void	print_minishell_art(void);
 char	*get_prompt(t_sh *sh);
 void	signal_initializer(void);
 void	fill_color(char **color);
+char	*find_path(char *command, t_sh *sh);
+int		find_sp(char **args);
 void	freetab(char **tab);
 char	*get_cwd(void);
 int		get_type(char *path);
@@ -63,20 +73,25 @@ void	new_terminal(t_sh *shell, char *buffer);
 
 //Utils
 int		tab_len(char **tab);
-char	**ft_better_split(char const *s);
+char	**ft_better_split(char *s);
 int		ft_isalnum_or_score(int c);
 void	ft_strerase(char **str, int start, int num);
 char	*ft_stradd(char *str, int start, char *add);
 int		is_around_squotes(char *str, int pos);
 int		is_around_dquotes(char *str, int pos);
+int		is_quoted(char *str, int i);
+void	space_adder(char **str);
 int		find_first_squote_back(char *str, int pos);
 void	add_to_tab(char ***tab, char *str);
+void	add_to_tab_pos(char ***tab, char *str, int pos);
+void	remove_from_tab(char ***tab, int pos);
 void	copy_tab(char ***taker, char **giver);
 char	*get_substring_b(char *str, char c);
 char	*get_substring_a(char *str, char c);
 void	rm_tab_line(char ***tab, char *line);
 void	print_tab(char **tab);
 void	mod_checker(int *checker);
+char	*get_var_name(char *str);
 
 //Redirection functions
 void	redir_out_trunc(int first, char *outfile);
@@ -97,6 +112,17 @@ void	cd(t_sh *sh, char *folder, t_sh *shell);
 void	echo(char **args);
 void	export(t_sh *shell, char *str);
 
+
+int		wildcard(t_sh *sh);
+
+int		ft_int_strchr(const char *s, int c);
+void	replace_env(char **str, t_sh *sh);
+
+int		ft_int_strstr_wc(char *str, char *to_find);
+int		find_sp_str(char *str);
+
+void	replace_var(t_sh *sh, char ***tab);
+void	set_sp_bool(t_sh *sh);
 
 
 #endif
