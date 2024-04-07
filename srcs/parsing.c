@@ -6,56 +6,56 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/06 22:22:45 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 16:26:39 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	ft_find_first(const char *s, int c)
-{
-	int	i;
+// int	ft_find_first(const char *s, int c)
+// {
+// 	int	i;
 
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == (unsigned char)c)
-			return (i);
-		i++;
-	}
-	return (0);
-}
+// 	i = 0;
+// 	while (s[i])
+// 	{
+// 		if (s[i] == (unsigned char)c)
+// 			return (i);
+// 		i++;
+// 	}
+// 	return (0);
+// }
 
-int	arg_checker(char *str)
-{
-	char	*sub;
+// int	arg_checker(char *str)
+// {
+// 	char	*sub;
 
-	if (!ft_find_first(str, '='))
-		return (0);
-	sub = get_substring_b(str, '=');
-	if (ft_find_first(sub, '\'') || ft_find_first(sub, '"'))
-		return (0);
-	return (1);
-}
+// 	if (!ft_find_first(str, '='))
+// 		return (0);
+// 	sub = get_substring_b(str, '=');
+// 	if (ft_find_first(sub, '\'') || ft_find_first(sub, '"'))
+// 		return (0);
+// 	return (1);
+// }
 
-int	check_special(char *str)
-{
-	if (ft_equalstr(str, ">"))
-		return (1);
-	else if (ft_equalstr(str, ">>"))
-		return (2);
-	else if (ft_equalstr(str, "<"))
-		return (3);
-	else if (ft_equalstr(str, "<<"))
-		return (4);
-	else if (ft_equalstr(str, "|"))
-		return (5);
-	else if (ft_equalstr(str, "||"))
-		return (6);
-	else if (ft_equalstr(str, "&&"))
-		return (7);
-	return (0);
-}
+// int	check_special(char *str)
+// {
+// 	if (ft_equalstr(str, ">"))
+// 		return (1);
+// 	else if (ft_equalstr(str, ">>"))
+// 		return (2);
+// 	else if (ft_equalstr(str, "<"))
+// 		return (3);
+// 	else if (ft_equalstr(str, "<<"))
+// 		return (4);
+// 	else if (ft_equalstr(str, "|"))
+// 		return (5);
+// 	else if (ft_equalstr(str, "||"))
+// 		return (6);
+// 	else if (ft_equalstr(str, "&&"))
+// 		return (7);
+// 	return (0);
+// }
 
 void	arg(t_sh *sh)
 {

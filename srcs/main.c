@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/06 22:05:57 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 16:21:41 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ int	main(void)
 			get_input(&shell);
 			free(shell.current_dir);
 		}
+		// print_tab(sh.args);
 	}
 	return (0);
 }
+

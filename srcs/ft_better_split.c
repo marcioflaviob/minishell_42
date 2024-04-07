@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 16:45:19 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/01 17:49:31 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/03 15:09:02 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,13 @@ static int	null_handler(char **tab, int *i)
 	return (1);
 }
 
-char	**ft_better_split(char const *s)
+char	**ft_better_split(char *s)
 {
 	int		i;
 	int		j;
 	char	**tab;
 
+	space_adder(&s);
 	if (!s || (initial_config(&i, &j, (count_args(s) + 1), &tab) == 0))
 		return (NULL);
 	while (i < count_args(s))

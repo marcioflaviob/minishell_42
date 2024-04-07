@@ -6,11 +6,58 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:23:01 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/03 17:26:47 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 16:22:42 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	remove_from_tab(char ***tab, int pos)
+{
+	int		i;
+	int		y;
+	char	**tmp_tab;
+
+	i = 0;
+	y = -1;
+	tmp_tab = (char **)malloc((tab_len(*tab)) * sizeof(char *));
+	while ((*tab)[i])
+	{
+		if (i != pos)
+			tmp_tab[++y] = ft_strdup((*tab)[i]);
+		i++;
+	}
+	tmp_tab[++y] = NULL;
+	freetab(*tab);
+	*tab = tmp_tab;
+}
+
+void	add_to_tab_pos(char ***tab, char *str, int pos)
+{
+	int		i;
+	int		len;
+	char	**tmp;
+
+	i = 0;
+	if ((*tab)[0] == NULL)
+		len = 2;
+	while ((*tab)[i])
+		i++;
+	len = i + 2;
+	tmp = (char **)malloc(len * sizeof(char *));
+	i = -1;
+	while ((*tab)[++i] && i < pos)
+		tmp[i] = ft_strdup((*tab)[i]);
+	tmp[i] = ft_strdup(str);
+	while ((*tab)[i])
+	{
+		tmp[i + 1] = ft_strdup((*tab)[i]);
+		i++;
+	}
+	tmp[i + 1] = NULL;
+	freetab(*tab);
+	*tab = tmp;
+}
 
 void	add_to_tab(char ***tab, char *str)
 {

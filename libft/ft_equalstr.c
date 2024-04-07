@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 16:15:39 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/05 17:06:07 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/07 16:24:39 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,5 @@ int	ft_equalstr(char const *str, char const *str2)
 	}
 	if (!str[i] && !str2[i])
 		return (1);
-	else
-		return (0);
+	return (0);
 }
