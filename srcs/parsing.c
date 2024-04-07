@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/02 22:28:21 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/06 22:22:45 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,34 +57,124 @@ int	check_special(char *str)
 	return (0);
 }
 
-void	first_arg(t_sh *sh)
+void	arg(t_sh *sh)
 {
 	int		special;
+	int		fd;
+	char	*buffer;
 	char	*tmp;
 	char	*substr;
 
-	special = check_special(sh->args[0]);
-	if (arg_checker(sh->args[0]) && !special)
+	fd = 0;
+	dup2(sh->true_stdin, STDIN_FILENO);
+	dup2(sh->true_stdout, STDOUT_FILENO);
+	if (sh->position == tab_len(sh->args) - 1)
+		get_input(sh);	
+	else
 	{
-		quotes_removal_helper(&(sh->args[0]));
-		substr = get_substring_b(sh->args[0], '=');
-		tmp = get_env(substr, sh);
-		if (tmp)
-			(free(tmp), free(substr), export(sh, sh->args[0]));
+		special = check_special(sh->args[sh->position]);
+		if (arg_checker(sh->args[sh->position]) && !special)
+		{
+			quotes_removal_helper(&(sh->args[sh->position]));
+			substr = get_substring_b(sh->args[sh->position], '=');
+			tmp = get_env(substr, sh);
+			if (tmp)
+				(free(tmp), free(substr), export(sh, &substr));
+			else
+			{
+				
+				add_to_tab(&sh->variables, sh->args[sh->position]);
+			}
+			sh->position++;
+		}
+		else if (special && !sh->args[sh->position + 1])
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+			ft_putstr_fd(sh->args[sh->position], 2);
+			ft_putstr_fd("\n", 2);
+			sh->position = tab_len(sh->args) - 1;
+		}
+		else if (special && sh->args[sh->position + 1])
+		{
+			if (special == 1)
+			{
+				redir_out_trunc(sh->args[sh->position + 1], &sh->args[sh->position], sh);
+				sh->position += 2;
+				exec_cmd(&sh->args[sh->position], sh);
+			}
+			else if (special == 2)
+			{
+				redir_out_app(sh->args[sh->position + 1], &sh->args[sh->position], sh);
+				sh->position += 2;
+				exec_cmd(&sh->args[sh->position], sh);
+			}
+			else if (special == 3 && !sh->args[sh->position + 2])
+				redir_in(sh->args[sh->position + 1], &sh->args[0], sh);
+			else if (special == 3 && sh->args[sh->position + 2])
+			{
+				fd = open(sh->args[sh->position + 1], O_RDONLY);
+				if ((!find_sp(&sh->args[sh->position + 1]) || !ft_equalstr(sh->args[find_sp(&sh->args[sh->position + 1]) + 1], "|")) && (fd == -1))
+				{
+					ft_putstr_fd("minishell: no such file or directory: ", 2);
+					ft_putstr_fd(sh->args[sh->position + 1], 2);
+					ft_putstr_fd("\n", 2);
+					sh->position = tab_len(sh->args) - 1;
+				}
+				else
+				{
+					if (fd != -1)
+						close(fd);
+					redir_in(sh->args[sh->position + 1], &sh->args[sh->position], sh);
+					sh->position += 2;
+					exec_cmd(&sh->args[sh->position], sh);
+					free(sh->wrong_file);
+					sh->wrong_file = NULL;
+				}
+			}
+			else if (special == 4)
+			{
+				pipe(sh->pipe);
+				buffer = redir_in_heredoc(sh->args[sh->position + 1]);
+				write(sh->pipe[1], buffer, ft_strlen(buffer));
+				close(sh->pipe[1]);
+				free(buffer);
+				dup2(sh->pipe[0], STDIN_FILENO);
+				close(sh->pipe[0]);
+				sh->position += 2;
+				exec_cmd(&sh->args[sh->position], sh);
+			}
+			else if (special == 5)
+			{
+				sh->position++;
+				dup2(sh->pipe[0], STDIN_FILENO);
+				close(sh->pipe[0]);
+				exec_cmd(&sh->args[sh->position], sh);
+			}
+			else if (special == 6)
+			{
+				if (sh->last_cmd_st == 0)
+				{
+					if (find_sp(&sh->args[sh->position + 1]) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp(&sh->args[sh->position]);
+				}
+				else
+					sh->position++;
+			}
+			else if (special == 7)
+			{
+				if (sh->last_cmd_st != 0)
+					sh->position = tab_len(sh->args) - 1;
+				else
+					sh->position++;
+			}
+			else if (special == 8)
+				exec_cmd(&sh->args[sh->position], sh);
+		}
 		else
-			add_to_tab(&sh->variables, sh->args[0]);
+			exec_cmd(&sh->args[sh->position], sh);
+		arg(sh);
 	}
-	else if (special && sh->args[1])
-	{
-		if (special == 1)
-			redir_out_trunc(1, sh->args[1]);
-		if (special == 2)
-			redir_out_app(1, sh->args[1]);
-		if (special == 3 && !sh->args[2])
-			redir_in(sh->args[1], &sh->args[0]);
-		else if (special == 3 && sh->args[2])
-			redir_in(1, &sh->args[0]);
-	}
-	else if (special && !sh->args[1])
-		ft_putstr_fd("minishell: syntax error near unexpected token `", STDERR);
 }
+

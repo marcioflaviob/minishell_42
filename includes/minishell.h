@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 22:27:27 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/06 20:40:17 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <sys/stat.h>
 # include <unistd.h>
 # include <dirent.h>
+# include <wait.h>
 
 # define RED "\033[1;31m"
 # define ORANGE "\e[0;91m"
@@ -34,8 +35,16 @@
 # define CYAN_BACK "\033[48;5;9m"
 
 typedef struct s_sh {
-	int		pipe_read[2];
-	int		pipe_write[2];
+	int		pipe[2];
+	int		position;
+	int		fd_input;
+	int		fd_output;
+	int		true_stdin;
+	int		true_stdout;
+	int		pipe_pos;
+	int		last_cmd_st;
+	int		refresh;
+	char	*wrong_file;
 	char	*current_dir;
 	char	*emoji_path;
 	char	**args;
@@ -55,7 +64,7 @@ void	freetab(char **tab);
 char	*get_cwd(void);
 int		get_type(char *path);
 char	*get_curr_dir(char *path);
-void	builtin_dealer(t_sh *sh, char *cmd);
+//void	builtin_dealer(t_sh *sh, char *cmd);
 void	dollar_sign_dealer(char ***commands, t_sh *sh);
 void	quotes_removal_helper(char **str);
 void	quotes_removal(char ***cmds);
@@ -77,25 +86,33 @@ char	*get_substring_a(char *str, char c);
 void	rm_tab_line(char ***tab, char *line);
 void	print_tab(char **tab);
 void	mod_checker(int *checker);
+int	ft_strlen_gnl(const char *s);
+char	*ft_strjoin_gnl(char *s1, char *s2);
 
 //Redirection functions
-void	redir_out_trunc(int first, char *outfile);
-void	redir_out_app(int first, char *outfile);
-char	*redir_in(char *infile, char **args);
+void	redir_out_trunc(char *outfile, char **args, t_sh *sh);
+void	redir_out_app(char *outfile, char **args, t_sh *sh);
+void	redir_in(char *infile, char **args, t_sh *sh);
+char	*redir_in_heredoc(char *delimiter);
 
 //env functions
 char	*get_env(char *str, t_sh *shell);
 void	set_env(t_sh *shell);
-void	un_set(t_sh *shell, char *str);
 
 //Parsing functions
-void	first_arg(t_sh *sh);
+void	arg(t_sh *sh);
+int	find_sp(char **args);
 
 //Built-in functions
 void	pwd(void);
-void	cd(t_sh *sh, char *folder, t_sh *shell);
+void	cd(t_sh *sh, char *folder);
 void	echo(char **args);
-void	export(t_sh *shell, char *str);
+void	export(t_sh *shell, char **str);
+void	un_set(t_sh *shell, char **str);
+void	env(t_sh *shell);
+
+//Command functions
+void	exec_cmd(char **args, t_sh *sh);
 
 
 

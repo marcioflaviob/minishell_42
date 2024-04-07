@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 18:01:14 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/06 21:57:11 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,15 @@ void	get_input(t_sh *sh)
 {
 	char	*buffer;
 	char	*prompt;
-
+	
+	dup2(sh->true_stdin, STDIN_FILENO);
+	dup2(sh->true_stdout, STDOUT_FILENO);
+	if (sh->fd_input != -2)
+		(close(sh->fd_input), sh->fd_input = -2);
+	if (sh->fd_output != -2)
+		(close(sh->fd_output), sh->fd_output = -2);
+	sh->position = 0;
+	waitpid(-1, &sh->last_cmd_st, 0);
 	prompt = get_prompt(sh);
 	write(STDOUT_FILENO, "\033[s", 3);
 	buffer = readline(prompt);
@@ -52,7 +60,12 @@ void	get_input(t_sh *sh)
 	}
 	if (buffer && buffer[0])
 		add_history(buffer);
-	builtin_dealer(sh, buffer);
+	sh->args = ft_better_split(buffer);
+	quotes_removal(&sh->args);
+	dollar_sign_dealer(&sh->args, sh);
+	free(buffer);
+	//builtin_dealer(sh, buffer);
+	arg(sh);
 	free(prompt);
 	return ;
 }

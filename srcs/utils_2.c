@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:23:01 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 17:54:20 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/03 17:26:47 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,37 @@
 void	add_to_tab(char ***tab, char *str)
 {
 	int		i;
+	int		allocated;
 	int		len;
 	char	**tmp;
 
 	i = 0;
-	if ((*tab)[0] == NULL)
+	if (!(*tab))
+	{
 		len = 2;
-	while ((*tab)[i])
-		i++;
-	len = i + 2;
+		allocated = 0;
+	}
+	else
+	{
+		allocated = 1;
+		while ((*tab)[i])
+			i++;
+		len = i + 2;
+	}
 	tmp = (char **)malloc(len * sizeof(char *));
-	i = -1;
-	while ((*tab)[++i])
-		tmp[i] = ft_strdup((*tab)[i]);
+	i = 0;
+	if (allocated == 1)
+	{
+		while ((*tab)[i])
+		{
+			tmp[i] = ft_strdup((*tab)[i]);
+			i++;
+		}
+	}
 	tmp[i] = ft_strdup(str);
 	tmp[i + 1] = NULL;
-	freetab(*tab);
+	if (allocated == 1)
+		freetab(*tab);
 	*tab = tmp;
 }
 

@@ -3,28 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 14:26:14 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/02 20:57:10 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/06 22:15:22 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	redir_out_trunc(int first, char *outfile)
+void	redir_out_trunc(char *outfile, char **args, t_sh *sh)
 {
-	int		fd;
 	char	*buffer;
 
-	fd = open(outfile, O_WRONLY | O_TRUNC);
-	if (fd == -1)
+	sh->fd_output = open(outfile, O_WRONLY | O_TRUNC);
+	if (sh->fd_output == -1)
 	{
 		printf("Couldn't open file.");
 		return ;
 	}
-	dup2(STDOUT_FILENO, fd);
-	if (first)
+	dup2(sh->fd_output, STDOUT_FILENO);
+	if (!args[1])
 	{
 		while (1)
 		{
@@ -35,22 +34,21 @@ void	redir_out_trunc(int first, char *outfile)
 			free(buffer);
 		}
 	}
-	close(fd);
+	close(sh->fd_output);
 }
 
-void	redir_out_app(int first, char *outfile)
+void	redir_out_app(char *outfile, char **args, t_sh *sh)
 {
-	int		fd;
 	char	*buffer;
 
-	fd = open(outfile, O_WRONLY | O_APPEND);
-	if (fd == -1)
+	sh->fd_output = open(outfile, O_WRONLY | O_APPEND);
+	if (sh->fd_output == -1)
 	{
 		printf("Couldn't open file.");
 		return ;
 	}
-	dup2(STDOUT_FILENO, fd);
-	if (first)
+	dup2(sh->fd_output, STDOUT_FILENO);
+	if (!args[1])
 	{
 		while (1)
 		{
@@ -61,24 +59,25 @@ void	redir_out_app(int first, char *outfile)
 			free(buffer);
 		}
 	}
-	close(fd);
+	close(sh->fd_output);
 }
 
-char	*redir_in(char *infile, char **args)
+void	redir_in(char *infile, char **args, t_sh *sh)
 {
-	int		fd;
-
-	fd = open(infile, O_RDONLY);
-	if (fd == -1 && args[2])
-		return (infile);
-	else if (fd == -1 && !args[2])
-		return (perror("minishell"), NULL);
-	dup2(STDIN_FILENO, fd);
-	close(fd);
-	return (NULL);
+	sh->fd_input = open(infile, O_RDONLY);
+	if (sh->fd_input == -1 && args[2])
+	{
+		sh->wrong_file = ft_strdup(infile);
+		return ;
+	}
+	else if (sh->fd_input == -1 && !args[2])
+		return (perror("minishell"));
+	else
+		dup2(sh->fd_input, STDIN_FILENO);
+	return ;
 }
 
-char	*redir_in_heredoc(int fd, char *delimiter)
+char	*redir_in_heredoc(char *delimiter)
 {
 	char	*buffer;
 	char	*content;
@@ -87,8 +86,8 @@ char	*redir_in_heredoc(int fd, char *delimiter)
 	content[0] = 0;
 	while (1)
 	{
-		buffer = get_next_line(fd);
-		if (ft_equalstr(buffer, delimiter))
+		buffer = get_next_line(STDIN_FILENO);
+		if (ft_strncmp(buffer, delimiter, ft_strlen(delimiter)) == 0 && buffer[ft_strlen(delimiter)] == '\n')
 		{
 			free(buffer);
 			break ;
@@ -96,6 +95,5 @@ char	*redir_in_heredoc(int fd, char *delimiter)
 		content = ft_strjoin_gnl(content, buffer);
 		free(buffer);
 	}
-	close(fd);
 	return (content);
 }

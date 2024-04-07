@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/02 23:46:05 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/06 22:20:01 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ int	find_sp(char **args)
 	{
 		if (args[i][0] == '<' || args[i][0] == '>' || args[i][0] == '|')
 			return (i);
-		if (ft_equalstr(args[i], "<<") || ft_equalstr(args[i], ">>"))
+		if (ft_equalstr(args[i], "<<") || ft_equalstr(args[i], ">>") || ft_equalstr(args[i], "&&"))
 			return (i);
+		i++;
 	}
 	return (0);
 }
@@ -37,7 +38,8 @@ char	*find_path(char *command, t_sh *sh)
 	paths = ft_split(get_env("PATH", sh), ':');
 	while (paths[i])
 	{
-		str = ft_strjoin(paths[i++], command);
+		str = ft_strjoin(paths[i++], "/");
+		str = ft_strjoin_gnl(str, command);
 		if (access(str, X_OK) != -1)
 			return (freetab(paths), str);
 		free(str);
@@ -70,121 +72,280 @@ char	**cmd_args(t_sh *sh, char **args)
 	return (tab);
 }
 
-void	exec_cmd(char **args, int first, t_sh *sh)
+void	run_builtin(char *str, char **args, t_sh *sh)
+{
+	if (ft_equalstr(str, "echo"))
+		echo(args);
+	else if (ft_equalstr(str, "cd"))
+	{
+		if (find_sp(args) > 2)
+			ft_putstr_fd("cd: too many arguments\n", 2);
+		else
+			cd(sh, args[1]);
+	}
+	else if (ft_equalstr(str, "pwd"))
+		pwd();
+	else if (ft_equalstr(str, "export"))
+		export(sh, &args[1]);
+	else if (ft_equalstr(str, "unset"))
+		un_set(sh, &args[1]);
+	else if (ft_equalstr(str, "env"))
+		env(sh);
+	else if (ft_equalstr(str, "exit"))
+		exit(0);
+}
+
+int	is_builtin(char *str)
+{
+	if (ft_equalstr(str, "echo"))
+		return (1);
+	else if (ft_equalstr(str, "cd"))
+		return (1);
+	else if (ft_equalstr(str, "pwd"))
+		return (1);
+	else if (ft_equalstr(str, "export"))
+		return (1);
+	else if (ft_equalstr(str, "unset"))
+		return (1);
+	else if (ft_equalstr(str, "env"))
+		return (1);
+	else if (ft_equalstr(str, "exit"))
+		return (1);
+	else
+		return (0);
+}
+
+void	exec_cmd(char **args, t_sh *sh)
 {
 	pid_t	pid;
-	char	*buffer;
-	char	*content;
-	char	**cmd_args;
+	int		i;
+	char	**cmd;
 
+	i = 0;
+	if (!args[0])
+	{
+		
+	}
+	pipe(sh->pipe);
 	pid = fork();
 	if (pid == 0)
 	{
-		if (first)
+		if (find_sp(args))
 		{
-			if (find_sp(args))
+			if (ft_equalstr(args[find_sp(args)], "<"))
 			{
-				if (ft_equalstr(args[find_sp(args)], ">"))
-				{
-					redir_out_trunc(0, args[find_sp(args) + 1]);
-					close(sh->pipe_read[1]);
-					close(sh->pipe_write[0]);
-					close(sh->pipe_write[1]);
-					cmd_args = cmd_args(sh, args);
-					execve(cmd_args[0], cmd_args, NULL);
-					//cmd didn't execute
-				}
-				else if (ft_equalstr(args[find_sp(args)], ">>"))
-				{
-					redir_out_app(0, args[find_sp(args) + 1]);
-					close(sh->pipe_read[1]);
-					close(sh->pipe_write[0]);
-					close(sh->pipe_write[1]);
-					cmd_args = cmd_args(sh, args);
-					execve(cmd_args[0], cmd_args, NULL);
-				}
-				else if (ft_equalstr(args[find_sp(args)], "|"))
-				{
-					dup2(STDOUT_FILENO, sh->pipe_write[1]); 
-					close(sh->pipe_read[1]);
-					close(sh->pipe_write[0]);
-					close(sh->pipe_write[1]);
-					cmd_args = cmd_args(sh, args);
-					execve(cmd_args[0], cmd_args, NULL);
-				}
+				run_builtin(args[0], args, sh);
+				rm_tab_line(&sh->args, sh->args[find_sp(args)]);
+				rm_tab_line(&sh->args, sh->args[find_sp(args) + 1]);
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				if (sh->fd_output != -2)
+					close(sh->fd_output);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				exit(0);
 			}
-			else
+			else if (ft_equalstr(args[find_sp(args)], ">"))
 			{
-				close(sh->pipe_read[1]);
-				close(sh->pipe_write[0]);
-				close(sh->pipe_write[1]);
-				cmd_args = cmd_args(sh, args);
-				execve(cmd_args[0], cmd_args, NULL);
+				i = find_sp(args);
+				redir_out_trunc(args[find_sp(args) + 1], &args[find_sp(args)], sh);
+				if (!find_sp(&args[find_sp(args) + 1]))
+					;
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
+				{
+					dup2(sh->true_stdout, STDOUT_FILENO);
+					dup2(sh->pipe[1], STDOUT_FILENO);
+				}
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				run_builtin(args[0], args, sh);
+				if (is_builtin(args[0]))
+					exit(0);
+				cmd = cmd_args(sh, args);
+				execve(cmd[0], cmd, NULL);
 				//cmd didn't execute
+				exit(EXIT_FAILURE);
+			}
+			else if (ft_equalstr(args[find_sp(args)], ">>"))
+			{
+				i = find_sp(args);
+				redir_out_app(args[find_sp(args) + 1], &args[find_sp(args)], sh);
+				if (!find_sp(&args[find_sp(args) + 1]))
+					;
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
+				{
+					dup2(sh->true_stdout, STDOUT_FILENO);
+					dup2(sh->pipe[1], STDOUT_FILENO);
+				}
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				run_builtin(args[0], args, sh);
+				if (is_builtin(args[0]))
+					exit(0);
+				cmd = cmd_args(sh, args);
+				execve(cmd[0], cmd, NULL);
+				//cmd didn't execute
+				exit(EXIT_FAILURE);
+			}
+			else if (ft_equalstr(args[find_sp(args)], "|"))
+			{
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				if (sh->fd_output != -2)
+					close(sh->fd_output);
+				dup2(sh->pipe[1], STDOUT_FILENO);
+				close(sh->pipe[1]);
+				close(sh->pipe[0]);
+				run_builtin(args[0], args, sh);
+				if (is_builtin(args[0]))
+					exit(0);
+				cmd = cmd_args(sh, args);
+				if (sh->wrong_file != NULL)
+					add_to_tab(&cmd, sh->wrong_file);
+				execve(cmd[0], cmd, NULL);
+			}
+			else if (ft_equalstr(args[find_sp(args)], "&&"))
+			{
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				if (sh->fd_output != -2)
+					close(sh->fd_output);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				run_builtin(args[0], args, sh);
+				if (is_builtin(args[0]))
+					exit(0);
+				cmd = cmd_args(sh, args);
+				execve(cmd[0], cmd, NULL);
+				//cmd didn't execute
+				exit(EXIT_FAILURE);
+			}
+			else if (ft_equalstr(args[find_sp(args)], "||"))
+			{
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				if (sh->fd_output != -2)
+					close(sh->fd_output);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				run_builtin(args[0], args, sh);
+				if (is_builtin(args[0]))
+					exit(0);
+				cmd = cmd_args(sh, args);
+				execve(cmd[0], cmd, NULL);
+				//cmd didn't execute
+				exit(EXIT_FAILURE);
 			}
 		}
-		else if (ft_equalstr(argv[-1], "|"))
+		else
 		{
-			content = strdup("");
-			while (1)
-			{
-				buffer = get_next_line(sh->pipe_write[0]);
-				if (!buffer)
-					break ;
-				free(buffer);
-				content = ft_strjoin_gnl(content, buffer);
-			}
-			write(sh->pipe_read[1], content, ft_strlen(content));
-			free(content);
-			dup2(STDIN_FILENO, sh->pipe_read[0]);
-			close(sh->pipe_read[0]);
-			if (find_sp(args))
-			{
-				if (ft_equalstr(args[find_sp(args)], ">"))
-				{
-					redir_out_trunc(0, args[find_sp(args) + 1]);
-					close(sh->pipe_read[1]);
-					close(sh->pipe_write[0]);
-					close(sh->pipe_write[1]);
-					cmd_args = cmd_args(sh, args);
-					execve(cmd_args[0], cmd_args, NULL);
-					//cmd didn't execute
-				}
-				else if (ft_equalstr(args[find_sp(args)], ">>"))
-				{
-					redir_out_app(0, args[find_sp(args) + 1]);
-					close(sh->pipe_read[1]);
-					close(sh->pipe_write[0]);
-					close(sh->pipe_write[1]);
-					cmd_args = cmd_args(sh, args);
-					execve(cmd_args[0], cmd_args, NULL);
-				}
-				else if (ft_equalstr(args[find_sp(args)], "|"))
-				{
-					dup2(STDOUT_FILENO, sh->pipe_write[1]); 
-					close(sh->pipe_read[1]);
-					close(sh->pipe_write[0]);
-					close(sh->pipe_write[1]);
-					cmd_args = cmd_args(sh, args);
-					execve(cmd_args[0], cmd_args, NULL);
-				}
-			}
-			else
-			{
-				close(sh->pipe_read[1]);
-				close(sh->pipe_write[0]);
-				close(sh->pipe_write[1]);
-				cmd_args = cmd_args(sh, args);
-				execve(cmd_args[0], cmd_args, NULL);
-				//cmd didn't execute
-			}
+			if (sh->fd_input != -2)
+				close(sh->fd_input);
+			if (sh->fd_output != -2)
+				close(sh->fd_output);
+			close(sh->pipe[0]);
+			close(sh->pipe[1]);
+			run_builtin(args[0], args, sh);
+			if (is_builtin(args[0]))
+					exit(0);
+			cmd = cmd_args(sh, args);
+			execve(cmd[0], cmd, NULL);
+			//cmd didn't execute
+			exit(EXIT_FAILURE);
 		}
 	}
 	else
 	{
-		close(sh->pipe_read[0]);
-		close(sh->pipe_read[1]);
-		close(sh->pipe_write[0]);
-		close(sh->pipe_write[1]);
+		i = find_sp(args);
+		if (!find_sp(args))
+		{
+			waitpid(-1, &sh->last_cmd_st, 0);
+			close(sh->pipe[1]);
+			close(sh->pipe[0]);
+			sh->position = tab_len(sh->args) - 1;
+		}
+		else
+		{
+			if (ft_equalstr(args[find_sp(args)], ">"))
+			{
+				if (!find_sp(&args[find_sp(args) + 1]))
+					waitpid(pid, &sh->last_cmd_st, 0);
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
+					close(sh->pipe[1]);
+				if (find_sp(&args[find_sp(args) + 1]) == 0)
+					sh->position = tab_len(sh->args) - 1;
+				else
+					
+					sh->position += find_sp(&args[find_sp(args) + 1]) + find_sp(args) + 1;
+			}
+			else if (ft_equalstr(args[find_sp(args)], ">>"))
+			{
+				if (!find_sp(&args[find_sp(args) + 1]))
+					waitpid(pid, &sh->last_cmd_st, 0);
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
+					close(sh->pipe[1]);
+				if (find_sp(&args[find_sp(args) + 1]) == 0)
+					sh->position = tab_len(sh->args) - 1;
+				else			
+					sh->position += find_sp(&args[find_sp(args) + 1]) + find_sp(args) + 1;
+			}
+			//else if (ft_equalstr(args[find_sp(args)], ">")
+			//	|| ft_equalstr(args[find_sp(args)], ">>"))
+			//{
+			//	if (!find_sp(&args[find_sp(args) + 1]) || !ft_equalstr(args[find_sp(&args[find_sp(args) + 1])], "|"))
+			//		return ;
+			//	else
+			//	{
+			//		i = 0;
+			//		while (i < find_sp(&args[find_sp(args) + 1]))
+			//			i++;
+			//		sh->position += i;
+			//	}
+			//}
+			else if (ft_equalstr(args[find_sp(args)], "<"))
+			{
+				//if (!find_sp(&args[find_sp(args) + 1]) || !ft_equalstr(args[find_sp(&args[find_sp(args) + 1])], "|"))
+				//	return ;
+				//else
+				sh->position += find_sp(args) + 1;
+			}
+			else if (ft_equalstr(args[find_sp(args)], "|"))
+			{
+				close(sh->pipe[1]);
+				sh->position += find_sp(args);
+			}
+			else if (ft_equalstr(args[find_sp(args)], "||"))
+			{
+				waitpid(pid, &sh->last_cmd_st, 0);
+				if (sh->last_cmd_st != 0)
+					sh->position += find_sp(args) + 1;
+				else
+				{
+					if (find_sp(&args[find_sp(args) + 1]) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp(args) + find_sp(&args[find_sp(args) + 1]);
+				}
+			}
+			else if (ft_equalstr(args[find_sp(args)], "&&"))
+			{
+				waitpid(pid, &sh->last_cmd_st, 0);
+				if (sh->last_cmd_st != 0)
+					get_input(sh);
+				else
+					sh->position += find_sp(args) + 1;
+			}
+			else if (is_builtin(args[0]))
+			{
+				if (find_sp(args) == 0)
+					sh->position = tab_len(sh->args) - 1;
+				else
+					sh->position += find_sp(args);
+			}
+		}
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 23:24:42 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/03/30 23:54:19 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/06 23:53:49 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 void	echo(char **args)
 {
 	int	i;
+	int	y;
 
 	i = 1;
 	if (!args[i])
-		write(1, "\n", 1);
+		printf("\n");
 	else if (ft_equalstr(args[i++], "-n"))
 	{
 		while (args[i])
@@ -31,7 +32,11 @@ void	echo(char **args)
 	else
 	{
 		i = 1;
-		while (args[i])
+		if (find_sp(&args[0]))
+			y = find_sp(&args[0]);
+		else
+			y = tab_len(args) - 1;
+		while (i < y)
 		{
 			printf("%s", args[i++]);
 			if (args[i])

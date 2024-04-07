@@ -3,61 +3,124 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/22 21:46:03 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/03/29 23:37:35 by trimize          ###   ########.fr       */
+/*   Created: 2023/11/18 01:43:11 by marvin            #+#    #+#             */
+/*   Updated: 2023/11/18 01:43:11 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <fcntl.h>
 
-char	*helper_ft(int fd, char *updated)
+char	*onenewline(int fd, char *str)
 {
-	int		char_num;
-	char	*previous;
+	char	*buff;
+	int		bytes;
+	int		i;
 
-	char_num = 1;
-	previous = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!previous)
+	i = 0;
+	buff = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buff)
 		return (NULL);
-	while (!has_end(updated) && char_num != 0)
+	bytes = 5;
+	while (!ft_strchr_tgnl(str, '\n') && bytes != 0)
 	{
-		char_num = read(fd, previous, BUFFER_SIZE);
-		if (char_num == -1)
-		{
-			free(previous);
-			return (NULL);
-		}
-		previous[char_num] = 0;
-		updated = ft_strjoin_gnl(updated, previous);
+		bytes = read(fd, buff, BUFFER_SIZE);
+		if (bytes == -1)
+			return (free(buff), NULL);
+		if (bytes == 0 && i == 0)
+			return (free(buff), NULL);
+		buff[bytes] = 0;
+		str = ft_strjoin_tgnl(str, buff);
+		i++;
 	}
-	free(previous);
-	return (updated);
+	return (free(buff), str);
+}
+
+char	*next_line(char *str)
+{
+	int		i;
+	int		y;
+	char	*tmp;
+
+	i = 0;
+	y = 0;
+	while (str[i] != '\n' && str[i])
+		i++;
+	if (!str[i])
+		return (free(str), NULL);
+	tmp = (char *)malloc((ft_strlen_tgnl(str) - i + 1) * sizeof(char));
+	i++;
+	if (!tmp)
+		return (0);
+	while (str[i])
+		tmp[y++] = str[i++];
+	return (tmp[y] = 0, free(str), tmp);
+}
+
+char	*getoneline(char *str)
+{
+	int		i;
+	char	*line;
+
+	i = 0;
+	if (!str[i])
+		return (NULL);
+	while (str[i] && str[i] != '\n')
+		i++;
+	line = (char *)malloc((i + 2) * sizeof(char));
+	if (!line)
+		return (0);
+	i = -1;
+	while (str[++i] && str[i] != '\n')
+		line[i] = str[i];
+	if (str[i] == '\n')
+	{
+		line[i] = str[i];
+		i++;
+	}
+	line[i] = 0;
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*updated;
 	char		*line;
+	static char	*str[4096];
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 )
+		return (0);
+	str[fd] = onenewline(fd, str[fd]);
+	if (!str[fd])
 		return (NULL);
-	updated = helper_ft(fd, updated);
-	if (!updated || updated[0] == 0)
-	{
-		free(updated);
-		updated = NULL;
-		return (NULL);
-	}
-	line = line_dealer(updated);
-	if (updated)
-	{
-		if (updated[0] == 0)
-		{
-			free (updated);
-			updated = NULL;
-		}
-	}
+	line = getoneline(str[fd]);
+	str[fd] = next_line(str[fd]);
 	return (line);
 }
+
+//int	main(void)
+//{
+//	int		fd[2];
+//	int i = 0;
+
+//	pipe(fd);
+//	write(fd[1], "", 0);
+//	close(fd[1]);
+
+//	while (i < 130)
+//	{
+//		char *str = get_next_line(fd[0]);
+//		if (!str)
+//			exit(0);
+//		printf("%s", str);
+//		free(str);
+//		i++;
+//	}
+//	close(fd[0]);
+//	return (0);
+//}
