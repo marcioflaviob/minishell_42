@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/07 17:39:45 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/08 16:38:04 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ char	*get_prompt(t_sh *sh);
 void	signal_initializer(void);
 void	fill_color(char **color);
 char	*find_path(char *command, t_sh *sh);
-int		find_sp(char **args);
 void	freetab(char **tab);
 char	*get_cwd(void);
 int		get_type(char *path);
@@ -119,12 +118,12 @@ void	set_env(t_sh *shell);
 
 //Parsing functions
 void	arg(t_sh *sh);
-int	find_sp(char **args);
+int	find_sp(char **args, t_sh *sh);
 
 //Built-in functions
 void	pwd(void);
 void	cd(t_sh *sh, char *folder);
-void	echo(char **args);
+void	echo(char **args, t_sh *sh);
 void	export(t_sh *shell, char **str);
 void	un_set(t_sh *shell, char **str);
 void	env(t_sh *shell);

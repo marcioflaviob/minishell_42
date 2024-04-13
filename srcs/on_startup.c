@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/07 18:18:08 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/08 16:25:45 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	get_input(t_sh *sh)
 	sh->args = ft_better_split(buffer);
 	while (wildcard(sh))
 		;
+	set_sp_bool(sh);
 	replace_var(sh, &sh->args);
 	quotes_removal(&sh->args);
 	dollar_sign_dealer(&sh->args, sh);

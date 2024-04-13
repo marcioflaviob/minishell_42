@@ -6,22 +6,22 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/07 17:47:46 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/08 16:38:15 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	find_sp(char **args)
+int	find_sp(char **args, t_sh *sh)
 {
 	int	i;
 
 	i = 0;
 	while (args[i])
 	{
-		if (args[i][0] == '<' || args[i][0] == '>' || args[i][0] == '|')
+		if ((args[i][0] == '<' && sh->sp_bool[i] == 1) || (args[i][0] == '>' && sh->sp_bool[i] == 1) || (args[i][0] == '|' && sh->sp_bool[i] == 1))
 			return (i);
-		if (ft_equalstr(args[i], "<<") || ft_equalstr(args[i], ">>") || ft_equalstr(args[i], "&&"))
+		if ((ft_equalstr(args[i], "<<") && sh->sp_bool[i] == 1) || (ft_equalstr(args[i], ">>") && sh->sp_bool[i] == 1) || (ft_equalstr(args[i], "&&") && sh->sp_bool[i] == 1))
 			return (i);
 		i++;
 	}
@@ -85,7 +85,7 @@ char	**cmd_args(t_sh *sh, char **args)
 	char	*temp;
 
 	i = 1;
-	sp_index = find_sp(args);
+	sp_index = find_sp(args, sh);
 	if (!sp_index)
 		sp_index = tab_len(args) - 1;
 	tab = NULL;
@@ -100,10 +100,10 @@ char	**cmd_args(t_sh *sh, char **args)
 void	run_builtin(char *str, char **args, t_sh *sh)
 {
 	if (ft_equalstr(str, "echo"))
-		echo(args);
+		echo(args, sh);
 	else if (ft_equalstr(str, "cd"))
 	{
-		if (find_sp(args) > 2)
+		if (find_sp(args, sh) > 2)
 			ft_putstr_fd("cd: too many arguments\n", 2);
 		else
 			cd(sh, args[1]);
@@ -143,6 +143,7 @@ int	is_builtin(char *str)
 void	exec_cmd(char **args, t_sh *sh)
 {
 	pid_t	pid;
+	pid_t	pid2;
 	int		i;
 	char	**cmd;
 
@@ -155,13 +156,13 @@ void	exec_cmd(char **args, t_sh *sh)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (find_sp(args))
+		if (find_sp(args, sh))
 		{
-			if (ft_equalstr(args[find_sp(args)], "<"))
+			if (ft_equalstr(args[find_sp(args, sh)], "<"))
 			{
 				run_builtin(args[0], args, sh);
-				rm_tab_line(&sh->args, sh->args[find_sp(args)]);
-				rm_tab_line(&sh->args, sh->args[find_sp(args) + 1]);
+				rm_tab_line(&sh->args, sh->args[find_sp(args, sh)]);
+				rm_tab_line(&sh->args, sh->args[find_sp(args, sh) + 1]);
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
 				if (sh->fd_output != -2)
@@ -170,16 +171,34 @@ void	exec_cmd(char **args, t_sh *sh)
 				close(sh->pipe[1]);
 				exit(0);
 			}
-			else if (ft_equalstr(args[find_sp(args)], ">"))
+			else if (ft_equalstr(args[find_sp(args, sh)], ">"))
 			{
-				i = find_sp(args);
-				redir_out_trunc(args[find_sp(args) + 1], &args[find_sp(args)], sh);
-				if (!find_sp(&args[find_sp(args) + 1]))
+				i = find_sp(args, sh);
+				redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
+				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
 					;
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|"))
 				{
-					dup2(sh->true_stdout, STDOUT_FILENO);
-					dup2(sh->pipe[1], STDOUT_FILENO);
+					pid2 = fork();
+					if (pid2 == 0)
+					{
+						dup2(sh->true_stdout, STDOUT_FILENO);
+						dup2(sh->pipe[1], STDOUT_FILENO);
+						if (sh->fd_input != -2)
+							close(sh->fd_input);
+						close(sh->pipe[0]);
+						close(sh->pipe[1]);
+						run_builtin(args[0], args, sh);
+						if (is_builtin(args[0]))
+							exit(0);
+						cmd = cmd_args(sh, args);
+						execve(cmd[0], cmd, NULL);
+						//cmd didn't execute
+						exit(EXIT_FAILURE);
+						
+					}
+					else
+						waitpid(pid2, &sh->last_cmd_st, 0);
 				}
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
@@ -193,16 +212,34 @@ void	exec_cmd(char **args, t_sh *sh)
 				//cmd didn't execute
 				exit(EXIT_FAILURE);
 			}
-			else if (ft_equalstr(args[find_sp(args)], ">>"))
+			else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
 			{
-				i = find_sp(args);
-				redir_out_app(args[find_sp(args) + 1], &args[find_sp(args)], sh);
-				if (!find_sp(&args[find_sp(args) + 1]))
+				i = find_sp(args, sh);
+				redir_out_app(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
+				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
 					;
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|"))
 				{
-					dup2(sh->true_stdout, STDOUT_FILENO);
-					dup2(sh->pipe[1], STDOUT_FILENO);
+					pid2 = fork();
+					if (pid2 == 0)
+					{
+						dup2(sh->true_stdout, STDOUT_FILENO);
+						dup2(sh->pipe[1], STDOUT_FILENO);
+						if (sh->fd_input != -2)
+							close(sh->fd_input);
+						close(sh->pipe[0]);
+						close(sh->pipe[1]);
+						run_builtin(args[0], args, sh);
+						if (is_builtin(args[0]))
+							exit(0);
+						cmd = cmd_args(sh, args);
+						execve(cmd[0], cmd, NULL);
+						//cmd didn't execute
+						exit(EXIT_FAILURE);
+						
+					}
+					else
+						waitpid(pid2, &sh->last_cmd_st, 0);
 				}
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
@@ -216,7 +253,7 @@ void	exec_cmd(char **args, t_sh *sh)
 				//cmd didn't execute
 				exit(EXIT_FAILURE);
 			}
-			else if (ft_equalstr(args[find_sp(args)], "|"))
+			else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 			{
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
@@ -233,7 +270,7 @@ void	exec_cmd(char **args, t_sh *sh)
 					add_to_tab(&cmd, sh->wrong_file);
 				execve(cmd[0], cmd, NULL);
 			}
-			else if (ft_equalstr(args[find_sp(args)], "&&"))
+			else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
 			{
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
@@ -249,7 +286,7 @@ void	exec_cmd(char **args, t_sh *sh)
 				//cmd didn't execute
 				exit(EXIT_FAILURE);
 			}
-			else if (ft_equalstr(args[find_sp(args)], "||"))
+			else if (ft_equalstr(args[find_sp(args, sh)], "||"))
 			{
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
@@ -286,8 +323,8 @@ void	exec_cmd(char **args, t_sh *sh)
 	}
 	else
 	{
-		i = find_sp(args);
-		if (!find_sp(args))
+		i = find_sp(args, sh);
+		if (!find_sp(args, sh))
 		{
 			waitpid(pid, &sh->last_cmd_st, 0);
 			close(sh->pipe[1]);
@@ -296,28 +333,28 @@ void	exec_cmd(char **args, t_sh *sh)
 		}
 		else
 		{
-			if (ft_equalstr(args[find_sp(args)], ">"))
+			if (ft_equalstr(args[find_sp(args, sh)], ">"))
 			{
-				if (!find_sp(&args[find_sp(args) + 1]))
+				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
 					waitpid(pid, &sh->last_cmd_st, 0);
-				if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
+				if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|"))
 					close(sh->pipe[1]);
-				if (find_sp(&args[find_sp(args) + 1]) == 0)
+				if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
 					sh->position = tab_len(sh->args) - 1;
 				else
 					
-					sh->position += find_sp(&args[find_sp(args) + 1]) + find_sp(args) + 1;
+					sh->position += find_sp(&args[find_sp(args, sh) + 1], sh) + find_sp(args, sh) + 1;
 			}
-			else if (ft_equalstr(args[find_sp(args)], ">>"))
+			else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
 			{
-				if (!find_sp(&args[find_sp(args) + 1]))
+				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
 					waitpid(pid, &sh->last_cmd_st, 0);
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args) + 1]) + i + 1], "|"))
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|"))
 					close(sh->pipe[1]);
-				if (find_sp(&args[find_sp(args) + 1]) == 0)
+				if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
 					sh->position = tab_len(sh->args) - 1;
 				else			
-					sh->position += find_sp(&args[find_sp(args) + 1]) + find_sp(args) + 1;
+					sh->position += find_sp(&args[find_sp(args, sh) + 1], sh) + find_sp(args, sh) + 1;
 			}
 			//else if (ft_equalstr(args[find_sp(args)], ">")
 			//	|| ft_equalstr(args[find_sp(args)], ">>"))
@@ -332,46 +369,46 @@ void	exec_cmd(char **args, t_sh *sh)
 			//		sh->position += i;
 			//	}
 			//}
-			else if (ft_equalstr(args[find_sp(args)], "<"))
+			else if (ft_equalstr(args[find_sp(args, sh)], "<"))
 			{
 				//if (!find_sp(&args[find_sp(args) + 1]) || !ft_equalstr(args[find_sp(&args[find_sp(args) + 1])], "|"))
 				//	return ;
 				//else
-				sh->position += find_sp(args) + 1;
+				sh->position += find_sp(args, sh) + 1;
 			}
-			else if (ft_equalstr(args[find_sp(args)], "|"))
+			else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 			{
 				close(sh->pipe[1]);
-				sh->position += find_sp(args);
+				sh->position += find_sp(args, sh);
 			}
-			else if (ft_equalstr(args[find_sp(args)], "||"))
+			else if (ft_equalstr(args[find_sp(args, sh)], "||"))
 			{
 				waitpid(pid, &sh->last_cmd_st, 0);
 				if (sh->last_cmd_st != 0)
-					sh->position += find_sp(args) + 1;
+					sh->position += find_sp(args, sh) + 1;
 				else
 				{
-					if (find_sp(&args[find_sp(args) + 1]) == 0)
+					if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
 						sh->position = tab_len(sh->args) - 1;
 					else
-						sh->position += find_sp(args) + find_sp(&args[find_sp(args) + 1]);
+						sh->position += find_sp(args, sh) + find_sp(&args[find_sp(args, sh) + 1], sh);
 				}
 			}
-			else if (ft_equalstr(args[find_sp(args)], "&&"))
+			else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
 			{
 				waitpid(pid, &sh->last_cmd_st, 0);
 				if (sh->last_cmd_st != 0)
 					get_input(sh);
 				else
-					sh->position += find_sp(args) + 1;
+					sh->position += find_sp(args, sh) + 1;
 			}
 			else if (is_builtin(args[0]))
 			{
 				waitpid(pid, &sh->last_cmd_st, 0);
-				if (find_sp(args) == 0)
+				if (find_sp(args, sh) == 0)
 					sh->position = tab_len(sh->args) - 1;
 				else
-					sh->position += find_sp(args);
+					sh->position += find_sp(args, sh);
 			}
 		}
 	}

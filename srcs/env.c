@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/07 16:17:55 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/08 16:39:07 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ void	export(t_sh *shell, char **str)
 
 	i = 0;
 	y = 0;
-	if (!find_sp(str))
+	if (!find_sp(str, shell))
 		str_len = tab_len(str) - 1;
 	else
-		str_len = find_sp(str);
+		str_len = find_sp(str, shell);
 	while (y < str_len)
 	{
 		while (shell->env[i])
@@ -102,10 +102,10 @@ void	un_set(t_sh *shell, char **str)
 
 	i = 0;
 	y = 0;
-	if (!find_sp(str))
+	if (!find_sp(str, shell))
 		str_len = tab_len(str) - 1;
 	else
-		str_len = find_sp(str);
+		str_len = find_sp(str, shell);
 	while (y < str_len)
 	{
 		while (shell->env[i])

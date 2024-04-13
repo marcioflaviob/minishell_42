@@ -6,13 +6,13 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/07 18:19:48 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/08 16:39:54 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
- int	ft_find_first(const char *s, int c)
+int	ft_find_first(const char *s, int c)
  {
  	int	i;
 
@@ -26,7 +26,7 @@
  	return (0);
  }
 
- int	arg_checker(char *str)
+int	arg_checker(char *str)
  {
  	char	*sub;
 
@@ -38,21 +38,21 @@
  	return (1);
  }
 
- int	check_special(char *str)
+int	check_special(char *str, t_sh *sh)
  {
- 	if (ft_equalstr(str, ">"))
+ 	if (ft_equalstr(str, ">") && sh->sp_bool[sh->position] == 1)
  		return (1);
- 	else if (ft_equalstr(str, ">>"))
+ 	else if (ft_equalstr(str, ">>") && sh->sp_bool[sh->position] == 1)
  		return (2);
- 	else if (ft_equalstr(str, "<"))
+ 	else if (ft_equalstr(str, "<") && sh->sp_bool[sh->position] == 1)
  		return (3);
- 	else if (ft_equalstr(str, "<<"))
+ 	else if (ft_equalstr(str, "<<") && sh->sp_bool[sh->position] == 1)
  		return (4);
- 	else if (ft_equalstr(str, "|"))
+ 	else if (ft_equalstr(str, "|") && sh->sp_bool[sh->position] == 1)
  		return (5);
- 	else if (ft_equalstr(str, "||"))
+ 	else if (ft_equalstr(str, "||") && sh->sp_bool[sh->position] == 1)
  		return (6);
- 	else if (ft_equalstr(str, "&&"))
+ 	else if (ft_equalstr(str, "&&") && sh->sp_bool[sh->position] == 1)
  		return (7);
  	return (0);
  }
@@ -70,7 +70,7 @@ void	arg(t_sh *sh)
 		get_input(sh);	
 	else
 	{
-		special = check_special(sh->args[sh->position]);
+		special = check_special(sh->args[sh->position], sh);
 		if (arg_checker(sh->args[sh->position]) && !special)
 			sh->position++;
 		else if (special && !sh->args[sh->position + 1])
@@ -99,7 +99,7 @@ void	arg(t_sh *sh)
 			else if (special == 3 && sh->args[sh->position + 2])
 			{
 				fd = open(sh->args[sh->position + 1], O_RDONLY);
-				if ((!find_sp(&sh->args[sh->position + 1]) || !ft_equalstr(sh->args[find_sp(&sh->args[sh->position + 1]) + 1], "|")) && (fd == -1))
+				if ((!find_sp(&sh->args[sh->position + 1], sh) || !ft_equalstr(sh->args[find_sp(&sh->args[sh->position + 1], sh) + 1], "|")) && (fd == -1))
 				{
 					ft_putstr_fd("minishell: no such file or directory: ", 2);
 					ft_putstr_fd(sh->args[sh->position + 1], 2);
@@ -140,10 +140,10 @@ void	arg(t_sh *sh)
 			{
 				if (sh->last_cmd_st == 0)
 				{
-					if (find_sp(&sh->args[sh->position + 1]) == 0)
+					if (find_sp(&sh->args[sh->position + 1], sh) == 0)
 						sh->position = tab_len(sh->args) - 1;
 					else
-						sh->position += find_sp(&sh->args[sh->position]);
+						sh->position += find_sp(&sh->args[sh->position], sh);
 				}
 				else
 					sh->position++;

@@ -6,13 +6,13 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 23:24:42 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/06 23:53:49 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/08 16:37:50 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	echo(char **args)
+void	echo(char **args, t_sh *sh)
 {
 	int	i;
 	int	y;
@@ -32,8 +32,8 @@ void	echo(char **args)
 	else
 	{
 		i = 1;
-		if (find_sp(&args[0]))
-			y = find_sp(&args[0]);
+		if (find_sp(&args[0], sh))
+			y = find_sp(&args[0], sh);
 		else
 			y = tab_len(args) - 1;
 		while (i < y)
