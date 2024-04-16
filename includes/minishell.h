@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/08 16:38:04 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/16 11:54:50 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ typedef struct s_wc {
 
 typedef struct s_sh {
 	int		pipe[2];
+	int		pipe_par[2];
+	int		inside_par;
+	int		out_par;
+	int		pipe_par_bool;
 	int		position;
 	int		fd_input;
 	int		fd_output;
@@ -49,6 +53,7 @@ typedef struct s_sh {
 	int		pipe_pos;
 	int		last_cmd_st;
 	int		refresh;
+	int		bool_result;
 	char	*wrong_file;
 	int		pipe_read[2];
 	int		pipe_write[2];
@@ -119,6 +124,7 @@ void	set_env(t_sh *shell);
 //Parsing functions
 void	arg(t_sh *sh);
 int	find_sp(char **args, t_sh *sh);
+int	check_sp_afpar(char **args);
 
 //Built-in functions
 void	pwd(void);

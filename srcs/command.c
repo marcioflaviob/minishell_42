@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/08 16:38:15 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/16 17:46:11 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,42 +15,68 @@
 int	find_sp(char **args, t_sh *sh)
 {
 	int	i;
+	int	j;
 
+	
 	i = 0;
+	j = sh->position;
 	while (args[i])
 	{
-		if ((args[i][0] == '<' && sh->sp_bool[i] == 1) || (args[i][0] == '>' && sh->sp_bool[i] == 1) || (args[i][0] == '|' && sh->sp_bool[i] == 1))
+		if ((args[i][0] == '<' && sh->sp_bool[j] == 1) || (args[i][0] == '>' && sh->sp_bool[j] == 1) || (args[i][0] == '|' && sh->sp_bool[j] == 1))
 			return (i);
-		if ((ft_equalstr(args[i], "<<") && sh->sp_bool[i] == 1) || (ft_equalstr(args[i], ">>") && sh->sp_bool[i] == 1) || (ft_equalstr(args[i], "&&") && sh->sp_bool[i] == 1))
+		if ((ft_equalstr(args[i], "<<") && sh->sp_bool[j] == 1) || (ft_equalstr(args[i], ">>") && sh->sp_bool[j] == 1) || (ft_equalstr(args[i], "&&") && sh->sp_bool[j] == 1))
 			return (i);
 		i++;
+		j++;
 	}
 	return (0);
 }
 
-int	find_sp_str(char *str)
+int	find_sp_par(char **args, t_sh *sh)
 {
 	int	i;
+	int	j;
 
+	
 	i = 0;
-	if (ft_int_strstr_wc(str, "<<") != -1)
-		return (ft_int_strstr_wc(str, "<<"));
-	else if (ft_int_strstr_wc(str, ">>") != -1)
-		return (ft_int_strstr_wc(str, ">>"));
-	else if (ft_int_strstr_wc(str, "||") != -1)
-		return (ft_int_strstr_wc(str, "||"));
-	else if (ft_int_strstr_wc(str, "&&") != -1)
-		return (ft_int_strstr_wc(str, "&&"));
-	else
+	j = sh->position;
+	while (args[i])
 	{
-		while (str[i])
-		{
-			if (str[i] == '<' || str[i] == '>' || str[i] == '|')
-				return (i);
-			i++;
-		}
-		return (-1);
+		if ((args[i][0] == '<' && sh->sp_bool[j] == 1) || (args[i][0] == '>' && sh->sp_bool[j] == 1) || (args[i][0] == '|' && sh->sp_bool[j] == 1) || (args[i][0] == ')' && sh->sp_bool[j] == 1))
+			return (i);
+		if ((ft_equalstr(args[i], "<<") && sh->sp_bool[j] == 1) || (ft_equalstr(args[i], ">>") && sh->sp_bool[j] == 1) || (ft_equalstr(args[i], "&&") && sh->sp_bool[j] == 1))
+			return (i);
+		i++;
+		j++;
 	}
+	return (0);
+}
+
+int    find_sp_str(char *str)
+{
+    int    i;
+
+    i = 0;
+    if (ft_int_strstr_wc(str, "<<") != -1)
+        return (ft_int_strstr_wc(str, "<<"));
+    else if (ft_int_strstr_wc(str, ">>") != -1)
+        return (ft_int_strstr_wc(str, ">>"));
+    else if (ft_int_strstr_wc(str, "||") != -1)
+        return (ft_int_strstr_wc(str, "||"));
+    else if (ft_int_strstr_wc(str, "&&") != -1)
+        return (ft_int_strstr_wc(str, "&&"));
+    else if (ft_equalstr(str, "(") || ft_equalstr(str, ")"))
+        return (0);
+    else
+    {
+        while (str[i])
+        {
+            if (str[i] == '<' || str[i] == '>' || str[i] == '|')
+                return (i);
+            i++;
+        }
+        return (-1);
+    }
 }
 
 char	*find_path(char *command, t_sh *sh)
@@ -85,7 +111,7 @@ char	**cmd_args(t_sh *sh, char **args)
 	char	*temp;
 
 	i = 1;
-	sp_index = find_sp(args, sh);
+	sp_index = find_sp_par(args, sh);
 	if (!sp_index)
 		sp_index = tab_len(args) - 1;
 	tab = NULL;
@@ -174,10 +200,13 @@ void	exec_cmd(char **args, t_sh *sh)
 			else if (ft_equalstr(args[find_sp(args, sh)], ">"))
 			{
 				i = find_sp(args, sh);
-				redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
+				if (sh->out_par)
+					(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
+				else
+					redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
 				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
 					;
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|"))
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
 				{
 					pid2 = fork();
 					if (pid2 == 0)
@@ -215,10 +244,13 @@ void	exec_cmd(char **args, t_sh *sh)
 			else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
 			{
 				i = find_sp(args, sh);
-				redir_out_app(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
+				if (sh->out_par)
+					(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
+				else
+					redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
 				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
 					;
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|"))
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
 				{
 					pid2 = fork();
 					if (pid2 == 0)
@@ -241,6 +273,12 @@ void	exec_cmd(char **args, t_sh *sh)
 					else
 						waitpid(pid2, &sh->last_cmd_st, 0);
 				}
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 == check_sp_afpar(args))
+				{
+					write(sh->pipe_par[1], "", 0);
+					close(sh->pipe_par[0]);
+					close(sh->pipe_par[1]);
+				}
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
 				close(sh->pipe[0]);
@@ -259,7 +297,18 @@ void	exec_cmd(char **args, t_sh *sh)
 					close(sh->fd_input);
 				if (sh->fd_output != -2)
 					close(sh->fd_output);
-				dup2(sh->pipe[1], STDOUT_FILENO);
+				if (sh->pipe_par_bool == find_sp(args, sh) + sh->position)
+				{
+					dup2(sh->pipe_par[1], STDOUT_FILENO);
+					close(sh->pipe_par[1]);
+					close(sh->pipe_par[0]);
+				}
+				else
+				{
+					dup2(sh->pipe[1], STDOUT_FILENO);
+					close(sh->pipe[1]);
+					close(sh->pipe[0]);	
+				}
 				close(sh->pipe[1]);
 				close(sh->pipe[0]);
 				run_builtin(args[0], args, sh);
@@ -274,6 +323,14 @@ void	exec_cmd(char **args, t_sh *sh)
 			{
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
+				if (sh->pipe_par_bool)
+				{
+					dup2(sh->pipe_par[1], STDOUT_FILENO);
+					close(sh->pipe_par[1]);
+					close(sh->pipe_par[0]);
+				}
+				else if (sh->out_par)
+					dup2(sh->fd_output, STDOUT_FILENO);
 				if (sh->fd_output != -2)
 					close(sh->fd_output);
 				close(sh->pipe[0]);
@@ -290,6 +347,14 @@ void	exec_cmd(char **args, t_sh *sh)
 			{
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
+				if (sh->pipe_par_bool)
+				{
+					dup2(sh->pipe_par[1], STDOUT_FILENO);
+					close(sh->pipe_par[1]);
+					close(sh->pipe_par[0]);
+				}
+				else if (sh->out_par)
+					dup2(sh->fd_output, STDOUT_FILENO);
 				if (sh->fd_output != -2)
 					close(sh->fd_output);
 				close(sh->pipe[0]);
@@ -308,6 +373,10 @@ void	exec_cmd(char **args, t_sh *sh)
 			dup2(sh->true_stdout, STDOUT_FILENO);
 			if (sh->fd_input != -2)
 				close(sh->fd_input);
+			close(sh->pipe_par[1]);
+			close(sh->pipe_par[0]);
+			if (sh->out_par)
+				dup2(sh->fd_output, STDOUT_FILENO);
 			if (sh->fd_output != -2)
 				close(sh->fd_output);
 			close(sh->pipe[0]);
@@ -335,72 +404,97 @@ void	exec_cmd(char **args, t_sh *sh)
 		{
 			if (ft_equalstr(args[find_sp(args, sh)], ">"))
 			{
-				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
-					waitpid(pid, &sh->last_cmd_st, 0);
 				if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|"))
+				{
+					sh->position += find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1;
 					close(sh->pipe[1]);
-				if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
-					sh->position = tab_len(sh->args) - 1;
+					if (sh->pipe_par_bool)
+						close(sh->pipe_par[1]);
+				}
 				else
-					
-					sh->position += find_sp(&args[find_sp(args, sh) + 1], sh) + find_sp(args, sh) + 1;
+				{
+					waitpid(pid, &sh->last_cmd_st, 0);
+					if (sh->last_cmd_st != 0)
+						sh->bool_result = 0;
+					else if (sh->last_cmd_st == 0)
+						sh->bool_result = 1;
+					if (sh->position + find_sp(args, sh) == sh->out_par)
+						(close(sh->fd_output), sh->out_par = 0);
+					if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						
+						sh->position += find_sp_par(&args[find_sp_par(args, sh) + 1], sh) + find_sp_par(args, sh) + 1;
+				}
 			}
 			else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
 			{
-				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
-					waitpid(pid, &sh->last_cmd_st, 0);
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|"))
+				if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|"))
+				{
+					sh->position += find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1;
 					close(sh->pipe[1]);
-				if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
-					sh->position = tab_len(sh->args) - 1;
-				else			
-					sh->position += find_sp(&args[find_sp(args, sh) + 1], sh) + find_sp(args, sh) + 1;
+					if (sh->pipe_par_bool)
+						close(sh->pipe_par[1]);
+				}
+				else
+				{
+					waitpid(pid, &sh->last_cmd_st, 0);
+					if (sh->last_cmd_st != 0)
+						sh->bool_result = 0;
+					else if (sh->last_cmd_st == 0)
+						sh->bool_result = 1;
+					if (sh->position + find_sp(args, sh) == sh->out_par)
+						(close(sh->fd_output), sh->out_par = 0);
+					if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else			
+						sh->position += find_sp_par(&args[find_sp_par(args, sh) + 1], sh) + find_sp_par(args, sh) + 1;
+				}
 			}
-			//else if (ft_equalstr(args[find_sp(args)], ">")
-			//	|| ft_equalstr(args[find_sp(args)], ">>"))
-			//{
-			//	if (!find_sp(&args[find_sp(args) + 1]) || !ft_equalstr(args[find_sp(&args[find_sp(args) + 1])], "|"))
-			//		return ;
-			//	else
-			//	{
-			//		i = 0;
-			//		while (i < find_sp(&args[find_sp(args) + 1]))
-			//			i++;
-			//		sh->position += i;
-			//	}
-			//}
 			else if (ft_equalstr(args[find_sp(args, sh)], "<"))
-			{
-				//if (!find_sp(&args[find_sp(args) + 1]) || !ft_equalstr(args[find_sp(&args[find_sp(args) + 1])], "|"))
-				//	return ;
-				//else
 				sh->position += find_sp(args, sh) + 1;
-			}
 			else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 			{
 				close(sh->pipe[1]);
+				if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+					close(sh->pipe_par[1]);
 				sh->position += find_sp(args, sh);
 			}
 			else if (ft_equalstr(args[find_sp(args, sh)], "||"))
 			{
 				waitpid(pid, &sh->last_cmd_st, 0);
 				if (sh->last_cmd_st != 0)
-					sh->position += find_sp(args, sh) + 1;
+				{
+					sh->bool_result = 0;
+					//if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
+					//	sh->position = tab_len(sh->args) - 1;
+					sh->position += find_sp_par(args, sh);
+				}
 				else
 				{
-					if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
-						sh->position = tab_len(sh->args) - 1;
-					else
-						sh->position += find_sp(args, sh) + find_sp(&args[find_sp(args, sh) + 1], sh);
+					sh->bool_result = 1;
+					//if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
+					//	sh->position = tab_len(sh->args) - 1;
+					sh->position += find_sp_par(args, sh);
 				}
 			}
 			else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
 			{
 				waitpid(pid, &sh->last_cmd_st, 0);
 				if (sh->last_cmd_st != 0)
-					get_input(sh);
+				{
+					sh->bool_result = 0;
+					//if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
+					//	sh->position = tab_len(sh->args) - 1;
+					sh->position += find_sp_par(args, sh);
+				}
 				else
-					sh->position += find_sp(args, sh) + 1;
+				{
+					sh->bool_result = 1;
+					//if (find_sp(&args[find_sp(args, sh) + 1], sh) == 0)
+					//	sh->position = tab_len(sh->args) - 1;					
+					sh->position += find_sp_par(args, sh);
+				}
 			}
 			else if (is_builtin(args[0]))
 			{
@@ -408,7 +502,7 @@ void	exec_cmd(char **args, t_sh *sh)
 				if (find_sp(args, sh) == 0)
 					sh->position = tab_len(sh->args) - 1;
 				else
-					sh->position += find_sp(args, sh);
+					sh->position += find_sp_par(args, sh);
 			}
 		}
 	}

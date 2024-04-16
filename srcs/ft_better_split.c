@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/01 16:45:19 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/07 17:09:45 by trimize          ###   ########.fr       */
+/*   Created: 2024/04/16 12:18:13 by trimize           #+#    #+#             */
+/*   Updated: 2024/04/16 12:46:15 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,44 @@ static int	count_args(char const *str)
 {
 	int	i;
 	int	args;
+	int	quote_flag;
 
 	i = 0;
 	args = 0;
+	quote_flag = 0;
 	while (str[i])
 	{
 		while ((str[i] != 0) && (str[i] == ' '))
 			i++;
 		if (str[i])
 		{
-			if (str[i] == '\'')
-				while (str[++i] != '\'')
-					;
-			else if (str[i] == '"')
-				while (str[++i] != '"')
-					;
-			i++;
-			args++;
+			if (str[i] == '\'' || str[i] == '"')
+			{
+				quote_flag = !quote_flag;
+				i++;
+				continue ;
+			}
+			else if ((str[i] == '(' || str[i] == ')') && !quote_flag)
+			{
+				args++;
+				i++;
+				continue ;
+			}
+			else if (!quote_flag)
+			{
+				args++;
+				while ((str[i] != 0) && (str[i] != ' ' && str[i] != '(' && str[i] != ')') && !(str[i] == '\'' || str[i] == '"'))
+					i++;
+			}
+			else
+			{
+				args++;
+				while ((str[i] != 0) && (str[i] != '\'' && str[i] != '"'))
+					i++;
+				if (str[i] == '\'' || str[i] == '"')
+					i++;
+			}
 		}
-		while ((str[i] != 0) && (str[i] != ' '))
-			i++;
 	}
 	return (args);
 }
@@ -43,19 +61,27 @@ static int	count_args(char const *str)
 static int	word_len(char const *str)
 {
 	int	i;
+	int	quote_flag;
 
 	i = 0;
-	while (str[i] && str[i] != ' ')
+	quote_flag = 0;
+	while (str[i] && (str[i] != ' ' || quote_flag))
 	{
-		if (str[i] == '\'')
-			while (str[++i] != '\'')
-				;
-		else if (str[i] == '"')
-			while (str[++i] != '"')
-				;
-		i++;
-		while ((str[i] != 0) && (str[i] != ' '))
+		if (str[i] == '\'' || str[i] == '"')
+		{
+			quote_flag = !quote_flag;
 			i++;
+			continue ;
+		}
+		if ((str[i] == '(' || str[i] == ')') && !quote_flag)
+		{
+			if (i != 0)
+				break ;
+			else
+				i++;
+			continue ;
+		}
+		i++;
 	}
 	return (i);
 }
@@ -93,7 +119,8 @@ char	**ft_better_split(char *s)
 	int		j;
 	char	**tab;
 
-	//space_adder(&s);
+	// space_adder(&s);
+	printf("args counter: %d\n", count_args(s));
 	if (!s || (initial_config(&i, &j, (count_args(s) + 1), &tab) == 0))
 		return (NULL);
 	while (i < count_args(s))
@@ -103,8 +130,17 @@ char	**ft_better_split(char *s)
 			tab[i] = (char *) malloc((word_len(s + j) + 1) * sizeof(char));
 			if (null_handler(tab, &i) == 0 || tab[i] == NULL)
 				return (NULL);
-			ft_strlcpy(tab[i], (char *) s + j, word_len(s + j) + 1);
-			j += word_len((s + j));
+			if (s[j] == '(' || s[j] == ')')
+			{
+				tab[i][0] = s[j];
+				tab[i][1] = '\0';
+				j++;
+			}
+			else
+			{
+				ft_strlcpy(tab[i], (char *) s + j, word_len(s + j) + 1);
+				j += word_len((s + j));
+			}
 			i++;
 		}
 		else
