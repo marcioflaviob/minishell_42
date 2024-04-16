@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/16 18:25:49 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/16 19:51:17 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,7 @@ void	arg(t_sh *sh)
 				if (ft_equalstr(sh->args[check_sp_afpar(&sh->args[sh->position]) + sh->position], "|") && !sh->pipe_par_bool)
 				{
 					pipe(sh->pipe_par);
+					sh->op_pipe = 1;
 					sh->pipe_par_bool = check_sp_afpar(&sh->args[sh->position]) + sh->position;
 				}
 				else if (ft_equalstr(sh->args[check_sp_afpar(&sh->args[sh->position]) + sh->position], ">"))

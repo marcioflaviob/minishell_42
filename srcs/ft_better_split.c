@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_better_split.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:18:13 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/16 12:46:15 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/16 19:21:52 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,8 @@ char	**ft_better_split(char *s)
 	int		j;
 	char	**tab;
 
-	// space_adder(&s);
-	printf("args counter: %d\n", count_args(s));
+	space_adder(&s);
+	// printf("args counter: %d\n", count_args(s));
 	if (!s || (initial_config(&i, &j, (count_args(s) + 1), &tab) == 0))
 		return (NULL);
 	while (i < count_args(s))

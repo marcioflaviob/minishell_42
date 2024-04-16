@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 14:26:14 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/07 17:39:21 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/16 19:19:42 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,12 @@ char	*redir_in_heredoc(char *delimiter)
 	while (1)
 	{
 		buffer = get_next_line(STDIN_FILENO);
+		if (g_signal)
+		{
+			g_signal = 0;
+			free(buffer);
+			break ;
+		}
 		if (ft_strncmp(buffer, delimiter, ft_strlen(delimiter)) == 0 && buffer[ft_strlen(delimiter)] == '\n')
 		{
 			free(buffer);

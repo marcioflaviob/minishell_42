@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/16 11:54:57 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/16 19:53:55 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	g_signal = 0;
 
 //void	builtin_dealer(t_sh *sh, char *cmd)
 //{
@@ -77,6 +79,7 @@ int	main(void)
 	shell.pipe_par_bool = 0;
 	shell.out_par = 0;
 	shell.bool_result = 0;
+	shell.op_pipe = 0;
 	//permission_fd = open("./assets/permission", O_RDWR);
 	//if (permission_fd == -1)
 	//	(write(2, "Failed opening permission file", 30));
@@ -91,16 +94,14 @@ int	main(void)
 			if (!shell.current_dir)
 				return (0); //RETURN ERROR HERE
 			shell.emoji_path = ft_strjoin(shell.current_dir, "/assets/emojis");
-			//(print_minishell_art(), free(buffer));
+			print_minishell_art();
+			// free(buffer);
 			set_env(&shell);
 			signal_initializer();
 			get_input(&shell);
 			free(shell.current_dir);
 		}
 	}
-	char	*args[19] = {"(", "(", "cat", "test", ")", "&&", "(", "ls", "|", "grep", "s", ")", ")", "|", "(", "cat", ")"};
-	
-	printf("%d", check_sp_afpar(&args[14]));
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/16 17:46:11 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/16 19:50:25 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -373,8 +373,11 @@ void	exec_cmd(char **args, t_sh *sh)
 			dup2(sh->true_stdout, STDOUT_FILENO);
 			if (sh->fd_input != -2)
 				close(sh->fd_input);
-			close(sh->pipe_par[1]);
-			close(sh->pipe_par[0]);
+			if (sh->op_pipe)
+			{
+				close(sh->pipe_par[1]);
+				close(sh->pipe_par[0]);
+			}
 			if (sh->out_par)
 				dup2(sh->fd_output, STDOUT_FILENO);
 			if (sh->fd_output != -2)

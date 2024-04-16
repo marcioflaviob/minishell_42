@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/16 11:54:50 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/16 19:50:54 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # define RESET "\033[0m"
 # define CYAN_BACK "\033[48;5;9m"
 
+extern int		g_signal;
+
 typedef struct s_wc {
 	char	*segment;
 	int		pos;
@@ -54,6 +56,7 @@ typedef struct s_sh {
 	int		last_cmd_st;
 	int		refresh;
 	int		bool_result;
+	int		op_pipe;
 	char	*wrong_file;
 	int		pipe_read[2];
 	int		pipe_write[2];
@@ -105,7 +108,7 @@ char	*get_substring_a(char *str, char c);
 void	rm_tab_line(char ***tab, char *line);
 void	print_tab(char **tab);
 void	mod_checker(int *checker);
-int	ft_strlen_gnl(const char *s);
+int		ft_strlen_gnl(const char *s);
 char	*ft_strjoin_gnl(char *s1, char *s2);
 char	*get_var_name(char *str);
 
@@ -123,8 +126,8 @@ void	set_env(t_sh *shell);
 
 //Parsing functions
 void	arg(t_sh *sh);
-int	find_sp(char **args, t_sh *sh);
-int	check_sp_afpar(char **args);
+int		find_sp(char **args, t_sh *sh);
+int		check_sp_afpar(char **args);
 
 //Built-in functions
 void	pwd(void);

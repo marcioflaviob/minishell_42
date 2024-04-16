@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:40:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/06 23:34:16 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/16 19:28:18 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,21 +65,25 @@ void	space_adder(char **str)
 		else if ((*str)[i] == '>' && (*str)[i + 1] && (*str)[i + 1] == '>')
 		{
 			*str = ft_stradd(*str, i++, " ");
+			i++;
 			*str = ft_stradd(*str, ++i, " ");
 		}
 		else if ((*str)[i] == '<' && (*str)[i + 1] && (*str)[i + 1] == '<')
 		{
 			*str = ft_stradd(*str, i++, " ");
+			i++;
 			*str = ft_stradd(*str, ++i, " ");
 		}
 		else if ((*str)[i] == '|' && (*str)[i + 1] && (*str)[i + 1] == '|')
 		{
 			*str = ft_stradd(*str, i++, " ");
+			i++;
 			*str = ft_stradd(*str, ++i, " ");
 		}
 		else if ((*str)[i] == '&' && (*str)[i + 1] && (*str)[i + 1] == '&')
 		{
 			*str = ft_stradd(*str, i++, " ");
+			i++;
 			*str = ft_stradd(*str, ++i, " ");
 		}
 		else
