@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/08 16:39:07 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/22 17:31:16 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,11 @@ char	*get_env(char *str, t_sh *shell)
 void	set_env(t_sh *shell)
 {
 	copy_tab(&shell->env, __environ);
-	shell->variables = malloc(sizeof(char *));
-	shell->variables[0] = NULL;
+	shell->variables = (char **)malloc(2 * sizeof(char));
+	if (!shell->variables)
+		return ;
+	shell->variables[0] = ft_strdup("?=0");
+	shell->variables[1] = NULL;
 }
 
 void	un_set(t_sh *shell, char **str)

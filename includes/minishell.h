@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/16 19:50:54 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/22 21:12:49 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <unistd.h>
 # include <dirent.h>
 # include <wait.h>
+# include <errno.h>
 
 # define RED "\033[1;31m"
 # define ORANGE "\e[0;91m"
@@ -67,8 +68,11 @@ typedef struct s_sh {
 	char	**env;
 	char	**variables;
 	char	**term_command;
+	pid_t	parent_pid;
 	t_wc	*wc;
 }	t_sh;
+
+void	before_command(void);
 
 int		get_random_number(void);
 char	*get_a_line(char *filename, int line_number);
@@ -151,6 +155,10 @@ int		find_sp_str(char *str);
 
 void	replace_var(t_sh *sh, char ***tab);
 void	set_sp_bool(t_sh *sh);
+
+// Term config
+void	term_config(void);
+void	term_reset(void);
 
 
 #endif

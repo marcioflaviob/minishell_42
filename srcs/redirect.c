@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 14:26:14 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/16 19:19:42 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/22 21:14:58 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,16 +131,24 @@ char	*redir_in_heredoc(char *delimiter)
 {
 	char	*buffer;
 	char	*content;
+	int		line;
 
+	term_config();
 	content = (char *) malloc(sizeof(char));
 	content[0] = 0;
+	line = 1;
 	while (1)
 	{
 		buffer = get_next_line(STDIN_FILENO);
 		if (g_signal)
 		{
-			g_signal = 0;
 			free(buffer);
+			term_reset();
+			return (NULL);
+		}
+		if (!buffer)
+		{
+			printf("minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", line, delimiter);
 			break ;
 		}
 		if (ft_strncmp(buffer, delimiter, ft_strlen(delimiter)) == 0 && buffer[ft_strlen(delimiter)] == '\n')
@@ -150,6 +158,8 @@ char	*redir_in_heredoc(char *delimiter)
 		}
 		content = ft_strjoin_gnl(content, buffer);
 		free(buffer);
+		line++;
 	}
+	term_reset();
 	return (content);
 }

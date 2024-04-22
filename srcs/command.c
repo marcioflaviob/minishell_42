@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/16 19:50:25 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/22 17:39:56 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,12 +176,13 @@ void	exec_cmd(char **args, t_sh *sh)
 	i = 0;
 	if (!args[0])
 	{
-		
+
 	}
 	pipe(sh->pipe);
 	pid = fork();
 	if (pid == 0)
 	{
+		before_command();
 		if (find_sp(args, sh))
 		{
 			if (ft_equalstr(args[find_sp(args, sh)], "<"))
@@ -221,7 +222,8 @@ void	exec_cmd(char **args, t_sh *sh)
 						if (is_builtin(args[0]))
 							exit(0);
 						cmd = cmd_args(sh, args);
-						execve(cmd[0], cmd, NULL);
+						if (execve(cmd[0], cmd, NULL) == -1)
+							printf("execve error: %s\n", strerror(errno));
 						//cmd didn't execute
 						exit(EXIT_FAILURE);
 						
@@ -237,7 +239,8 @@ void	exec_cmd(char **args, t_sh *sh)
 				if (is_builtin(args[0]))
 					exit(0);
 				cmd = cmd_args(sh, args);
-				execve(cmd[0], cmd, NULL);
+				if (execve(cmd[0], cmd, NULL) == -1)
+					printf("execve error: %s\n", strerror(errno));
 				//cmd didn't execute
 				exit(EXIT_FAILURE);
 			}
@@ -265,7 +268,8 @@ void	exec_cmd(char **args, t_sh *sh)
 						if (is_builtin(args[0]))
 							exit(0);
 						cmd = cmd_args(sh, args);
-						execve(cmd[0], cmd, NULL);
+						if (execve(cmd[0], cmd, NULL) == -1)
+							printf("execve error: %s\n", strerror(errno));
 						//cmd didn't execute
 						exit(EXIT_FAILURE);
 						
@@ -287,7 +291,8 @@ void	exec_cmd(char **args, t_sh *sh)
 				if (is_builtin(args[0]))
 					exit(0);
 				cmd = cmd_args(sh, args);
-				execve(cmd[0], cmd, NULL);
+				if (execve(cmd[0], cmd, NULL) == -1)
+					printf("execve error: %s\n", strerror(errno));
 				//cmd didn't execute
 				exit(EXIT_FAILURE);
 			}
@@ -317,7 +322,8 @@ void	exec_cmd(char **args, t_sh *sh)
 				cmd = cmd_args(sh, args);
 				if (sh->wrong_file != NULL)
 					add_to_tab(&cmd, sh->wrong_file);
-				execve(cmd[0], cmd, NULL);
+				if (execve(cmd[0], cmd, NULL) == -1)
+					printf("execve error: %s\n", strerror(errno));
 			}
 			else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
 			{
@@ -339,7 +345,8 @@ void	exec_cmd(char **args, t_sh *sh)
 				if (is_builtin(args[0]))
 					exit(0);
 				cmd = cmd_args(sh, args);
-				execve(cmd[0], cmd, NULL);
+				if (execve(cmd[0], cmd, NULL) == -1)
+					printf("execve error: %s\n", strerror(errno));
 				//cmd didn't execute
 				exit(EXIT_FAILURE);
 			}
@@ -363,7 +370,8 @@ void	exec_cmd(char **args, t_sh *sh)
 				if (is_builtin(args[0]))
 					exit(0);
 				cmd = cmd_args(sh, args);
-				execve(cmd[0], cmd, NULL);
+				if (execve(cmd[0], cmd, NULL) == -1)
+					printf("execve error: %s\n", strerror(errno));
 				//cmd didn't execute
 				exit(EXIT_FAILURE);
 			}
@@ -388,7 +396,8 @@ void	exec_cmd(char **args, t_sh *sh)
 			if (is_builtin(args[0]))
 				exit(0);
 			cmd = cmd_args(sh, args);
-			execve(cmd[0], cmd, NULL);
+			if (execve(cmd[0], cmd, NULL) == -1)
+				printf("execve error: %s\n", strerror(errno));
 			//cmd didn't execute
 			exit(EXIT_FAILURE);
 		}
@@ -399,6 +408,8 @@ void	exec_cmd(char **args, t_sh *sh)
 		if (!find_sp(args, sh))
 		{
 			waitpid(pid, &sh->last_cmd_st, 0);
+			if (sh->last_cmd_st == 131)
+				write(1, "Quit (core dumped)\n", 19);
 			close(sh->pipe[1]);
 			close(sh->pipe[0]);
 			sh->position = tab_len(sh->args) - 1;

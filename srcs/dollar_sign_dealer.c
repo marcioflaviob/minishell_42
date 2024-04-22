@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 18:30:25 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/02 20:50:08 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/16 20:20:05 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*get_var_name(char *str)
 	int		i;
 
 	i = 0;
+	if (str[i] == '?')
+		return (ft_strdup("?"));
 	while (str[i] && ft_isalnum_or_score(str[i]))
 		i++;
 	return (ft_substr(str, 0, i));
