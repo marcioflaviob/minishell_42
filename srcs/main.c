@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/16 19:53:55 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:23:50 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	main(void)
 	shell.inside_par = 0;
 	shell.pipe_par_bool = 0;
 	shell.out_par = 0;
-	shell.bool_result = 0;
+	shell.bool_result = 1;
 	shell.op_pipe = 0;
 	//permission_fd = open("./assets/permission", O_RDWR);
 	//if (permission_fd == -1)

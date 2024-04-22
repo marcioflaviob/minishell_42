@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/16 19:40:56 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/16 20:38:13 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,8 @@ void	get_input(t_sh *sh)
 	prompt = get_prompt(sh);
 	write(STDOUT_FILENO, "\033[s", 3);
 	buffer = readline(prompt);
-	if (!buffer || ft_equalstr(buffer, "exit"))
+	if (!buffer)
 	{
-		printf("exit");
 		if (buffer)
 			free(buffer);
 		free(prompt);

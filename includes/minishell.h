@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/16 19:50:54 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:14:50 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,8 @@ int		check_sp_afpar(char **args);
 
 //Built-in functions
 void	pwd(void);
-void	cd(t_sh *sh, char *folder);
-void	echo(char **args, t_sh *sh);
+int	cd(t_sh *sh, char *folder);
+char	*echo(char **args, t_sh *sh);
 void	export(t_sh *shell, char **str);
 void	un_set(t_sh *shell, char **str);
 void	env(t_sh *shell);

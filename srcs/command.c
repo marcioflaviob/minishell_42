@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/16 19:50:25 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/22 18:23:59 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,28 +123,26 @@ char	**cmd_args(t_sh *sh, char **args)
 	return (tab);
 }
 
-void	run_builtin(char *str, char **args, t_sh *sh)
-{
-	if (ft_equalstr(str, "echo"))
-		echo(args, sh);
-	else if (ft_equalstr(str, "cd"))
-	{
-		if (find_sp(args, sh) > 2)
-			ft_putstr_fd("cd: too many arguments\n", 2);
-		else
-			cd(sh, args[1]);
-	}
-	else if (ft_equalstr(str, "pwd"))
-		pwd();
-	else if (ft_equalstr(str, "export"))
-		export(sh, &args[1]);
-	else if (ft_equalstr(str, "unset"))
-		un_set(sh, &args[1]);
-	else if (ft_equalstr(str, "env"))
-		env(sh);
-	else if (ft_equalstr(str, "exit"))
-		exit(0);
-}
+//void	run_builtin(char *str, char **args, t_sh *sh)
+//{
+//	//if (ft_equalstr(str, "echo"))
+//	//	echo(args, sh);
+//	//else if (ft_equalstr(str, "cd"))
+//	//{
+//	//	if (find_sp(args, sh) > 2)
+//	//		ft_putstr_fd("cd: too many arguments\n", 2);
+//	//	else if (!ft_equalstr(args[find_sp(args, sh)], "|"))
+//	//		cd(sh, args[1]);
+//	//}
+//	//else if (ft_equalstr(str, "pwd"))
+//	//	pwd();
+//	//else if (ft_equalstr(str, "export"))
+//	//	export(sh, &args[1]);
+//	//else if (ft_equalstr(str, "unset"))
+//	//	un_set(sh, &args[1]);
+//	//else if (ft_equalstr(str, "env"))
+//	//	env(sh);
+//}
 
 int	is_builtin(char *str)
 {
@@ -171,6 +169,7 @@ void	exec_cmd(char **args, t_sh *sh)
 	pid_t	pid;
 	pid_t	pid2;
 	int		i;
+	char	*str;
 	char	**cmd;
 
 	i = 0;
@@ -182,221 +181,522 @@ void	exec_cmd(char **args, t_sh *sh)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (find_sp(args, sh))
-		{
-			if (ft_equalstr(args[find_sp(args, sh)], "<"))
-			{
-				run_builtin(args[0], args, sh);
-				rm_tab_line(&sh->args, sh->args[find_sp(args, sh)]);
-				rm_tab_line(&sh->args, sh->args[find_sp(args, sh) + 1]);
-				if (sh->fd_input != -2)
-					close(sh->fd_input);
-				if (sh->fd_output != -2)
-					close(sh->fd_output);
-				close(sh->pipe[0]);
-				close(sh->pipe[1]);
-				exit(0);
-			}
-			else if (ft_equalstr(args[find_sp(args, sh)], ">"))
-			{
-				i = find_sp(args, sh);
-				if (sh->out_par)
-					(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
-				else
-					redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
-				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
-					;
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
-				{
-					pid2 = fork();
-					if (pid2 == 0)
-					{
-						dup2(sh->true_stdout, STDOUT_FILENO);
-						dup2(sh->pipe[1], STDOUT_FILENO);
-						if (sh->fd_input != -2)
-							close(sh->fd_input);
-						close(sh->pipe[0]);
-						close(sh->pipe[1]);
-						run_builtin(args[0], args, sh);
-						if (is_builtin(args[0]))
-							exit(0);
-						cmd = cmd_args(sh, args);
-						execve(cmd[0], cmd, NULL);
-						//cmd didn't execute
-						exit(EXIT_FAILURE);
-						
-					}
-					else
-						waitpid(pid2, &sh->last_cmd_st, 0);
-				}
-				if (sh->fd_input != -2)
-					close(sh->fd_input);
-				close(sh->pipe[0]);
-				close(sh->pipe[1]);
-				run_builtin(args[0], args, sh);
-				if (is_builtin(args[0]))
-					exit(0);
-				cmd = cmd_args(sh, args);
-				execve(cmd[0], cmd, NULL);
-				//cmd didn't execute
-				exit(EXIT_FAILURE);
-			}
-			else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
-			{
-				i = find_sp(args, sh);
-				if (sh->out_par)
-					(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
-				else
-					redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
-				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
-					;
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
-				{
-					pid2 = fork();
-					if (pid2 == 0)
-					{
-						dup2(sh->true_stdout, STDOUT_FILENO);
-						dup2(sh->pipe[1], STDOUT_FILENO);
-						if (sh->fd_input != -2)
-							close(sh->fd_input);
-						close(sh->pipe[0]);
-						close(sh->pipe[1]);
-						run_builtin(args[0], args, sh);
-						if (is_builtin(args[0]))
-							exit(0);
-						cmd = cmd_args(sh, args);
-						execve(cmd[0], cmd, NULL);
-						//cmd didn't execute
-						exit(EXIT_FAILURE);
-						
-					}
-					else
-						waitpid(pid2, &sh->last_cmd_st, 0);
-				}
-				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 == check_sp_afpar(args))
-				{
-					write(sh->pipe_par[1], "", 0);
-					close(sh->pipe_par[0]);
-					close(sh->pipe_par[1]);
-				}
-				if (sh->fd_input != -2)
-					close(sh->fd_input);
-				close(sh->pipe[0]);
-				close(sh->pipe[1]);
-				run_builtin(args[0], args, sh);
-				if (is_builtin(args[0]))
-					exit(0);
-				cmd = cmd_args(sh, args);
-				execve(cmd[0], cmd, NULL);
-				//cmd didn't execute
-				exit(EXIT_FAILURE);
-			}
-			else if (ft_equalstr(args[find_sp(args, sh)], "|"))
-			{
-				if (sh->fd_input != -2)
-					close(sh->fd_input);
-				if (sh->fd_output != -2)
-					close(sh->fd_output);
-				if (sh->pipe_par_bool == find_sp(args, sh) + sh->position)
-				{
-					dup2(sh->pipe_par[1], STDOUT_FILENO);
-					close(sh->pipe_par[1]);
-					close(sh->pipe_par[0]);
-				}
-				else
-				{
-					dup2(sh->pipe[1], STDOUT_FILENO);
-					close(sh->pipe[1]);
-					close(sh->pipe[0]);	
-				}
-				close(sh->pipe[1]);
-				close(sh->pipe[0]);
-				run_builtin(args[0], args, sh);
-				if (is_builtin(args[0]))
-					exit(0);
-				cmd = cmd_args(sh, args);
-				if (sh->wrong_file != NULL)
-					add_to_tab(&cmd, sh->wrong_file);
-				execve(cmd[0], cmd, NULL);
-			}
-			else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
-			{
-				if (sh->fd_input != -2)
-					close(sh->fd_input);
-				if (sh->pipe_par_bool)
-				{
-					dup2(sh->pipe_par[1], STDOUT_FILENO);
-					close(sh->pipe_par[1]);
-					close(sh->pipe_par[0]);
-				}
-				else if (sh->out_par)
-					dup2(sh->fd_output, STDOUT_FILENO);
-				if (sh->fd_output != -2)
-					close(sh->fd_output);
-				close(sh->pipe[0]);
-				close(sh->pipe[1]);
-				run_builtin(args[0], args, sh);
-				if (is_builtin(args[0]))
-					exit(0);
-				cmd = cmd_args(sh, args);
-				execve(cmd[0], cmd, NULL);
-				//cmd didn't execute
-				exit(EXIT_FAILURE);
-			}
-			else if (ft_equalstr(args[find_sp(args, sh)], "||"))
-			{
-				if (sh->fd_input != -2)
-					close(sh->fd_input);
-				if (sh->pipe_par_bool)
-				{
-					dup2(sh->pipe_par[1], STDOUT_FILENO);
-					close(sh->pipe_par[1]);
-					close(sh->pipe_par[0]);
-				}
-				else if (sh->out_par)
-					dup2(sh->fd_output, STDOUT_FILENO);
-				if (sh->fd_output != -2)
-					close(sh->fd_output);
-				close(sh->pipe[0]);
-				close(sh->pipe[1]);
-				run_builtin(args[0], args, sh);
-				if (is_builtin(args[0]))
-					exit(0);
-				cmd = cmd_args(sh, args);
-				execve(cmd[0], cmd, NULL);
-				//cmd didn't execute
-				exit(EXIT_FAILURE);
-			}
-		}
+		if (is_builtin(args[0]))
+			exit(EXIT_SUCCESS);
 		else
 		{
-			dup2(sh->true_stdout, STDOUT_FILENO);
-			if (sh->fd_input != -2)
-				close(sh->fd_input);
-			if (sh->op_pipe)
+			if (find_sp(args, sh))
 			{
-				close(sh->pipe_par[1]);
-				close(sh->pipe_par[0]);
+				if (ft_equalstr(args[find_sp(args, sh)], "<"))
+				{
+					//run_builtin(args[0], args, sh);
+					rm_tab_line(&sh->args, sh->args[find_sp(args, sh)]);
+					rm_tab_line(&sh->args, sh->args[find_sp(args, sh) + 1]);
+					if (sh->fd_input != -2)
+						close(sh->fd_input);
+					if (sh->fd_output != -2)
+						close(sh->fd_output);
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
+					exit(0);
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], ">"))
+				{
+					i = find_sp(args, sh);
+					if (sh->out_par)
+						(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
+					else
+						redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
+					if (!find_sp(&args[find_sp(args, sh) + 1], sh))
+						;
+					else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
+					{
+						pid2 = fork();
+						if (pid2 == 0)
+						{
+							dup2(sh->true_stdout, STDOUT_FILENO);
+							dup2(sh->pipe[1], STDOUT_FILENO);
+							if (sh->fd_input != -2)
+								close(sh->fd_input);
+							close(sh->pipe[0]);
+							close(sh->pipe[1]);
+							cmd = cmd_args(sh, args);
+							execve(cmd[0], cmd, NULL);
+							//cmd didn't execute
+							exit(EXIT_FAILURE);
+							
+						}
+						else
+							waitpid(pid2, &sh->last_cmd_st, 0);
+					}
+					if (sh->fd_input != -2)
+						close(sh->fd_input);
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
+					cmd = cmd_args(sh, args);
+					execve(cmd[0], cmd, NULL);
+					//cmd didn't execute
+					exit(EXIT_FAILURE);
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
+				{
+					i = find_sp(args, sh);
+					if (sh->out_par)
+						(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
+					else
+						redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
+					if (!find_sp(&args[find_sp(args, sh) + 1], sh))
+						;
+					else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
+					{
+						pid2 = fork();
+						if (pid2 == 0)
+						{
+							dup2(sh->true_stdout, STDOUT_FILENO);
+							dup2(sh->pipe[1], STDOUT_FILENO);
+							if (sh->fd_input != -2)
+								close(sh->fd_input);
+							close(sh->pipe[0]);
+							close(sh->pipe[1]);
+							cmd = cmd_args(sh, args);
+							execve(cmd[0], cmd, NULL);
+							//cmd didn't execute
+							exit(EXIT_FAILURE);
+							
+						}
+						else
+							waitpid(pid2, &sh->last_cmd_st, 0);
+					}
+					else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 == check_sp_afpar(args))
+					{
+						write(sh->pipe_par[1], "", 0);
+						close(sh->pipe_par[0]);
+						close(sh->pipe_par[1]);
+					}
+					if (sh->fd_input != -2)
+						close(sh->fd_input);
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
+					cmd = cmd_args(sh, args);
+					execve(cmd[0], cmd, NULL);
+					//cmd didn't execute
+					exit(EXIT_FAILURE);
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				{
+					if (sh->fd_input != -2)
+						close(sh->fd_input);
+					if (sh->fd_output != -2)
+						close(sh->fd_output);
+					if (sh->pipe_par_bool == find_sp(args, sh) + sh->position)
+					{
+						dup2(sh->pipe_par[1], STDOUT_FILENO);
+						close(sh->pipe_par[1]);
+						close(sh->pipe_par[0]);
+					}
+					else
+					{
+						dup2(sh->pipe[1], STDOUT_FILENO);
+						close(sh->pipe[1]);
+						close(sh->pipe[0]);	
+					}
+					close(sh->pipe[1]);
+					close(sh->pipe[0]);
+					cmd = cmd_args(sh, args);
+					if (sh->wrong_file != NULL)
+						add_to_tab(&cmd, sh->wrong_file);
+					execve(cmd[0], cmd, NULL);
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
+				{
+					if (sh->fd_input != -2)
+						close(sh->fd_input);
+					if (sh->pipe_par_bool)
+					{
+						dup2(sh->pipe_par[1], STDOUT_FILENO);
+						close(sh->pipe_par[1]);
+						close(sh->pipe_par[0]);
+					}
+					else if (sh->out_par)
+						dup2(sh->fd_output, STDOUT_FILENO);
+					if (sh->fd_output != -2)
+						close(sh->fd_output);
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
+					cmd = cmd_args(sh, args);
+					execve(cmd[0], cmd, NULL);
+					//cmd didn't execute
+					exit(EXIT_FAILURE);
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], "||"))
+				{
+					if (sh->fd_input != -2)
+						close(sh->fd_input);
+					if (sh->pipe_par_bool)
+					{
+						dup2(sh->pipe_par[1], STDOUT_FILENO);
+						close(sh->pipe_par[1]);
+						close(sh->pipe_par[0]);
+					}
+					else if (sh->out_par)
+						dup2(sh->fd_output, STDOUT_FILENO);
+					if (sh->fd_output != -2)
+						close(sh->fd_output);
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
+					cmd = cmd_args(sh, args);
+					execve(cmd[0], cmd, NULL);
+					//cmd didn't execute
+					exit(EXIT_FAILURE);
+				}
 			}
-			if (sh->out_par)
-				dup2(sh->fd_output, STDOUT_FILENO);
-			if (sh->fd_output != -2)
-				close(sh->fd_output);
-			close(sh->pipe[0]);
-			close(sh->pipe[1]);
-			run_builtin(args[0], args, sh);
-			if (is_builtin(args[0]))
-				exit(0);
-			cmd = cmd_args(sh, args);
-			execve(cmd[0], cmd, NULL);
-			//cmd didn't execute
-			exit(EXIT_FAILURE);
+			else
+			{
+				dup2(sh->true_stdout, STDOUT_FILENO);
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				if (sh->op_pipe)
+				{
+					close(sh->pipe_par[1]);
+					close(sh->pipe_par[0]);
+				}
+				if (sh->out_par)
+					dup2(sh->fd_output, STDOUT_FILENO);
+				if (sh->fd_output != -2)
+					close(sh->fd_output);
+				close(sh->pipe[0]);
+				cmd = cmd_args(sh, args);
+				execve(cmd[0], cmd, NULL);
+				//cmd didn't execute
+				exit(EXIT_FAILURE);
+			}
 		}
 	}
 	else
 	{
 		i = find_sp(args, sh);
-		if (!find_sp(args, sh))
+		if (is_builtin(args[0]))
+		{
+			if (ft_equalstr(args[0], "exit"))
+			{
+				if (!args[1])
+				{
+					printf("exit");
+					exit(0);
+				}
+				else
+				{
+					printf("exit");
+					exit(ft_atoi(args[1]));
+				}
+				if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				{
+					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+					{
+						pipe(sh->pipe_par);
+						write(sh->pipe_par[1], "\x04", 1);
+						close(sh->pipe_par[1]);
+					}
+					else
+					{
+						pipe(sh->pipe);
+						write(sh->pipe[1], "\x04", 1);
+						close(sh->pipe[1]);
+					}
+				}
+				if (find_sp(args, sh) == 0)
+					sh->position = tab_len(sh->args) - 1;
+				else
+					sh->position += find_sp_par(args, sh);
+			}
+			else if (ft_equalstr(args[0], "unset"))
+			{
+				un_set(sh, &args[1]);
+				if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				{
+					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+					{
+						pipe(sh->pipe_par);
+						write(sh->pipe_par[1], "\x04", 1);
+						close(sh->pipe_par[1]);
+					}
+					else
+					{
+						pipe(sh->pipe);
+						write(sh->pipe[1], "\x04", 1);
+						close(sh->pipe[1]);
+					}
+				}
+				if (find_sp(args, sh) == 0)
+					sh->position = tab_len(sh->args) - 1;
+				else
+					sh->position += find_sp_par(args, sh);
+			}
+			else if (ft_equalstr(args[0], "env"))
+			{
+				if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				{
+					i = 0;
+					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+					{
+						pipe(sh->pipe_par);
+						while (sh->env[i])
+							(ft_putstr_fd(sh->env[i++], sh->pipe_par[1]), write(sh->pipe_par[1], "\n", 1));
+						write(sh->pipe_par[1], "\x04", 1);
+						close(sh->pipe_par[1]);
+					}
+					else
+					{
+						pipe(sh->pipe);
+						while (sh->env[i])
+							(ft_putstr_fd(sh->env[i++], sh->pipe[1]), write(sh->pipe[1], "\n", 1));
+						write(sh->pipe[1], "\x04", 1);
+						close(sh->pipe[1]);
+					}
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp_par(args, sh);
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], ">"))
+				{
+					//if (sh->out_par)
+					//	dup2(sh->fd_output, STDOUT_FILENO);
+					//else
+					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+						if (sh->fd_output == -1)
+							printf("Couldn't open file.");
+					}
+					i = -1;
+					while (sh->env[++i] != NULL)
+					{
+						write(sh->fd_output, sh->env[i], ft_strlen(sh->env[i]));
+						write(sh->fd_output, "\n", 1);
+					}
+					close(sh->fd_output);
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp(args, sh) + 2;
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
+				{
+					//if (sh->out_par)
+					//	dup2(sh->fd_output, STDOUT_FILENO);
+					//else
+					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
+						if (sh->fd_output == -1)
+							printf("Couldn't open file.");
+					}
+					write(sh->fd_output, str, ft_strlen(str));
+					write(sh->fd_output,"\n", 1);
+					close(sh->fd_output);
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp(args, sh) + 2;
+				}
+				else
+				{
+					env(sh);
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp_par(args, sh);
+				}
+			}
+			else if (ft_equalstr(args[0], "export"))
+			{
+				export(sh, &args[1]);
+				if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				{
+					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+					{
+						pipe(sh->pipe_par);
+						write(sh->pipe_par[1], "\x04", 1);
+						close(sh->pipe_par[1]);
+					}
+					else
+					{
+						pipe(sh->pipe);
+						write(sh->pipe[1], "\x04", 1);
+						close(sh->pipe[1]);
+					}
+				}
+				if (find_sp(args, sh) == 0)
+					sh->position = tab_len(sh->args) - 1;
+				else
+					sh->position += find_sp_par(args, sh);
+			}
+			else if (ft_equalstr(args[0], "pwd"))
+			{
+				str = get_cwd();
+				if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				{
+					i = 0;
+					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+					{
+						pipe(sh->pipe_par);
+						write(sh->pipe_par[1], str, ft_strlen(str));
+						write(sh->pipe_par[1],"\n", 1);
+						write(sh->pipe_par[1], "\x04", 1);
+						close(sh->pipe_par[1]);
+					}
+					else
+					{
+						pipe(sh->pipe);
+						write(sh->pipe[1], str, ft_strlen(str));
+						write(sh->pipe[1],"\n", 1);
+						write(sh->pipe[1], "\x04", 1);
+						close(sh->pipe[1]);
+					}
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp_par(args, sh);
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], ">"))
+				{
+					//if (sh->out_par)
+					//	dup2(sh->fd_output, STDOUT_FILENO);
+					//else
+					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+						if (sh->fd_output == -1)
+							printf("Couldn't open file.");
+					}
+					write(sh->fd_output, str, ft_strlen(str));
+					write(sh->fd_output,"\n", 1);
+					close(sh->fd_output);
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp(args, sh) + 2;
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
+				{
+					//if (sh->out_par)
+					//	dup2(sh->fd_output, STDOUT_FILENO);
+					//else
+					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
+						if (sh->fd_output == -1)
+							printf("Couldn't open file.");
+					}
+					write(sh->fd_output, str, ft_strlen(str));
+					write(sh->fd_output,"\n", 1);
+					close(sh->fd_output);
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp(args, sh) + 2;
+				}
+				else
+				{
+					pwd();
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp_par(args, sh);
+				}
+				free(str);
+			}
+			else if (ft_equalstr(args[0], "cd"))
+			{
+				if (find_sp(args, sh) > 2)
+				{
+					ft_putstr_fd("cd: too many arguments\n", 2);
+					sh->bool_result = 0;
+				}
+				else if (!ft_equalstr(args[find_sp(args, sh)], "|"))
+					sh->bool_result = cd(sh, args[1]);
+				else
+				{
+					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+					{
+						pipe(sh->pipe_par);
+						write(sh->pipe_par[1], "\x04", 1);
+						close(sh->pipe_par[1]);
+					}
+					else
+					{
+						pipe(sh->pipe);
+						write(sh->pipe[1], "\x04", 1);
+						close(sh->pipe[1]);
+					}
+				}
+				if (find_sp(args, sh) == 0)
+					sh->position = tab_len(sh->args) - 1;
+				else
+					sh->position += find_sp_par(args, sh);
+			}
+			else if (ft_equalstr(args[0], "echo"))
+			{
+				str = echo(args, sh);
+				if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				{
+					i = 0;
+					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+					{
+						pipe(sh->pipe_par);
+						write(sh->pipe_par[1], str, ft_strlen(str));
+						write(sh->pipe_par[1], "\x04", 1);
+						close(sh->pipe_par[1]);
+					}
+					else
+					{
+						pipe(sh->pipe);
+						write(sh->pipe[1], str, ft_strlen(str));
+						write(sh->pipe[1], "\x04", 1);
+						close(sh->pipe[1]);
+					}
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp_par(args, sh);
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], ">"))
+				{
+					//if (sh->out_par)
+					//	dup2(sh->fd_output, STDOUT_FILENO);
+					//else
+					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+						if (sh->fd_output == -1)
+							printf("Couldn't open file.");
+					}
+					write(sh->fd_output, str, ft_strlen(str));
+					close(sh->fd_output);
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp(args, sh) + 2;
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
+				{
+					//if (sh->out_par)
+					//	dup2(sh->fd_output, STDOUT_FILENO);
+					//else
+					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
+						if (sh->fd_output == -1)
+							printf("Couldn't open file.");
+					}
+					write(sh->fd_output, str, ft_strlen(str));
+					close(sh->fd_output);
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp(args, sh) + 2;
+				}
+				else
+				{
+					printf("%s", str);
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp_par(args, sh);
+				}
+				free(str);
+			}
+		}
+		else if (!find_sp(args, sh))
 		{
 			waitpid(pid, &sh->last_cmd_st, 0);
 			close(sh->pipe[1]);
@@ -498,14 +798,6 @@ void	exec_cmd(char **args, t_sh *sh)
 					//	sh->position = tab_len(sh->args) - 1;					
 					sh->position += find_sp_par(args, sh);
 				}
-			}
-			else if (is_builtin(args[0]))
-			{
-				waitpid(pid, &sh->last_cmd_st, 0);
-				if (find_sp(args, sh) == 0)
-					sh->position = tab_len(sh->args) - 1;
-				else
-					sh->position += find_sp_par(args, sh);
 			}
 		}
 	}
