@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/22 18:23:50 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/22 22:24:18 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,26 +60,30 @@ int	g_signal = 0;
 //	get_input(sh);
 //}
 
+void	var_start(t_sh *sh)
+{
+	set_env(sh);
+	sh->fd_input = -2;
+	sh->fd_output = -2;
+	sh->last_cmd_st = 0;
+	sh->wrong_file = NULL;
+	sh->refresh = 0;
+	sh->inside_par = 0;
+	sh->pipe_par_bool = 0;
+	sh->out_par = 0;
+	sh->bool_result = 1;
+	sh->op_pipe = 0;
+	sh->true_stdin = dup(STDIN_FILENO);
+	sh->true_stdout = dup(STDOUT_FILENO);
+}
+
 int	main(void)
 {
 	t_sh	shell;
 	//int		permission_fd;
 	//char	*buffer;
 
-	shell.true_stdin = dup(STDIN_FILENO);
-	shell.true_stdout = dup(STDOUT_FILENO);
-	shell.fd_input = -2;
-	shell.fd_output = -2;
-	shell.last_cmd_st = 0;
-	shell.wrong_file = NULL;
-	shell.variables = (char **)malloc(1 * sizeof(char));
-	shell.variables[0] = NULL;
-	shell.refresh = 0;
-	shell.inside_par = 0;
-	shell.pipe_par_bool = 0;
-	shell.out_par = 0;
-	shell.bool_result = 1;
-	shell.op_pipe = 0;
+	var_start(&shell);
 	//permission_fd = open("./assets/permission", O_RDWR);
 	//if (permission_fd == -1)
 	//	(write(2, "Failed opening permission file", 30));
@@ -96,7 +100,6 @@ int	main(void)
 			shell.emoji_path = ft_strjoin(shell.current_dir, "/assets/emojis");
 			print_minishell_art();
 			// free(buffer);
-			set_env(&shell);
 			signal_initializer();
 			get_input(&shell);
 			free(shell.current_dir);

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/22 18:23:59 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/22 22:14:43 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,201 +175,199 @@ void	exec_cmd(char **args, t_sh *sh)
 	i = 0;
 	if (!args[0])
 	{
-		
+
 	}
 	pipe(sh->pipe);
 	pid = fork();
 	if (pid == 0)
 	{
+		before_command();
 		if (is_builtin(args[0]))
 			exit(EXIT_SUCCESS);
-		else
+		if (find_sp(args, sh))
 		{
-			if (find_sp(args, sh))
+			if (ft_equalstr(args[find_sp(args, sh)], "<"))
 			{
-				if (ft_equalstr(args[find_sp(args, sh)], "<"))
-				{
-					//run_builtin(args[0], args, sh);
-					rm_tab_line(&sh->args, sh->args[find_sp(args, sh)]);
-					rm_tab_line(&sh->args, sh->args[find_sp(args, sh) + 1]);
-					if (sh->fd_input != -2)
-						close(sh->fd_input);
-					if (sh->fd_output != -2)
-						close(sh->fd_output);
-					close(sh->pipe[0]);
-					close(sh->pipe[1]);
-					exit(0);
-				}
-				else if (ft_equalstr(args[find_sp(args, sh)], ">"))
-				{
-					i = find_sp(args, sh);
-					if (sh->out_par)
-						(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
-					else
-						redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
-					if (!find_sp(&args[find_sp(args, sh) + 1], sh))
-						;
-					else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
-					{
-						pid2 = fork();
-						if (pid2 == 0)
-						{
-							dup2(sh->true_stdout, STDOUT_FILENO);
-							dup2(sh->pipe[1], STDOUT_FILENO);
-							if (sh->fd_input != -2)
-								close(sh->fd_input);
-							close(sh->pipe[0]);
-							close(sh->pipe[1]);
-							cmd = cmd_args(sh, args);
-							execve(cmd[0], cmd, NULL);
-							//cmd didn't execute
-							exit(EXIT_FAILURE);
-							
-						}
-						else
-							waitpid(pid2, &sh->last_cmd_st, 0);
-					}
-					if (sh->fd_input != -2)
-						close(sh->fd_input);
-					close(sh->pipe[0]);
-					close(sh->pipe[1]);
-					cmd = cmd_args(sh, args);
-					execve(cmd[0], cmd, NULL);
-					//cmd didn't execute
-					exit(EXIT_FAILURE);
-				}
-				else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
-				{
-					i = find_sp(args, sh);
-					if (sh->out_par)
-						(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
-					else
-						redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
-					if (!find_sp(&args[find_sp(args, sh) + 1], sh))
-						;
-					else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
-					{
-						pid2 = fork();
-						if (pid2 == 0)
-						{
-							dup2(sh->true_stdout, STDOUT_FILENO);
-							dup2(sh->pipe[1], STDOUT_FILENO);
-							if (sh->fd_input != -2)
-								close(sh->fd_input);
-							close(sh->pipe[0]);
-							close(sh->pipe[1]);
-							cmd = cmd_args(sh, args);
-							execve(cmd[0], cmd, NULL);
-							//cmd didn't execute
-							exit(EXIT_FAILURE);
-							
-						}
-						else
-							waitpid(pid2, &sh->last_cmd_st, 0);
-					}
-					else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 == check_sp_afpar(args))
-					{
-						write(sh->pipe_par[1], "", 0);
-						close(sh->pipe_par[0]);
-						close(sh->pipe_par[1]);
-					}
-					if (sh->fd_input != -2)
-						close(sh->fd_input);
-					close(sh->pipe[0]);
-					close(sh->pipe[1]);
-					cmd = cmd_args(sh, args);
-					execve(cmd[0], cmd, NULL);
-					//cmd didn't execute
-					exit(EXIT_FAILURE);
-				}
-				else if (ft_equalstr(args[find_sp(args, sh)], "|"))
-				{
-					if (sh->fd_input != -2)
-						close(sh->fd_input);
-					if (sh->fd_output != -2)
-						close(sh->fd_output);
-					if (sh->pipe_par_bool == find_sp(args, sh) + sh->position)
-					{
-						dup2(sh->pipe_par[1], STDOUT_FILENO);
-						close(sh->pipe_par[1]);
-						close(sh->pipe_par[0]);
-					}
-					else
-					{
-						dup2(sh->pipe[1], STDOUT_FILENO);
-						close(sh->pipe[1]);
-						close(sh->pipe[0]);	
-					}
-					close(sh->pipe[1]);
-					close(sh->pipe[0]);
-					cmd = cmd_args(sh, args);
-					if (sh->wrong_file != NULL)
-						add_to_tab(&cmd, sh->wrong_file);
-					execve(cmd[0], cmd, NULL);
-				}
-				else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
-				{
-					if (sh->fd_input != -2)
-						close(sh->fd_input);
-					if (sh->pipe_par_bool)
-					{
-						dup2(sh->pipe_par[1], STDOUT_FILENO);
-						close(sh->pipe_par[1]);
-						close(sh->pipe_par[0]);
-					}
-					else if (sh->out_par)
-						dup2(sh->fd_output, STDOUT_FILENO);
-					if (sh->fd_output != -2)
-						close(sh->fd_output);
-					close(sh->pipe[0]);
-					close(sh->pipe[1]);
-					cmd = cmd_args(sh, args);
-					execve(cmd[0], cmd, NULL);
-					//cmd didn't execute
-					exit(EXIT_FAILURE);
-				}
-				else if (ft_equalstr(args[find_sp(args, sh)], "||"))
-				{
-					if (sh->fd_input != -2)
-						close(sh->fd_input);
-					if (sh->pipe_par_bool)
-					{
-						dup2(sh->pipe_par[1], STDOUT_FILENO);
-						close(sh->pipe_par[1]);
-						close(sh->pipe_par[0]);
-					}
-					else if (sh->out_par)
-						dup2(sh->fd_output, STDOUT_FILENO);
-					if (sh->fd_output != -2)
-						close(sh->fd_output);
-					close(sh->pipe[0]);
-					close(sh->pipe[1]);
-					cmd = cmd_args(sh, args);
-					execve(cmd[0], cmd, NULL);
-					//cmd didn't execute
-					exit(EXIT_FAILURE);
-				}
-			}
-			else
-			{
-				dup2(sh->true_stdout, STDOUT_FILENO);
+				//run_builtin(args[0], args, sh);
+				rm_tab_line(&sh->args, sh->args[find_sp(args, sh)]);
+				rm_tab_line(&sh->args, sh->args[find_sp(args, sh) + 1]);
 				if (sh->fd_input != -2)
 					close(sh->fd_input);
-				if (sh->op_pipe)
-				{
-					close(sh->pipe_par[1]);
-					close(sh->pipe_par[0]);
-				}
-				if (sh->out_par)
-					dup2(sh->fd_output, STDOUT_FILENO);
 				if (sh->fd_output != -2)
 					close(sh->fd_output);
 				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				exit(0);
+			}
+			else if (ft_equalstr(args[find_sp(args, sh)], ">"))
+			{
+				i = find_sp(args, sh);
+				if (sh->out_par)
+					(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
+				else
+					redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
+				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
+					;
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
+				{
+					pid2 = fork();
+					if (pid2 == 0)
+					{
+						dup2(sh->true_stdout, STDOUT_FILENO);
+						dup2(sh->pipe[1], STDOUT_FILENO);
+						if (sh->fd_input != -2)
+							close(sh->fd_input);
+						close(sh->pipe[0]);
+						close(sh->pipe[1]);
+						cmd = cmd_args(sh, args);
+						execve(cmd[0], cmd, NULL);
+						//cmd didn't execute
+						exit(EXIT_FAILURE);
+						
+					}
+					else
+						waitpid(pid2, &sh->last_cmd_st, 0);
+				}
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
 				cmd = cmd_args(sh, args);
 				execve(cmd[0], cmd, NULL);
 				//cmd didn't execute
 				exit(EXIT_FAILURE);
 			}
+			else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
+			{
+				i = find_sp(args, sh);
+				if (sh->out_par)
+					(dup2(sh->fd_output, STDOUT_FILENO), close(sh->fd_output));
+				else
+					redir_out_trunc(args[find_sp(args, sh) + 1], &args[find_sp(args, sh)], sh);
+				if (!find_sp(&args[find_sp(args, sh) + 1], sh))
+					;
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 != check_sp_afpar(args))
+				{
+					pid2 = fork();
+					if (pid2 == 0)
+					{
+						dup2(sh->true_stdout, STDOUT_FILENO);
+						dup2(sh->pipe[1], STDOUT_FILENO);
+						if (sh->fd_input != -2)
+							close(sh->fd_input);
+						close(sh->pipe[0]);
+						close(sh->pipe[1]);
+						cmd = cmd_args(sh, args);
+						execve(cmd[0], cmd, NULL);
+						//cmd didn't execute
+						exit(EXIT_FAILURE);
+						
+					}
+					else
+						waitpid(pid2, &sh->last_cmd_st, 0);
+				}
+				else if (ft_equalstr(args[find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1], "|") && find_sp(&args[find_sp(args, sh) + 1], sh) + i + 1 == check_sp_afpar(args))
+				{
+					write(sh->pipe_par[1], "", 0);
+					close(sh->pipe_par[0]);
+					close(sh->pipe_par[1]);
+				}
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				cmd = cmd_args(sh, args);
+				execve(cmd[0], cmd, NULL);
+				//cmd didn't execute
+				exit(EXIT_FAILURE);
+			}
+			else if (ft_equalstr(args[find_sp(args, sh)], "|"))
+			{
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				if (sh->fd_output != -2)
+					close(sh->fd_output);
+				if (sh->pipe_par_bool == find_sp(args, sh) + sh->position)
+				{
+					dup2(sh->pipe_par[1], STDOUT_FILENO);
+					close(sh->pipe_par[1]);
+					close(sh->pipe_par[0]);
+				}
+				else
+				{
+					dup2(sh->pipe[1], STDOUT_FILENO);
+					close(sh->pipe[1]);
+					close(sh->pipe[0]);	
+				}
+				close(sh->pipe[1]);
+				close(sh->pipe[0]);
+				cmd = cmd_args(sh, args);
+				if (sh->wrong_file != NULL)
+					add_to_tab(&cmd, sh->wrong_file);
+				execve(cmd[0], cmd, NULL);
+			}
+			else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
+			{
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				if (sh->pipe_par_bool)
+				{
+					dup2(sh->pipe_par[1], STDOUT_FILENO);
+					close(sh->pipe_par[1]);
+					close(sh->pipe_par[0]);
+				}
+				else if (sh->out_par)
+					dup2(sh->fd_output, STDOUT_FILENO);
+				if (sh->fd_output != -2)
+					close(sh->fd_output);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				cmd = cmd_args(sh, args);
+				execve(cmd[0], cmd, NULL);
+				//cmd didn't execute
+				exit(EXIT_FAILURE);
+			}
+			else if (ft_equalstr(args[find_sp(args, sh)], "||"))
+			{
+				if (sh->fd_input != -2)
+					close(sh->fd_input);
+				if (sh->pipe_par_bool)
+				{
+					dup2(sh->pipe_par[1], STDOUT_FILENO);
+					close(sh->pipe_par[1]);
+					close(sh->pipe_par[0]);
+				}
+				else if (sh->out_par)
+					dup2(sh->fd_output, STDOUT_FILENO);
+				if (sh->fd_output != -2)
+					close(sh->fd_output);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				cmd = cmd_args(sh, args);
+				execve(cmd[0], cmd, NULL);
+				//cmd didn't execute
+				exit(EXIT_FAILURE);
+			}
+		}
+		else
+		{
+			dup2(sh->true_stdout, STDOUT_FILENO);
+			if (sh->fd_input != -2)
+				close(sh->fd_input);
+			if (sh->op_pipe)
+			{
+				close(sh->pipe_par[1]);
+				close(sh->pipe_par[0]);
+			}
+			if (sh->out_par)
+				dup2(sh->fd_output, STDOUT_FILENO);
+			if (sh->fd_output != -2)
+				close(sh->fd_output);
+			close(sh->pipe[0]);
+			cmd = cmd_args(sh, args);
+			execve(cmd[0], cmd, NULL);
+			//cmd didn't execute
+			exit(EXIT_FAILURE);
 		}
 	}
 	else
@@ -699,6 +697,8 @@ void	exec_cmd(char **args, t_sh *sh)
 		else if (!find_sp(args, sh))
 		{
 			waitpid(pid, &sh->last_cmd_st, 0);
+			if (sh->last_cmd_st == 131)
+				write(1, "Quit (core dumped)\n", 19);
 			close(sh->pipe[1]);
 			close(sh->pipe[0]);
 			sh->position = tab_len(sh->args) - 1;

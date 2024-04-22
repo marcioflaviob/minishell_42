@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/16 19:51:17 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/22 21:09:33 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ int	go_af_par(char **args)
 		else if (args[i][0] == ')')
 			par--;
 		i++;
-		
 	}
 	if (args[i - 1][0] != ')')
 		return (0);
@@ -173,6 +172,13 @@ void	arg(t_sh *sh)
 				dup2(sh->true_stdout, STDOUT_FILENO);
 				pipe(sh->pipe);
 				buffer = redir_in_heredoc(sh->args[sh->position + 1]);
+				if (!buffer && g_signal)
+				{
+					g_signal = 0;
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
+					get_input(sh);
+				}
 				write(sh->pipe[1], buffer, ft_strlen(buffer));
 				close(sh->pipe[1]);
 				free(buffer);
