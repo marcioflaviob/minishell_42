@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/22 22:40:32 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/22 23:48:42 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,12 +127,14 @@ char	*redir_in_heredoc(char *delimiter);
 //env functions
 char	*get_env(char *str, t_sh *shell);
 void	set_env(t_sh *shell);
+void	add_env(t_sh *sh, char *variable);
 
 //Parsing functions
 void	arg(t_sh *sh);
 int		find_sp(char **args, t_sh *sh);
 int		check_sp_afpar(char **args);
 int	find_sp_par(char **args, t_sh *sh);
+int	par_check_all(char **str, t_sh *sh);
 
 //Built-in functions
 void	pwd(void);
@@ -156,6 +158,7 @@ int		find_sp_str(char *str);
 
 void	replace_var(t_sh *sh, char ***tab);
 void	set_sp_bool(t_sh *sh);
+
 
 // Term config
 void	term_config(void);

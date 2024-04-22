@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/16 20:38:13 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/22 23:57:01 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,11 @@ void	get_input(t_sh *sh)
 	char	*buffer;
 	char	*prompt;
 
+	if (g_signal == 2)
+	{
+		add_env(sh, "?=130");
+		g_signal = 0;
+	}
 	dup2(sh->true_stdin, STDIN_FILENO);
 	dup2(sh->true_stdout, STDOUT_FILENO);
 	if (sh->fd_input != -2)
@@ -60,16 +65,25 @@ void	get_input(t_sh *sh)
 	if (buffer && buffer[0])
 		add_history(buffer);
 	sh->args = ft_better_split(buffer);
+	free(buffer);
+	free(prompt);
+	if (par_check_all(sh->args, sh))
+	{
+		buffer = ft_itoa(sh->last_cmd_st);
+		prompt = ft_strjoin("?=", buffer);
+		free(buffer);
+		add_env(sh, prompt);
+		free(prompt);
+		get_input(sh);
+	}
 	while (wildcard(sh))
 		;
 	set_sp_bool(sh);
 	replace_var(sh, &sh->args);
 	quotes_removal(&sh->args);
 	//dollar_sign_dealer(&sh->args, sh);
-	//free(buffer);
 	//builtin_dealer(sh, buffer);
 	arg(sh);
-	free(prompt);
 	return ;
 }
 

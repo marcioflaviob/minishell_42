@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/22 21:09:33 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/22 23:56:02 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,18 @@ void	arg(t_sh *sh)
 	int		special;
 	int		fd;
 	char	*buffer;
+	char	*tmp;
 
 	fd = 0;
 	if (sh->position == tab_len(sh->args) - 1)
-		get_input(sh);	
+	{
+		buffer = ft_itoa(sh->last_cmd_st);
+		tmp = ft_strjoin("?=", buffer);
+		free(buffer);
+		add_env(sh, tmp);
+		free(tmp);
+		get_input(sh);
+	}
 	else
 	{
 		special = check_special(sh->args[sh->position], sh);
@@ -174,7 +182,6 @@ void	arg(t_sh *sh)
 				buffer = redir_in_heredoc(sh->args[sh->position + 1]);
 				if (!buffer && g_signal)
 				{
-					g_signal = 0;
 					close(sh->pipe[0]);
 					close(sh->pipe[1]);
 					get_input(sh);
