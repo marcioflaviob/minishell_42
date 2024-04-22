@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/22 21:09:33 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/22 22:59:37 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ int	check_sp_afpar(char **args)
 		i++;
 	if (ft_equalstr(args[i], "|") || ft_equalstr(args[i], ">") || ft_equalstr(args[i], ">>") || ft_equalstr(args[i], "||") || ft_equalstr(args[i], "&&"))
 		return (i);
-	else if (args[i])
-		return (printf("minishell: parse error near `%s\'", args[i]), -1);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/22 22:14:43 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 01:52:51 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -409,6 +409,8 @@ void	exec_cmd(char **args, t_sh *sh)
 			}
 			else if (ft_equalstr(args[0], "unset"))
 			{
+				sh->last_cmd_st = 0;
+				sh->bool_result = 1;
 				un_set(sh, &args[1]);
 				if (ft_equalstr(args[find_sp(args, sh)], "|"))
 				{
@@ -432,81 +434,149 @@ void	exec_cmd(char **args, t_sh *sh)
 			}
 			else if (ft_equalstr(args[0], "env"))
 			{
-				if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				if (find_sp(args, sh) == 0 && args[1])
 				{
-					i = 0;
-					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
-					{
-						pipe(sh->pipe_par);
-						while (sh->env[i])
-							(ft_putstr_fd(sh->env[i++], sh->pipe_par[1]), write(sh->pipe_par[1], "\n", 1));
-						write(sh->pipe_par[1], "\x04", 1);
-						close(sh->pipe_par[1]);
-					}
-					else
-					{
-						pipe(sh->pipe);
-						while (sh->env[i])
-							(ft_putstr_fd(sh->env[i++], sh->pipe[1]), write(sh->pipe[1], "\n", 1));
-						write(sh->pipe[1], "\x04", 1);
-						close(sh->pipe[1]);
-					}
-					if (find_sp(args, sh) == 0)
-						sh->position = tab_len(sh->args) - 1;
-					else
-						sh->position += find_sp_par(args, sh);
-				}
-				else if (ft_equalstr(args[find_sp(args, sh)], ">"))
-				{
-					//if (sh->out_par)
-					//	dup2(sh->fd_output, STDOUT_FILENO);
-					//else
-					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-						if (sh->fd_output == -1)
-							printf("Couldn't open file.");
-					}
-					i = -1;
-					while (sh->env[++i] != NULL)
-					{
-						write(sh->fd_output, sh->env[i], ft_strlen(sh->env[i]));
-						write(sh->fd_output, "\n", 1);
-					}
-					close(sh->fd_output);
-					if (find_sp(args, sh) == 0)
-						sh->position = tab_len(sh->args) - 1;
-					else
-						sh->position += find_sp(args, sh) + 2;
-				}
-				else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
-				{
-					//if (sh->out_par)
-					//	dup2(sh->fd_output, STDOUT_FILENO);
-					//else
-					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
-						if (sh->fd_output == -1)
-							printf("Couldn't open file.");
-					}
-					write(sh->fd_output, str, ft_strlen(str));
-					write(sh->fd_output,"\n", 1);
-					close(sh->fd_output);
-					if (find_sp(args, sh) == 0)
-						sh->position = tab_len(sh->args) - 1;
-					else
-						sh->position += find_sp(args, sh) + 2;
+					printf("env: \'%s\': No such file or directory\n", args[1]);
+					sh->position = tab_len(sh->args) - 1;
+					sh->bool_result = 0;
+					sh->last_cmd_st = 1;
 				}
 				else
 				{
-					env(sh);
-					if (find_sp(args, sh) == 0)
-						sh->position = tab_len(sh->args) - 1;
+					sh->bool_result = 1;
+					sh->last_cmd_st = 0;
+					if (ft_equalstr(args[find_sp(args, sh)], "|"))
+					{
+						i = 0;
+						if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+						{
+							pipe(sh->pipe_par);
+							while (sh->env[i])
+								(ft_putstr_fd(sh->env[i++], sh->pipe_par[1]), write(sh->pipe_par[1], "\n", 1));
+							write(sh->pipe_par[1], "\x04", 1);
+							close(sh->pipe_par[1]);
+						}
+						else
+						{
+							pipe(sh->pipe);
+							while (sh->env[i])
+								(ft_putstr_fd(sh->env[i++], sh->pipe[1]), write(sh->pipe[1], "\n", 1));
+							write(sh->pipe[1], "\x04", 1);
+							close(sh->pipe[1]);
+						}
+						if (find_sp(args, sh) == 0)
+							sh->position = tab_len(sh->args) - 1;
+						else
+							sh->position += find_sp_par(args, sh);
+					}
+					else if (ft_equalstr(args[find_sp(args, sh)], ">"))
+					{
+						//if (sh->out_par)
+						//	dup2(sh->fd_output, STDOUT_FILENO);
+						//else
+						{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+							if (sh->fd_output == -1)
+								printf("Couldn't open file.");
+						}
+						i = -1;
+						while (sh->env[++i] != NULL)
+						{
+							write(sh->fd_output, sh->env[i], ft_strlen(sh->env[i]));
+							write(sh->fd_output, "\n", 1);
+						}
+						close(sh->fd_output);
+						if (find_sp(args, sh) == 0)
+							sh->position = tab_len(sh->args) - 1;
+						else
+							sh->position += find_sp(args, sh) + 2;
+					}
+					else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
+					{
+						//if (sh->out_par)
+						//	dup2(sh->fd_output, STDOUT_FILENO);
+						//else
+						{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
+							if (sh->fd_output == -1)
+								printf("Couldn't open file.");
+						}
+						while (sh->env[++i] != NULL)
+						{
+							write(sh->fd_output, sh->env[i], ft_strlen(sh->env[i]));
+							write(sh->fd_output, "\n", 1);
+						}
+						close(sh->fd_output);
+						if (find_sp(args, sh) == 0)
+							sh->position = tab_len(sh->args) - 1;
+						else
+							sh->position += find_sp(args, sh) + 2;
+					}
 					else
-						sh->position += find_sp_par(args, sh);
+					{
+						env(sh);
+						if (find_sp(args, sh) == 0)
+							sh->position = tab_len(sh->args) - 1;
+						else
+							sh->position += find_sp_par(args, sh);
+					}
 				}
 			}
 			else if (ft_equalstr(args[0], "export"))
 			{
-				export(sh, &args[1]);
-				if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				sh->last_cmd_st = 0;
+				sh->bool_result = 1;
+				if ((find_sp(args, sh) == 0 && !args[1]) || (find_sp(args, sh) == 1))
+				{
+					str = sorted_tab(sh->env);
+					if (ft_equalstr(args[find_sp(args, sh)], "|"))
+					{
+						i = 0;
+						if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+						{
+							pipe(sh->pipe_par);
+							write(sh->pipe_par[1], str, ft_strlen(str));
+							write(sh->pipe_par[1], "\x04", 1);
+							close(sh->pipe_par[1]);
+						}
+						else
+						{
+							pipe(sh->pipe);
+							write(sh->pipe[1], str, ft_strlen(str));
+							write(sh->pipe[1], "\x04", 1);
+							close(sh->pipe[1]);
+						}
+						sh->position += find_sp(args, sh);
+					}
+					else if (ft_equalstr(args[find_sp(args, sh)], ">"))
+					{
+						//if (sh->out_par)
+						//	dup2(sh->fd_output, STDOUT_FILENO);
+						//else
+						{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+							if (sh->fd_output == -1)
+								printf("Couldn't open file.");
+						}
+						i = -1;
+						write(sh->fd_output, str, ft_strlen(str));
+						close(sh->fd_output);
+						sh->position += find_sp(args, sh) + 2;
+					}
+					else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
+					{
+						//if (sh->out_par)
+						//	dup2(sh->fd_output, STDOUT_FILENO);
+						//else
+						{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
+							if (sh->fd_output == -1)
+								printf("Couldn't open file.");
+						}
+						write(sh->fd_output, str, ft_strlen(str));
+						write(sh->fd_output,"\n", 1);
+						close(sh->fd_output);
+						sh->position += find_sp(args, sh) + 2;
+					}
+					free(str);
+				}
+				else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 				{
 					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
 					{
@@ -520,82 +590,102 @@ void	exec_cmd(char **args, t_sh *sh)
 						write(sh->pipe[1], "\x04", 1);
 						close(sh->pipe[1]);
 					}
-				}
-				if (find_sp(args, sh) == 0)
-					sh->position = tab_len(sh->args) - 1;
-				else
 					sh->position += find_sp_par(args, sh);
+				}
+				else
+				{
+					export(sh, &args[1]);
+					if (find_sp(args, sh) == 0)
+						sh->position = tab_len(sh->args) - 1;
+					else
+						sh->position += find_sp_par(args, sh);
+				}
 			}
 			else if (ft_equalstr(args[0], "pwd"))
 			{
 				str = get_cwd();
-				if (ft_equalstr(args[find_sp(args, sh)], "|"))
+				if (args[1] && find_sp(args, sh) != 1)
 				{
-					i = 0;
-					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
-					{
-						pipe(sh->pipe_par);
-						write(sh->pipe_par[1], str, ft_strlen(str));
-						write(sh->pipe_par[1],"\n", 1);
-						write(sh->pipe_par[1], "\x04", 1);
-						close(sh->pipe_par[1]);
-					}
-					else
-					{
-						pipe(sh->pipe);
-						write(sh->pipe[1], str, ft_strlen(str));
-						write(sh->pipe[1],"\n", 1);
-						write(sh->pipe[1], "\x04", 1);
-						close(sh->pipe[1]);
-					}
+					ft_putstr_fd("pwd: too many arguments\n", 2);
+					sh->bool_result = 0;
+					sh->last_cmd_st = 1;
 					if (find_sp(args, sh) == 0)
 						sh->position = tab_len(sh->args) - 1;
 					else
 						sh->position += find_sp_par(args, sh);
-				}
-				else if (ft_equalstr(args[find_sp(args, sh)], ">"))
-				{
-					//if (sh->out_par)
-					//	dup2(sh->fd_output, STDOUT_FILENO);
-					//else
-					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-						if (sh->fd_output == -1)
-							printf("Couldn't open file.");
-					}
-					write(sh->fd_output, str, ft_strlen(str));
-					write(sh->fd_output,"\n", 1);
-					close(sh->fd_output);
-					if (find_sp(args, sh) == 0)
-						sh->position = tab_len(sh->args) - 1;
-					else
-						sh->position += find_sp(args, sh) + 2;
-				}
-				else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
-				{
-					//if (sh->out_par)
-					//	dup2(sh->fd_output, STDOUT_FILENO);
-					//else
-					{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
-						if (sh->fd_output == -1)
-							printf("Couldn't open file.");
-					}
-					write(sh->fd_output, str, ft_strlen(str));
-					write(sh->fd_output,"\n", 1);
-					close(sh->fd_output);
-					if (find_sp(args, sh) == 0)
-						sh->position = tab_len(sh->args) - 1;
-					else
-						sh->position += find_sp(args, sh) + 2;
 				}
 				else
 				{
-					pwd();
-					if (find_sp(args, sh) == 0)
-						sh->position = tab_len(sh->args) - 1;
+					sh->bool_result = 1;
+					sh->last_cmd_st = 0;
+					if (ft_equalstr(args[find_sp(args, sh)], "|"))
+					{
+						i = 0;
+						if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
+						{
+							pipe(sh->pipe_par);
+							write(sh->pipe_par[1], str, ft_strlen(str));
+							write(sh->pipe_par[1],"\n", 1);
+							write(sh->pipe_par[1], "\x04", 1);
+							close(sh->pipe_par[1]);
+						}
+						else
+						{
+							pipe(sh->pipe);
+							write(sh->pipe[1], str, ft_strlen(str));
+							write(sh->pipe[1],"\n", 1);
+							write(sh->pipe[1], "\x04", 1);
+							close(sh->pipe[1]);
+						}
+						if (find_sp(args, sh) == 0)
+							sh->position = tab_len(sh->args) - 1;
+						else
+							sh->position += find_sp_par(args, sh);
+					}
+					else if (ft_equalstr(args[find_sp(args, sh)], ">"))
+					{
+						//if (sh->out_par)
+						//	dup2(sh->fd_output, STDOUT_FILENO);
+						//else
+						{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+							if (sh->fd_output == -1)
+								printf("Couldn't open file.");
+						}
+						write(sh->fd_output, str, ft_strlen(str));
+						write(sh->fd_output,"\n", 1);
+						close(sh->fd_output);
+						if (find_sp(args, sh) == 0)
+							sh->position = tab_len(sh->args) - 1;
+						else
+							sh->position += find_sp(args, sh) + 2;
+					}
+					else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
+					{
+						//if (sh->out_par)
+						//	dup2(sh->fd_output, STDOUT_FILENO);
+						//else
+						{	sh->fd_output = open(args[find_sp(args, sh) + 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
+							if (sh->fd_output == -1)
+								printf("Couldn't open file.");
+						}
+						write(sh->fd_output, str, ft_strlen(str));
+						write(sh->fd_output,"\n", 1);
+						close(sh->fd_output);
+						if (find_sp(args, sh) == 0)
+							sh->position = tab_len(sh->args) - 1;
+						else
+							sh->position += find_sp(args, sh) + 2;
+					}
 					else
-						sh->position += find_sp_par(args, sh);
+					{
+						pwd();
+						if (find_sp(args, sh) == 0)
+							sh->position = tab_len(sh->args) - 1;
+						else
+							sh->position += find_sp_par(args, sh);
+					}
+					free(str);
 				}
-				free(str);
 			}
 			else if (ft_equalstr(args[0], "cd"))
 			{
@@ -603,9 +693,16 @@ void	exec_cmd(char **args, t_sh *sh)
 				{
 					ft_putstr_fd("cd: too many arguments\n", 2);
 					sh->bool_result = 0;
+					sh->last_cmd_st = 1;
 				}
 				else if (!ft_equalstr(args[find_sp(args, sh)], "|"))
+				{
 					sh->bool_result = cd(sh, args[1]);
+					if (sh->bool_result)
+						sh->last_cmd_st = 0;
+					else
+						sh->last_cmd_st = 1;
+				}
 				else
 				{
 					if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)
@@ -629,6 +726,8 @@ void	exec_cmd(char **args, t_sh *sh)
 			else if (ft_equalstr(args[0], "echo"))
 			{
 				str = echo(args, sh);
+				sh->last_cmd_st = 0;
+				sh->bool_result = 1;
 				if (ft_equalstr(args[find_sp(args, sh)], "|"))
 				{
 					i = 0;

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/22 22:05:53 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 00:58:49 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,34 +17,51 @@ void	export(t_sh *shell, char **str)
 	int		i;
 	int		y;
 	int		str_len;
+	int		replace;
 	char	*str1;
 	char	*str2;
 
 	i = 0;
 	y = 0;
+	replace = 0;
 	if (!find_sp(str, shell))
 		str_len = tab_len(str) - 1;
 	else
 		str_len = find_sp(str, shell);
 	while (y < str_len)
 	{
+		if (!ft_strrchr(str[y], '='))
+			str2 = ft_strdup(str[y]);
+		else
+			str2 = get_substring_b(str[y], '=');
 		while (shell->env[i])
 		{
 			str1 = get_substring_b(shell->env[i], '=');
-			str2 = get_substring_b(str[y], '=');
 			if (ft_equalstr(str1, str2) == 1)
 			{
-				free(str1);
-				free(str2);
-				free(shell->env[i]);
-				shell->env[i] = ft_strdup(str[y]);
-				return ;
+				if (!ft_strrchr(str[y], '='))
+					replace = 1;	
+				else
+				{
+					free(shell->env[i]);
+					shell->env[i] = ft_strdup(str[y]);
+					replace = 1;	
+				}
 			}
 			i++;
 			free(str1);
-			free(str2);
 		}
-		add_to_tab(&shell->env, str[y]);
+		if (replace == 0)
+		{
+			if (!ft_strrchr(str[y], '='))
+			{
+				free(str[y]);
+				str[y] = ft_strjoin(str2, "=");
+			}
+			add_to_tab(&shell->env, str[y]);
+		}
+		free(str2);
+		replace = 0;
 		y++;
 	}	
 }

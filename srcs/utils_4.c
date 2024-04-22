@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_4.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:40:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/16 19:28:18 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/23 01:40:21 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	is_quoted(char *str, int i)
 		return (1);
 	return (0);
 }
+
+
 
 void	space_adder(char **str)
 {
@@ -89,4 +91,50 @@ void	space_adder(char **str)
 		else
 			i++;
 	}
+}
+void	swap(char **a, char **b) {
+
+	char	*tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+void	sort_strings_by_first_char(char **arr, int n)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < n - 1)
+	{
+		while (j < n - i - 1)
+		{
+			if (arr[j][0] > arr[j + 1][0])
+				swap(&arr[j], &arr[j + 1]);
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+}
+
+char	*sorted_tab(char **tab)
+{
+	int		n;
+	int		i;
+	char	*str;
+
+	n = tab_len(tab) - 1;
+	i = 0;
+	str = 0;
+	sort_strings_by_first_char(tab, n);
+	while (tab[i])
+	{
+		str = ft_strjoin_gnl(str, tab[i++]);
+		str = ft_strjoin_gnl(str, "\n");
+	}
+	return (str);
 }

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/22 22:40:32 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 01:19:41 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ void	mod_checker(int *checker);
 int		ft_strlen_gnl(const char *s);
 char	*ft_strjoin_gnl(char *s1, char *s2);
 char	*get_var_name(char *str);
+char	*sorted_tab(char **tab);
 
 //Redirection functions
 void	redir_out_trunc(char *outfile, char **args, t_sh *sh);
