@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parenthesis_check.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 23:04:12 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/22 23:39:14 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/23 02:25:41 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ int	parenthesis_check(char **str)
 	}
 	if (parenthesis < 0)
 	{
-		printf("minishell: parse error near `)'\n");
+		ft_putstr_fd("minishell: parse error near `)'\n", 2);
 		return (1);
 	}
 	else if (parenthesis > 0)
 	{
-		printf("minishell: parse error near `('\n");
+		ft_putstr_fd("minishell: parse error near `('\n", 2);
 		return (1);
 	}
 	return (0);
@@ -77,7 +77,9 @@ int	parenthesis_check3(char **str)
 				return (0);
 			if (sp == -1 || (sp == 0 && str[i + 1][0] == '('))
 			{
-				printf("minishell: parse error near `%s\'\n", str[i + 1]);
+				ft_putstr_fd("minishell: parse error near `", 2);
+				ft_putstr_fd(str[i + 1], 2);
+				ft_putstr_fd("\'\n", 2);
 				return (1);
 			}
 		}
@@ -90,9 +92,9 @@ int	par_check_all(char **str, t_sh *sh)
 {
 	if (parenthesis_check(str))
 		return (sh->last_cmd_st = 1, 1);
-	if (parenthesis_check2(str))
-		return (sh->last_cmd_st = 1, 1);
 	if (parenthesis_check3(str))
+		return (sh->last_cmd_st = 1, 1);
+	if (parenthesis_check2(str))
 		return (sh->last_cmd_st = 1, 1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/23 00:58:49 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 05:01:17 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ char	*get_env(char *str, t_sh *shell)
 void	set_env(t_sh *shell)
 {
 	copy_tab(&shell->env, __environ);
-	shell->variables = (char **)malloc(2 * sizeof(char));
+	shell->variables = (char **)malloc(2 * sizeof(char *));
 	if (!shell->variables)
 		return ;
 	shell->variables[0] = ft_strdup("?=0");

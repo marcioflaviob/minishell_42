@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:17:31 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/22 17:23:54 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 02:26:35 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	pwd(void)
 	dir = get_cwd();
 	if (!dir)
 		return ;
-	printf("%s\n", dir);
+	ft_putstr_fd(dir, 1);
+	ft_putstr_fd("\n", 1);
 }
 
 char	*get_cwd(void)

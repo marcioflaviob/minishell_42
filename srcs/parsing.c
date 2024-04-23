@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 02:00:48 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 04:31:51 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,8 @@ void	arg(t_sh *sh)
 			{
 				dup2(sh->true_stdin, STDIN_FILENO);
 				dup2(sh->true_stdout, STDOUT_FILENO);
-				pipe(sh->pipe);
+				if (pipe(sh->pipe) != 0)
+					(perror("pipe error"), exit(EXIT_FAILURE));;
 				buffer = redir_in_heredoc(sh->args[sh->position + 1]);
 				if (!buffer && g_signal)
 				{
@@ -253,7 +254,8 @@ void	arg(t_sh *sh)
 			{
 				if (ft_equalstr(sh->args[check_sp_afpar(&sh->args[sh->position]) + sh->position], "|") && !sh->pipe_par_bool)
 				{
-					pipe(sh->pipe_par);
+					if (pipe(sh->pipe_par) != 0)
+						(perror("pipe error"), exit(EXIT_FAILURE));;
 					sh->op_pipe = 1;
 					sh->pipe_par_bool = check_sp_afpar(&sh->args[sh->position]) + sh->position;
 				}

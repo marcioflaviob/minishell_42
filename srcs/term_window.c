@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 18:16:49 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 11:27:29 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 02:37:50 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	new_terminal(t_sh *shell, char *buffer)
 	int		permission_fd;
 
 	shell->term_command = (char **)malloc(6 * sizeof(char *));
+	if (!shell->term_command)
+		(ft_putstr_fd("Malloc error new terminal\n", 2), exit(EXIT_FAILURE));
 	shell->term_command[0] = ft_strdup("/usr/bin/gnome-terminal");
 	shell->term_command[1] = ft_strdup("--");
 	shell->term_command[2] = ft_strdup("bash");

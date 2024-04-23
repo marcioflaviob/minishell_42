@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 14:26:14 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/22 22:30:08 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 02:37:14 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	redir_out_trunc_p(char *outfile, char **args, t_sh *sh)
 	sh->fd_output = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (sh->fd_output == -1)
 	{
-		printf("Couldn't open file.");
+		ft_putstr_fd("Couldn't open file\n", 2);
 		return ;
 	}
 	dup2(sh->fd_output, STDOUT_FILENO);
@@ -44,7 +44,7 @@ void	redir_out_trunc(char *outfile, char **args, t_sh *sh)
 	sh->fd_output = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (sh->fd_output == -1)
 	{
-		printf("Couldn't open file.");
+		ft_putstr_fd("Couldn't open file\n", 2);
 		return ;
 	}
 	dup2(sh->fd_output, STDOUT_FILENO);
@@ -69,7 +69,7 @@ void	redir_out_app(char *outfile, char **args, t_sh *sh)
 	sh->fd_output = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (sh->fd_output == -1)
 	{
-		printf("Couldn't open file.");
+		ft_putstr_fd("Couldn't open file\n", 2);
 		return ;
 	}
 	dup2(sh->fd_output, STDOUT_FILENO);
@@ -94,7 +94,7 @@ void	redir_out_app_p(char *outfile, char **args, t_sh *sh)
 	sh->fd_output = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (sh->fd_output == -1)
 	{
-		printf("Couldn't open file.");
+		ft_putstr_fd("Couldn't open file\n", 2);
 		return ;
 	}
 	dup2(sh->fd_output, STDOUT_FILENO);
@@ -135,6 +135,8 @@ char	*redir_in_heredoc(char *delimiter)
 
 	term_config();
 	content = (char *) malloc(sizeof(char));
+	if (!content)
+		(ft_putstr_fd("Malloc error redirect here_doc\n", 2), exit(EXIT_FAILURE));
 	content[0] = 0;
 	line = 1;
 	while (1)
@@ -143,13 +145,17 @@ char	*redir_in_heredoc(char *delimiter)
 		if (g_signal)
 		{
 			free(buffer);
-			printf("^C\n");
+			ft_putstr_fd("^C\n", 1);
 			term_reset();
 			return (NULL);
 		}
 		if (!buffer)
 		{
-			printf("minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", line, delimiter);
+			ft_putstr_fd("minishell: warning: here-document at line", 2);
+			ft_putstr_fd(ft_itoa(line), 2);
+			ft_putstr_fd("delimited by end-of-file (wanted `", 2);
+			ft_putstr_fd(delimiter, 2);
+			ft_putstr_fd("\')\n", 2);
 			break ;
 		}
 		if (ft_strncmp(buffer, delimiter, ft_strlen(delimiter)) == 0 && buffer[ft_strlen(delimiter)] == '\n')

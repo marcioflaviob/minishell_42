@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_replacer.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 17:59:46 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/12 23:13:59 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/23 05:02:59 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@ int	find_variable_index(char **variables, char *name)
 	{
 		tmp = get_substring_b(variables[i], '=');
 		if (ft_equalstr(tmp, name))
-			return (i);
+			return (free(tmp), i);
 		i++;
 	}
+	free(tmp);
 	return (-1);
 }
 

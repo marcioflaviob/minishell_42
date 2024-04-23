@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:40:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 01:40:21 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 05:09:03 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ void	set_sp_bool(t_sh *sh)
 	int	tmp;
 
 	i = 0;
-	result = malloc((tab_len(sh->args) - 1) * sizeof(int));
+	result = (int *)malloc((tab_len(sh->args) - 1) * sizeof(int));
+	if (!result)
+		(ft_putstr_fd("Malloc error getting sp bool\n", 2), exit(EXIT_FAILURE));
 	while (sh->args[i])
 	{
 		tmp = find_sp_str(sh->args[i]);

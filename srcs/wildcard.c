@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:40:39 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/06 22:54:14 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/23 02:52:06 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,8 @@ void segment_fill(t_wc **wc, char *input)
 		i++;
 	}
 	*wc = malloc((seg_count + 2) * sizeof(t_wc));
+	if (!*wc)
+		(ft_putstr_fd("Malloc error tab in segment fill", 2), exit(EXIT_FAILURE));
 	i = 0;
 	j = 0;
 	while (input[i])
@@ -226,6 +228,8 @@ void segment_fill(t_wc **wc, char *input)
 		{
 			x = 0;
 			(*wc)[j].segment = malloc (ft_part_len(input, '*') + 1 * sizeof(char));
+			if (!((*wc)[j].segment))
+				(ft_putstr_fd("Malloc error segment in segment fill", 2), free(*wc) ,exit(EXIT_FAILURE));
 			while (input[i] && (input[i] != '*' || in_quotes))
 			{
 				if (input[i] == '"' || input[i] == '\'')
@@ -250,6 +254,8 @@ void segment_fill(t_wc **wc, char *input)
 			i++;
 			x = 0;
 			(*wc)[j].segment = malloc (ft_part_len(input + 1, '*') + 1 * sizeof(char));
+			if (!((*wc)[j].segment))
+				(ft_putstr_fd("Malloc error segment in segment fill", 2), free(*wc) ,exit(EXIT_FAILURE));
 			while (input[i] && (input[i] != '*' || in_quotes))
 			{
 				if (input[i] == '"' || input[i] == '\'')
@@ -294,6 +300,8 @@ int	wildcard(t_sh *sh)
 	char_pos = ft_int_strchr(sh->args[pos], '*');
 	buffer = ft_strdup("");
 	cmd = malloc(2 * sizeof(char *));
+	if (!cmd)
+		(ft_putstr_fd("Malloc error ls in wildcard", 2) , exit(EXIT_FAILURE));
 	cmd[0] = find_path("ls", sh);
 	cmd[1] = NULL;
 	while (is_quoted(sh->args[pos], char_pos) && char_pos != -1)

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:56:21 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/03/30 17:38:37 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/23 02:34:26 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	print_minishell_art(void)
 
 	i = 0;
 	colors = (char **)malloc(8 * sizeof(char *));
+	if (!colors)
+		(ft_putstr_fd("Malloc error minishell art\n", 2), exit(1));
 	fill_color(colors);
 	fd = open("./assets/minishell_art", O_RDONLY);
 	if (fd == -1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/22 23:57:01 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/23 05:22:43 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	get_input(t_sh *sh)
 	if (buffer && buffer[0])
 		add_history(buffer);
 	sh->args = ft_better_split(buffer);
-	free(buffer);
 	free(prompt);
 	if (par_check_all(sh->args, sh))
 	{
@@ -120,7 +119,7 @@ int	get_random_number(void)
 
 	fd_random = open("/dev/random", O_RDONLY);
 	if (fd_random == -1)
-		return (printf("Couldn't open /dev/random\n"), 50);
+		return (ft_putstr_fd("Couldn't open /dev/random\n", 2), 50);
 	read(fd_random, &random, 1);
 	close(fd_random);
 	if (random < 0)

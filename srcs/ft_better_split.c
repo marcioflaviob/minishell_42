@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_better_split.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:18:13 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/16 19:21:52 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/23 05:12:07 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ char	**ft_better_split(char *s)
 		else
 			j++;
 	}
+	free(s);
 	tab[i] = NULL;
 	return (tab);
 }
