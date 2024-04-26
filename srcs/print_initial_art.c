@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:56:21 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 02:34:26 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 19:51:53 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	print_minishell_art(void)
 		return ;
 	while (1)
 	{
-		buffer = get_next_line(fd);
+		buffer = get_next_line(fd, 0);
 		if (!buffer)
 			break ;
 		write(STDOUT_FILENO, colors[i], ft_strlen_gnl(colors[i]));

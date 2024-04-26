@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 05:16:50 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 20:00:09 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,8 @@ void	exec_cmd(char **args, t_sh *sh)
 					close(sh->fd_input);
 				if (sh->fd_output != -2)
 					close(sh->fd_output);
+				close(sh->true_stdin);
+				close(sh->true_stdout);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
 				exit(0);
@@ -224,6 +226,8 @@ void	exec_cmd(char **args, t_sh *sh)
 							close(sh->fd_input);
 						close(sh->pipe[0]);
 						close(sh->pipe[1]);
+						close(sh->true_stdin);
+						close(sh->true_stdout);
 						cmd = cmd_args(sh, args);
 						execve(cmd[0], cmd, NULL);
 						//cmd didn't execute
@@ -237,6 +241,8 @@ void	exec_cmd(char **args, t_sh *sh)
 					close(sh->fd_input);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
+				close(sh->true_stdin);
+				close(sh->true_stdout);
 				cmd = cmd_args(sh, args);
 				execve(cmd[0], cmd, NULL);
 				//cmd didn't execute
@@ -264,6 +270,8 @@ void	exec_cmd(char **args, t_sh *sh)
 							close(sh->fd_input);
 						close(sh->pipe[0]);
 						close(sh->pipe[1]);
+						close(sh->true_stdin);
+						close(sh->true_stdout);
 						cmd = cmd_args(sh, args);
 						execve(cmd[0], cmd, NULL);
 						//cmd didn't execute
@@ -283,6 +291,8 @@ void	exec_cmd(char **args, t_sh *sh)
 					close(sh->fd_input);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
+				close(sh->true_stdin);
+				close(sh->true_stdout);
 				cmd = cmd_args(sh, args);
 				execve(cmd[0], cmd, NULL);
 				//cmd didn't execute
@@ -308,6 +318,8 @@ void	exec_cmd(char **args, t_sh *sh)
 				}
 				close(sh->pipe[1]);
 				close(sh->pipe[0]);
+				close(sh->true_stdin);
+				close(sh->true_stdout);
 				cmd = cmd_args(sh, args);
 				if (sh->wrong_file != NULL)
 					add_to_tab(&cmd, sh->wrong_file);
@@ -329,6 +341,8 @@ void	exec_cmd(char **args, t_sh *sh)
 					close(sh->fd_output);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
+				close(sh->true_stdin);
+				close(sh->true_stdout);
 				cmd = cmd_args(sh, args);
 				execve(cmd[0], cmd, NULL);
 				//cmd didn't execute
@@ -348,6 +362,8 @@ void	exec_cmd(char **args, t_sh *sh)
 					dup2(sh->fd_output, STDOUT_FILENO);
 				if (sh->fd_output != -2)
 					close(sh->fd_output);
+				close(sh->true_stdin);
+				close(sh->true_stdout);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
 				cmd = cmd_args(sh, args);
@@ -371,6 +387,9 @@ void	exec_cmd(char **args, t_sh *sh)
 			if (sh->fd_output != -2)
 				close(sh->fd_output);
 			close(sh->pipe[0]);
+			close(sh->pipe[1]);
+			close(sh->true_stdin);
+			close(sh->true_stdout);
 			cmd = cmd_args(sh, args);
 			execve(cmd[0], cmd, NULL);
 			//cmd didn't execute
@@ -387,11 +406,47 @@ void	exec_cmd(char **args, t_sh *sh)
 				if (!args[1])
 				{
 					write(1, "exit", ft_strlen("exit"));
+					freetab(sh->env);
+					free(sh->sp_bool);
+					freetab(sh->args);
+					free(sh->current_dir);
+					freetab(sh->variables);
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
+					i = open(sh->emoji_path, O_RDONLY);
+					get_next_line(i, 1);
+					close(i);
+					free(sh->emoji_path);
+					if (sh->op_pipe)
+					{
+						close(sh->pipe_par[0]);
+						close(sh->pipe_par[1]);
+					}
+					close(sh->true_stdin);
+					close(sh->true_stdout);
 					exit(0);
 				}
 				else
 				{
 					write(1, "exit", ft_strlen("exit"));
+					freetab(sh->env);
+					free(sh->sp_bool);
+					freetab(sh->args);
+					free(sh->current_dir);
+					freetab(sh->variables);
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
+					i = open(sh->emoji_path, O_RDONLY);
+					get_next_line(i, 1);
+					close(i);
+					free(sh->emoji_path);
+					if (sh->op_pipe)
+					{
+						close(sh->pipe_par[0]);
+						close(sh->pipe_par[1]);
+					}
+					close(sh->true_stdin);
+					close(sh->true_stdout);
 					exit(ft_atoi(args[1]));
 				}
 				if (ft_equalstr(args[find_sp(args, sh)], "|"))
@@ -825,6 +880,11 @@ void	exec_cmd(char **args, t_sh *sh)
 				write(1, "Quit (core dumped)\n", 19);
 			close(sh->pipe[1]);
 			close(sh->pipe[0]);
+			if (sh->op_pipe)
+			{
+				close(sh->pipe_par[0]);
+				close(sh->pipe_par[1]);
+			}
 			sh->position = tab_len(sh->args) - 1;
 		}
 		else
@@ -841,6 +901,8 @@ void	exec_cmd(char **args, t_sh *sh)
 				else
 				{
 					waitpid(pid, &sh->last_cmd_st, 0);
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
 					if (sh->last_cmd_st != 0)
 						sh->bool_result = 0;
 					else if (sh->last_cmd_st == 0)
@@ -865,6 +927,8 @@ void	exec_cmd(char **args, t_sh *sh)
 				else
 				{
 					waitpid(pid, &sh->last_cmd_st, 0);
+					close(sh->pipe[0]);
+					close(sh->pipe[1]);
 					if (sh->last_cmd_st != 0)
 						sh->bool_result = 0;
 					else if (sh->last_cmd_st == 0)
@@ -878,7 +942,11 @@ void	exec_cmd(char **args, t_sh *sh)
 				}
 			}
 			else if (ft_equalstr(args[find_sp(args, sh)], "<"))
+			{
 				sh->position += find_sp(args, sh) + 1;
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+			}
 			else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 			{
 				close(sh->pipe[1]);
@@ -889,6 +957,10 @@ void	exec_cmd(char **args, t_sh *sh)
 			else if (ft_equalstr(args[find_sp(args, sh)], "||"))
 			{
 				waitpid(pid, &sh->last_cmd_st, 0);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				if (sh->op_pipe)
+					close(sh->pipe_par[0]);
 				if (sh->last_cmd_st != 0)
 				{
 					sh->bool_result = 0;
@@ -907,6 +979,10 @@ void	exec_cmd(char **args, t_sh *sh)
 			else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
 			{
 				waitpid(pid, &sh->last_cmd_st, 0);
+				close(sh->pipe[0]);
+				close(sh->pipe[1]);
+				if (sh->op_pipe)
+					close(sh->pipe_par[0]);
 				if (sh->last_cmd_st != 0)
 				{
 					sh->bool_result = 0;

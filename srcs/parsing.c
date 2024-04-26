@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 04:31:51 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 15:10:54 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,10 @@ void	arg(t_sh *sh)
 		free(buffer);
 		add_env(sh, tmp);
 		free(tmp);
+		freetab(sh->args);
+		free(sh->sp_bool);
+		close(sh->pipe[0]);
+		close(sh->pipe[1]);
 		get_input(sh);
 	}
 	else
@@ -183,6 +187,8 @@ void	arg(t_sh *sh)
 				{
 					close(sh->pipe[0]);
 					close(sh->pipe[1]);
+					freetab(sh->args);
+					free(sh->sp_bool);
 					get_input(sh);
 				}
 				write(sh->pipe[1], buffer, ft_strlen(buffer));
@@ -232,7 +238,7 @@ void	arg(t_sh *sh)
 			{
 				if (sh->bool_result == 0)
 				{
-					while (sh->args[sh->position])
+					while (sh->position < tab_len(sh->args) - 1)
 					{
 						if (sh->args[sh->position][0] == '(')
 							sh->position += go_af_par(&sh->args[sh->position]);

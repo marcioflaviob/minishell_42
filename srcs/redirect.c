@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 14:26:14 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 02:37:14 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 20:24:16 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	redir_out_trunc_p(char *outfile, char **args, t_sh *sh)
 	{
 		while (1)
 		{
-			buffer = get_next_line(STDIN_FILENO);
+			buffer = get_next_line(STDIN_FILENO, 0);
 			if (!buffer)
 				break ;
 			write(1, buffer, ft_strlen(buffer));
@@ -52,7 +52,7 @@ void	redir_out_trunc(char *outfile, char **args, t_sh *sh)
 	{
 		while (1)
 		{
-			buffer = get_next_line(STDIN_FILENO);
+			buffer = get_next_line(STDIN_FILENO, 0);
 			if (!buffer)
 				break ;
 			write(1, buffer, ft_strlen(buffer));
@@ -77,7 +77,7 @@ void	redir_out_app(char *outfile, char **args, t_sh *sh)
 	{
 		while (1)
 		{
-			buffer = get_next_line(STDIN_FILENO);
+			buffer = get_next_line(STDIN_FILENO, 0);
 			if (!buffer)
 				break ;
 			write(1, buffer, ft_strlen(buffer));
@@ -102,7 +102,7 @@ void	redir_out_app_p(char *outfile, char **args, t_sh *sh)
 	{
 		while (1)
 		{
-			buffer = get_next_line(STDIN_FILENO);
+			buffer = get_next_line(STDIN_FILENO, 0);
 			if (!buffer)
 				break ;
 			write(1, buffer, ft_strlen(buffer));
@@ -131,6 +131,7 @@ char	*redir_in_heredoc(char *delimiter)
 {
 	char	*buffer;
 	char	*content;
+	char	*tmp;
 	int		line;
 
 	term_config();
@@ -141,22 +142,28 @@ char	*redir_in_heredoc(char *delimiter)
 	line = 1;
 	while (1)
 	{
-		buffer = get_next_line(STDIN_FILENO);
+		buffer = get_next_line(STDIN_FILENO, 0);
 		if (g_signal)
 		{
+			free(content);
 			free(buffer);
+			get_next_line(STDIN_FILENO, 1);
 			ft_putstr_fd("^C\n", 1);
 			term_reset();
 			return (NULL);
 		}
 		if (!buffer)
 		{
+			get_next_line(STDIN_FILENO, 1);
 			ft_putstr_fd("minishell: warning: here-document at line", 2);
-			ft_putstr_fd(ft_itoa(line), 2);
+			tmp = ft_itoa(line);
+			ft_putstr_fd(tmp, 2);
+			free (tmp);
 			ft_putstr_fd("delimited by end-of-file (wanted `", 2);
 			ft_putstr_fd(delimiter, 2);
 			ft_putstr_fd("\')\n", 2);
-			break ;
+			free(content);
+			return (NULL);
 		}
 		if (ft_strncmp(buffer, delimiter, ft_strlen(delimiter)) == 0 && buffer[ft_strlen(delimiter)] == '\n')
 		{

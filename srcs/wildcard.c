@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:40:39 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 02:52:06 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 19:52:21 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,7 +328,7 @@ int	wildcard(t_sh *sh)
 			close(fd[1]);
 			while (1)
 			{
-				tmp = get_next_line(fd[0]);
+				tmp = get_next_line(fd[0], 0);
 				if (!tmp)
 					break ;
 				buffer = ft_strjoin_gnl(buffer, tmp);

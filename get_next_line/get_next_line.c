@@ -55,9 +55,9 @@ char	*next_line(char *str)
 	if (!str[i])
 		return (free(str), NULL);
 	tmp = (char *)malloc((ft_strlen_tgnl(str) - i + 1) * sizeof(char));
-	i++;
 	if (!tmp)
 		return (0);
+	i++;
 	while (str[i])
 		tmp[y++] = str[i++];
 	return (tmp[y] = 0, free(str), tmp);
@@ -88,11 +88,13 @@ char	*getoneline(char *str)
 	return (line);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, int err)
 {
 	char		*line;
 	static char	*str[4096];
 
+	if (err == 1)
+		return (free(str[fd]), NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0 )
 		return (0);
 	str[fd] = onenewline(fd, str[fd]);

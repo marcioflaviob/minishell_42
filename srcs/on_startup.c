@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/23 05:22:43 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 19:54:51 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	get_input(t_sh *sh)
 {
 	char	*buffer;
 	char	*prompt;
+	int	fd;
 
 	if (g_signal == 2)
 	{
@@ -54,18 +55,24 @@ void	get_input(t_sh *sh)
 	prompt = get_prompt(sh);
 	write(STDOUT_FILENO, "\033[s", 3);
 	buffer = readline(prompt);
+	free(prompt);
 	if (!buffer)
 	{
-		if (buffer)
-			free(buffer);
-		free(prompt);
+		fd = open(sh->emoji_path, O_RDONLY);
+		get_next_line(fd, 1);
+		freetab(sh->env);
+		free(sh->emoji_path);
+		freetab(sh->variables);
+		write(1, "exit", 4);
+		close(sh->true_stdin);
+		close(sh->true_stdout);
+		close(fd);
 		free(sh->current_dir);
 		exit(0);
 	}
 	if (buffer && buffer[0])
 		add_history(buffer);
 	sh->args = ft_better_split(buffer);
-	free(prompt);
 	if (par_check_all(sh->args, sh))
 	{
 		buffer = ft_itoa(sh->last_cmd_st);
@@ -73,6 +80,7 @@ void	get_input(t_sh *sh)
 		free(buffer);
 		add_env(sh, prompt);
 		free(prompt);
+		freetab(sh->args);
 		get_input(sh);
 	}
 	while (wildcard(sh))
@@ -80,8 +88,6 @@ void	get_input(t_sh *sh)
 	set_sp_bool(sh);
 	replace_var(sh, &sh->args);
 	quotes_removal(&sh->args);
-	//dollar_sign_dealer(&sh->args, sh);
-	//builtin_dealer(sh, buffer);
 	arg(sh);
 	return ;
 }
@@ -102,7 +108,7 @@ char	*get_a_line(char *filename, int line_number)
 		return (perror("Error opening file"), NULL);
 	while (current_line_number != line_number)
 	{
-		line = get_next_line(fd);
+		line = get_next_line(fd, 0);
 		line[ft_strlen_gnl(line) - 1] = ' ';
 		current_line_number++;
 		if (current_line_number != line_number)

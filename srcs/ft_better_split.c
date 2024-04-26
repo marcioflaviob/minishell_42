@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:18:13 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/23 05:12:07 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 14:13:22 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static int	initial_config(int *i, int *j, int size, char ***tab)
 {
 	*i = 0;
 	*j = 0;
-	*tab = (char **) malloc(size * sizeof(char *));
+	*tab = (char **)malloc(size * sizeof(char *));
 	if (*tab == NULL)
 		return (0);
 	else
@@ -120,7 +120,6 @@ char	**ft_better_split(char *s)
 	char	**tab;
 
 	space_adder(&s);
-	// printf("args counter: %d\n", count_args(s));
 	if (!s || (initial_config(&i, &j, (count_args(s) + 1), &tab) == 0))
 		return (NULL);
 	while (i < count_args(s))

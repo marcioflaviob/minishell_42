@@ -21,7 +21,7 @@
 # endif
 
 int		ft_strlen_tgnl(char *s);
-char	*get_next_line(int fd);
+char	*get_next_line(int fd, int err);
 char	*ft_strchr_tgnl(const char *s, int c);
 char	*ft_strjoin_tgnl(char *s1, char *s2);
 

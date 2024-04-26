@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/23 02:02:37 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 19:35:40 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	dollar_sign_dealer(char ***commands, t_sh *sh);
 void	quotes_removal_helper(char **str);
 void	quotes_removal(char ***cmds);
 void	new_terminal(t_sh *shell, char *buffer);
-
+void	initialize(int *i, int *j);
 //Utils
 int		tab_len(char **tab);
 char	**ft_better_split(char *s);

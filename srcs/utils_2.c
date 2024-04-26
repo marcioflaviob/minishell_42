@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:23:01 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/23 05:25:48 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 13:54:42 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void	copy_tab(char ***taker, char **giver)
 	i = 0;
 	while (giver[i])
 	{
-		(*taker)[i] = ft_strdup(giver[i]);
+			(*taker)[i] = ft_strdup(giver[i]);
 		i++;
 	}
 	(*taker)[i] = NULL;
