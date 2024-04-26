@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/26 20:00:09 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/26 22:06:38 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,8 +198,6 @@ void	exec_cmd(char **args, t_sh *sh)
 					close(sh->fd_input);
 				if (sh->fd_output != -2)
 					close(sh->fd_output);
-				close(sh->true_stdin);
-				close(sh->true_stdout);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
 				exit(0);
@@ -226,8 +224,6 @@ void	exec_cmd(char **args, t_sh *sh)
 							close(sh->fd_input);
 						close(sh->pipe[0]);
 						close(sh->pipe[1]);
-						close(sh->true_stdin);
-						close(sh->true_stdout);
 						cmd = cmd_args(sh, args);
 						execve(cmd[0], cmd, NULL);
 						//cmd didn't execute
@@ -270,8 +266,6 @@ void	exec_cmd(char **args, t_sh *sh)
 							close(sh->fd_input);
 						close(sh->pipe[0]);
 						close(sh->pipe[1]);
-						close(sh->true_stdin);
-						close(sh->true_stdout);
 						cmd = cmd_args(sh, args);
 						execve(cmd[0], cmd, NULL);
 						//cmd didn't execute
@@ -291,8 +285,6 @@ void	exec_cmd(char **args, t_sh *sh)
 					close(sh->fd_input);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
-				close(sh->true_stdin);
-				close(sh->true_stdout);
 				cmd = cmd_args(sh, args);
 				execve(cmd[0], cmd, NULL);
 				//cmd didn't execute
@@ -318,8 +310,6 @@ void	exec_cmd(char **args, t_sh *sh)
 				}
 				close(sh->pipe[1]);
 				close(sh->pipe[0]);
-				close(sh->true_stdin);
-				close(sh->true_stdout);
 				cmd = cmd_args(sh, args);
 				if (sh->wrong_file != NULL)
 					add_to_tab(&cmd, sh->wrong_file);
@@ -341,8 +331,6 @@ void	exec_cmd(char **args, t_sh *sh)
 					close(sh->fd_output);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
-				close(sh->true_stdin);
-				close(sh->true_stdout);
 				cmd = cmd_args(sh, args);
 				execve(cmd[0], cmd, NULL);
 				//cmd didn't execute
@@ -959,8 +947,6 @@ void	exec_cmd(char **args, t_sh *sh)
 				waitpid(pid, &sh->last_cmd_st, 0);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
-				if (sh->op_pipe)
-					close(sh->pipe_par[0]);
 				if (sh->last_cmd_st != 0)
 				{
 					sh->bool_result = 0;
@@ -981,8 +967,6 @@ void	exec_cmd(char **args, t_sh *sh)
 				waitpid(pid, &sh->last_cmd_st, 0);
 				close(sh->pipe[0]);
 				close(sh->pipe[1]);
-				if (sh->op_pipe)
-					close(sh->pipe_par[0]);
 				if (sh->last_cmd_st != 0)
 				{
 					sh->bool_result = 0;

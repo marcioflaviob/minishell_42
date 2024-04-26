@@ -34,7 +34,10 @@ char	*onenewline(int fd, char *str)
 		if (bytes == -1)
 			return (free(buff), NULL);
 		if (bytes == 0 && i == 0)
+		{
+			free(str);
 			return (free(buff), NULL);
+		}
 		buff[bytes] = 0;
 		str = ft_strjoin_tgnl(str, buff);
 		i++;
