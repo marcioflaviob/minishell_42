@@ -6,13 +6,11 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 00:27:17 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/06 22:39:29 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/04/28 19:03:24 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-//TODO Fix quote removal
 
 int	qrh_init(int *i, int *j, char *str, char **result)
 {
@@ -20,7 +18,7 @@ int	qrh_init(int *i, int *j, char *str, char **result)
 	*j = 0;
 	*result = malloc(ft_strlen(str) + 1);
 	if (!(*result))
-		return -1;
+		return (-1);
 	return (0);
 }
 
@@ -65,38 +63,6 @@ void	quotes_removal_helper(char **str)
 	(free(*str), *str = result);
 }
 
-
-// void	quotes_removal_helper(char **str)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while ((*str)[i])
-// 	{
-// 		if ((*str)[i] == '\'')
-// 		{
-// 			if (is_around_squotes(*str, i))
-// 			{
-// 				ft_strerase(str, i, 1);
-// 				while ((*str)[i++] != '\'')
-// 					;
-// 				ft_strerase(str, i, 1);
-// 			}
-// 		}
-// 		if ((*str)[i] == '\"')
-// 		{
-// 			if (is_around_dquotes(*str, i))
-// 			{
-// 				ft_strerase(str, i, 1);
-// 				while ((*str)[i++] != '\"')
-// 					;
-// 				ft_strerase(str, i, 1);
-// 			}
-// 		}
-// 		i++;
-// 	}
-// }
-
 void	quotes_removal(char ***cmds)
 {
 	int	i;
@@ -108,4 +74,3 @@ void	quotes_removal(char ***cmds)
 		i++;
 	}
 }
-//ls | cat file1 && cat M*k* *READ* *i

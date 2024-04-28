@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:54:50 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/23 02:45:50 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 18:38:57 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,10 @@ void	print_tab(char **tab)
 
 	i = 0;
 	while (tab[i])
-		(ft_putstr_fd(tab[i++], 1), ft_putstr_fd("\n", 1));
+	{
+		ft_putstr_fd(tab[i++], 1);
+		ft_putstr_fd("\n", 1);
+	}
 }
 
 char	*get_curr_dir(char *path)
@@ -83,7 +86,8 @@ char	*get_curr_dir(char *path)
 	i++;
 	curr_dir = (char *)malloc(y * sizeof(char));
 	if (!curr_dir)
-		(ft_putstr_fd("Malloc error getting the current dir\n", 2), exit(EXIT_FAILURE));
+		(ft_putstr_fd("Malloc error getting the current dir\n", 2),
+			exit(EXIT_FAILURE));
 	y = 0;
 	while (path[i])
 		curr_dir[y++] = path[i++];

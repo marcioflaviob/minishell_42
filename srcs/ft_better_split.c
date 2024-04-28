@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_better_split.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:18:13 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/26 14:13:22 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 19:06:08 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	count_args(char const *str)
+int	count_args(char const *str)
 {
 	int	i;
 	int	args;
@@ -42,7 +42,8 @@ static int	count_args(char const *str)
 			else if (!quote_flag)
 			{
 				args++;
-				while ((str[i] != 0) && (str[i] != ' ' && str[i] != '(' && str[i] != ')') && !(str[i] == '\'' || str[i] == '"'))
+				while ((str[i] != 0) && (str[i] != ' ' && str[i] != '('
+						&& str[i] != ')') && !(str[i] == '\'' || str[i] == '"'))
 					i++;
 			}
 			else
@@ -145,7 +146,6 @@ char	**ft_better_split(char *s)
 		else
 			j++;
 	}
-	free(s);
-	tab[i] = NULL;
+	(free(s), tab[i] = NULL);
 	return (tab);
 }

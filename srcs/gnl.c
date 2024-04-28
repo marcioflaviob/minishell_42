@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   gnl.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 12:13:20 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/06 16:29:44 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 19:04:59 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+// The only purpose of this function is so we it doesn't get confusing
+// because it is not actually getting a next line
+void	clean_gnl(int fd)
+{
+	get_next_line(fd, 1);
+}
 
 int	ft_strlen_gnl(const char *s)
 {

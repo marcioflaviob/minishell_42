@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_4.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:40:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 05:09:03 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 18:37:44 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,9 @@ void	space_adder(char **str)
 			i++;
 	}
 }
-void	swap(char **a, char **b) {
 
+void	swap(char **a, char **b)
+{
 	char	*tmp;
 
 	tmp = *a;
@@ -121,22 +122,4 @@ void	sort_strings_by_first_char(char **arr, int n)
 		j = 0;
 		i++;
 	}
-}
-
-char	*sorted_tab(char **tab)
-{
-	int		n;
-	int		i;
-	char	*str;
-
-	n = tab_len(tab) - 1;
-	i = 0;
-	str = 0;
-	sort_strings_by_first_char(tab, n);
-	while (tab[i])
-	{
-		str = ft_strjoin_gnl(str, tab[i++]);
-		str = ft_strjoin_gnl(str, "\n");
-	}
-	return (str);
 }

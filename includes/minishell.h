@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/26 19:35:40 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 19:02:01 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int		ft_strlen_gnl(const char *s);
 char	*ft_strjoin_gnl(char *s1, char *s2);
 char	*get_var_name(char *str);
 char	*sorted_tab(char **tab);
+void	sort_strings_by_first_char(char **arr, int n);
 
 //Redirection functions
 void	redir_out_trunc(char *outfile, char **args, t_sh *sh);
@@ -124,6 +125,9 @@ void	redir_out_trunc_p(char *outfile, char **args, t_sh *sh);
 void	redir_out_app_p(char *outfile, char **args, t_sh *sh);
 void	redir_in(char *infile, char **args, t_sh *sh);
 char	*redir_in_heredoc(char *delimiter);
+int		ft_tabchr(char **tab, char c);
+char	*ft_strstr_wc(char *str, char *to_find);
+void	clean_gnl(int fd);
 
 //env functions
 char	*get_env(char *str, t_sh *shell);
@@ -134,12 +138,12 @@ void	add_env(t_sh *sh, char *variable);
 void	arg(t_sh *sh);
 int		find_sp(char **args, t_sh *sh);
 int		check_sp_afpar(char **args);
-int	find_sp_par(char **args, t_sh *sh);
-int	par_check_all(char **str, t_sh *sh);
+int		find_sp_par(char **args, t_sh *sh);
+int		par_check_all(char **str, t_sh *sh);
 
 //Built-in functions
 void	pwd(void);
-int	cd(t_sh *sh, char *folder);
+int		cd(t_sh *sh, char *folder);
 char	*echo(char **args, t_sh *sh);
 void	export(t_sh *shell, char **str);
 void	un_set(t_sh *shell, char **str);

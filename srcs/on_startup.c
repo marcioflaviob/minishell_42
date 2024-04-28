@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/26 19:54:51 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 19:04:29 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	get_input(t_sh *sh)
 {
 	char	*buffer;
 	char	*prompt;
-	int	fd;
+	int		fd;
 
 	if (g_signal == 2)
 	{

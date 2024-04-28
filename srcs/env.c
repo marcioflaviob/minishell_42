@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/23 05:01:17 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 19:09:25 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ void	export(t_sh *shell, char **str)
 			if (ft_equalstr(str1, str2) == 1)
 			{
 				if (!ft_strrchr(str[y], '='))
-					replace = 1;	
+					replace = 1;
 				else
 				{
 					free(shell->env[i]);
 					shell->env[i] = ft_strdup(str[y]);
-					replace = 1;	
+					replace = 1;
 				}
 			}
 			i++;
@@ -79,8 +79,7 @@ char	*get_env(char *str, t_sh *shell)
 		tmp = get_substring_b(shell->variables[y], '=');
 		if (ft_equalstr(tmp, str) == 1)
 		{
-			free(tmp);
-			tmp = get_substring_a(shell->variables[y], '=');
+			(free(tmp), tmp = get_substring_a(shell->variables[y], '='));
 			return (tmp);
 		}
 		y++;
@@ -92,12 +91,10 @@ char	*get_env(char *str, t_sh *shell)
 			tmp = get_substring_b(shell->env[i], '=');
 			if (ft_equalstr(tmp, str) == 1)
 			{
-				free(tmp);
-				tmp = get_substring_a(shell->env[i], '=');
+				(free(tmp), tmp = get_substring_a(shell->env[i], '='));
 				return (tmp);
 			}
-			free(tmp);
-			i++;
+			(free(tmp), i++);
 		}
 	}
 	return (NULL);
@@ -133,16 +130,13 @@ void	un_set(t_sh *shell, char **str)
 			tmp_subchar = get_substring_b(shell->env[i], '=');
 			if (ft_equalstr(tmp_subchar, str[y]) == 1)
 			{
-				free(tmp_subchar);
-				rm_tab_line(&shell->env, shell->env[i]);
+				(free(tmp_subchar), rm_tab_line(&shell->env, shell->env[i]));
 				break ;
 			}
-			free(tmp_subchar);
-			i++;
+			(free(tmp_subchar), i++);
 		}
 		y++;
 	}
-	return ;
 }
 
 void	env(t_sh *shell)

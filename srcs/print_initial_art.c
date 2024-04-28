@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_initial_art.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:56:21 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/26 19:51:53 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 19:03:57 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,7 @@ void	print_minishell_art(void)
 		i++;
 		free(buffer);
 	}
-	freetab(colors);
-	write(1, "\n\n\n", 3);
-	close(fd);
+	(freetab(colors), write(1, "\n\n\n", 3), close(fd));
 }
 
 void	fill_color(char **color)

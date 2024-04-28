@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:23:01 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/26 13:54:42 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 18:40:20 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,15 +116,14 @@ void	rm_tab_line(char ***tab, char *line)
 		{
 			tmp_tab = (char **)malloc((tab_len(*tab) - 1) * sizeof(char *));
 			if (!tmp_tab)
-				(ft_putstr_fd("Malloc error rm_tab_line\n", 2), exit(EXIT_FAILURE));
+				(ft_putstr_fd("Malloc error rm_tab_line\n", 2),
+					exit(EXIT_FAILURE));
 			while (++y < i)
 				tmp_tab[y] = ft_strdup((*tab)[y]);
 			while ((*tab)[++y])
 				tmp_tab[y - 1] = ft_strdup((*tab)[y]);
 			tmp_tab[y - 1] = NULL;
-			freetab(*tab);
-			copy_tab(tab, tmp_tab);
-			freetab(tmp_tab);
+			(freetab(*tab), copy_tab(tab, tmp_tab), freetab(tmp_tab));
 			break ;
 		}
 		i++;
@@ -149,49 +148,4 @@ void	copy_tab(char ***taker, char **giver)
 		i++;
 	}
 	(*taker)[i] = NULL;
-}
-
-char	*get_substring_b(char *str, char c)
-{
-	int		i;
-	char	*substr;
-
-	i = 0;
-	while (str[i] != c)
-		i++;
-	substr = (char *)malloc((i + 1) * sizeof(char));
-	if (!substr)
-		(ft_putstr_fd("Malloc error getting substring\n", 2), exit(EXIT_FAILURE));
-	i = 0;
-	while (str[i] != c)
-	{
-		substr[i] = str[i];
-		i++;
-	}
-	substr[i] = 0;
-	return (substr);
-}
-
-char	*get_substring_a(char *str, char c)
-{
-	int		i;
-	int		y;
-	char	*substr;
-
-	i = ft_strlen(str) - 1;
-	y = 0;
-	while (str[i] != c)
-	{
-		y++;
-		i--;
-	}
-	i++;
-	substr = (char *)malloc((y + 1) * sizeof(char));
-	if (!substr)
-		(ft_putstr_fd("Malloc error getting substring\n", 2), exit(EXIT_FAILURE));
-	y = 0;
-	while (str[i])
-		substr[y++] = str[i++];
-	substr[y] = 0;
-	return (substr);
 }

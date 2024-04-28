@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 23:24:42 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/22 22:40:59 by trimize          ###   ########.fr       */
+/*   Updated: 2024/04/28 19:09:47 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 char	*echo(char **args, t_sh *sh)
 {
-	int	i;
-	int	y;
+	int		i;
+	int		y;
 	char	*str;
 
 	i = 1;
