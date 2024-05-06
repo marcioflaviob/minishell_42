@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   term_window.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 18:16:49 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/23 02:37:50 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/06 17:28:21 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	new_terminal(t_sh *shell, char *buffer)
 {
 	pid_t	pid;
-	int		permission_fd;
+	int		perm_fd;
 
 	shell->term_command = (char **)malloc(6 * sizeof(char *));
 	if (!shell->term_command)
@@ -31,9 +31,8 @@ void	new_terminal(t_sh *shell, char *buffer)
 	{
 		if (buffer[15] == '1')
 		{
-			permission_fd = open("./assets/permission", O_RDWR | O_TRUNC);
-			write(permission_fd, "open_terminal =0", 16);
-			(close(permission_fd));
+			perm_fd = open("./assets/permission", O_RDWR | O_TRUNC);
+			(write(perm_fd, "open_terminal =0", 16), close(perm_fd));
 			execve("/usr/bin/gnome-terminal", shell->term_command, shell->env);
 			(free(shell->env), free(shell->term_command));
 		}

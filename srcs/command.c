@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/26 22:06:38 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/06 15:16:15 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -897,7 +897,7 @@ void	exec_cmd(char **args, t_sh *sh)
 						sh->bool_result = 1;
 					if (sh->position + find_sp(args, sh) == sh->out_par)
 						(close(sh->fd_output), sh->out_par = 0);
-					if (find_sp(&args[find_sp(args, sh) + 2], sh) == 0)
+					if (find_sp(&args[2], sh) == 0)
 						sh->position = tab_len(sh->args) - 1;
 					else
 						sh->position += find_sp(args, sh) + 2;
@@ -923,7 +923,7 @@ void	exec_cmd(char **args, t_sh *sh)
 						sh->bool_result = 1;
 					if (sh->position + find_sp(args, sh) == sh->out_par)
 						(close(sh->fd_output), sh->out_par = 0);
-					if (find_sp(&args[find_sp(args, sh) + 2], sh) == 0)
+					if (find_sp(&args[2], sh) == 0)
 						sh->position = tab_len(sh->args) - 1;
 					else			
 						sh->position += find_sp(args, sh) + 2;

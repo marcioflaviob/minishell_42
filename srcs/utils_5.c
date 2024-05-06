@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 18:37:46 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/28 18:39:25 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/06 17:22:34 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,33 @@ char	*get_substring_a(char *str, char c)
 		substr[y++] = str[i++];
 	substr[y] = 0;
 	return (substr);
+}
+
+void	swap(char **a, char **b)
+{
+	char	*tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+void	sort_strings_by_first_char(char **arr, int n)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (i < n - 1)
+	{
+		while (j < n - i - 1)
+		{
+			if (arr[j][0] > arr[j + 1][0])
+				swap(&arr[j], &arr[j + 1]);
+			j++;
+		}
+		j = 0;
+		i++;
+	}
 }

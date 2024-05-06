@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/28 19:02:01 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/06 18:05:42 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,44 @@ extern int		g_signal;
 
 typedef struct s_wc {
 	char	*segment;
+	char	*found_position;
+	char	*current_position;
 	int		pos;
 }	t_wc;
 
+typedef struct s_segfill {
+	int		i;
+	int		j;
+	int		x;
+	int		seg_count;
+	int		in_quotes;
+	char	quote_char;
+}	t_segfill;
+
+typedef struct s_segcheck {
+	int		fd[2];
+	int		i;
+	int		pos;
+	int		char_pos;
+	pid_t	pid;
+	char	**result;
+	char	*buffer;
+	char	*tmp;
+	char	**cmd;
+	t_wc	*wc;
+}	t_segcheck;
+
+// typedef struct s_segment_check {
+// 	char	*str;
+// 	t_wc	*wc;
+// 	int		j;
+// 	int		pass;
+// 	char	*current_position;
+// }	t_segment_check;
+
 typedef struct s_sh {
+	int		echo_i;
+	int		echo_y;
 	int		pipe[2];
 	int		pipe_par[2];
 	int		inside_par;
@@ -84,6 +118,9 @@ void	fill_color(char **color);
 char	*find_path(char *command, t_sh *sh);
 void	freetab(char **tab);
 char	*get_cwd(void);
+void	segment_fill_2(char *input, t_segfill *s);
+void	segment_fill(t_wc **wc, char *input);
+void	wildcard_finder(char ***tab, t_wc *wc);
 int		get_type(char *path);
 char	*get_curr_dir(char *path);
 //void	builtin_dealer(t_sh *sh, char *cmd);
@@ -110,6 +147,7 @@ void	copy_tab(char ***taker, char **giver);
 char	*get_substring_b(char *str, char c);
 char	*get_substring_a(char *str, char c);
 void	rm_tab_line(char ***tab, char *line);
+int		ft_part_len(char *str, char c);
 void	print_tab(char **tab);
 void	mod_checker(int *checker);
 int		ft_strlen_gnl(const char *s);

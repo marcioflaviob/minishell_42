@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/28 19:04:29 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/06 17:35:40 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,54 @@ char	*get_prompt(t_sh *sh)
 	return (random_line);
 }
 
+void	buffer_dealer(t_sh *sh, char **buffer, char *prompt)
+{
+	int	fd;
+
+	*buffer = readline(prompt);
+	free(prompt);
+	if (!*buffer)
+	{
+		fd = open(sh->emoji_path, O_RDONLY);
+		get_next_line(fd, 1);
+		freetab(sh->env);
+		free(sh->emoji_path);
+		freetab(sh->variables);
+		write(1, "exit", 4);
+		close(sh->true_stdin);
+		close(sh->true_stdout);
+		close(fd);
+		free(sh->current_dir);
+		exit(0);
+	}
+	if (*buffer && *buffer[0])
+		add_history(*buffer);
+	sh->args = ft_better_split(*buffer);
+}
+
+void	checkers(t_sh *sh, char **buffer, char **prompt)
+{
+	if (par_check_all(sh->args, sh))
+	{
+		*buffer = ft_itoa(sh->last_cmd_st);
+		*prompt = ft_strjoin("?=", *buffer);
+		free(*buffer);
+		add_env(sh, *prompt);
+		free(*prompt);
+		freetab(sh->args);
+		get_input(sh);
+	}
+	while (wildcard(sh))
+		;
+	set_sp_bool(sh);
+	replace_var(sh, &sh->args);
+	quotes_removal(&sh->args);
+}
+
 void	get_input(t_sh *sh)
 {
 	char	*buffer;
 	char	*prompt;
-	int		fd;
 
 	if (g_signal == 2)
 	{
@@ -54,40 +97,8 @@ void	get_input(t_sh *sh)
 	waitpid(-1, &sh->last_cmd_st, 0);
 	prompt = get_prompt(sh);
 	write(STDOUT_FILENO, "\033[s", 3);
-	buffer = readline(prompt);
-	free(prompt);
-	if (!buffer)
-	{
-		fd = open(sh->emoji_path, O_RDONLY);
-		get_next_line(fd, 1);
-		freetab(sh->env);
-		free(sh->emoji_path);
-		freetab(sh->variables);
-		write(1, "exit", 4);
-		close(sh->true_stdin);
-		close(sh->true_stdout);
-		close(fd);
-		free(sh->current_dir);
-		exit(0);
-	}
-	if (buffer && buffer[0])
-		add_history(buffer);
-	sh->args = ft_better_split(buffer);
-	if (par_check_all(sh->args, sh))
-	{
-		buffer = ft_itoa(sh->last_cmd_st);
-		prompt = ft_strjoin("?=", buffer);
-		free(buffer);
-		add_env(sh, prompt);
-		free(prompt);
-		freetab(sh->args);
-		get_input(sh);
-	}
-	while (wildcard(sh))
-		;
-	set_sp_bool(sh);
-	replace_var(sh, &sh->args);
-	quotes_removal(&sh->args);
+	buffer_dealer(sh, &buffer, prompt);
+	checkers(sh, &buffer, &prompt);
 	arg(sh);
 	return ;
 }
@@ -116,22 +127,4 @@ char	*get_a_line(char *filename, int line_number)
 	}
 	close(fd);
 	return (line);
-}
-
-int	get_random_number(void)
-{
-	int		fd_random;
-	char	random;
-
-	fd_random = open("/dev/random", O_RDONLY);
-	if (fd_random == -1)
-		return (ft_putstr_fd("Couldn't open /dev/random\n", 2), 50);
-	read(fd_random, &random, 1);
-	close(fd_random);
-	if (random < 0)
-		random *= -1;
-	random = random % 127;
-	if (random <= 0)
-		random = 1;
-	return (random);
 }

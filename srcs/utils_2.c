@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:23:01 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/28 18:40:20 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/06 17:27:18 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,30 @@ void	add_to_tab_pos(char ***tab, char *str, int pos)
 	*tab = tmp;
 }
 
+char	**add_to_tab_helper(int *i, int *len, int *allocated, char ***tab)
+{
+	char	**tmp;
+
+	*i = 0;
+	if (!(*tab))
+	{
+		*len = 2;
+		*allocated = 0;
+	}
+	else
+	{
+		*allocated = 1;
+		while ((*tab)[*i])
+			(*i)++;
+		*len = *i + 2;
+	}
+	tmp = (char **)malloc(*len * sizeof(char *));
+	if (!tmp)
+		(ft_putstr_fd("Malloc error add to tab\n", 2), exit(EXIT_FAILURE));
+	*i = 0;
+	return (tmp);
+}
+
 void	add_to_tab(char ***tab, char *str)
 {
 	int		i;
@@ -70,23 +94,7 @@ void	add_to_tab(char ***tab, char *str)
 	int		len;
 	char	**tmp;
 
-	i = 0;
-	if (!(*tab))
-	{
-		len = 2;
-		allocated = 0;
-	}
-	else
-	{
-		allocated = 1;
-		while ((*tab)[i])
-			i++;
-		len = i + 2;
-	}
-	tmp = (char **)malloc(len * sizeof(char *));
-	if (!tmp)
-		(ft_putstr_fd("Malloc error add to tab\n", 2), exit(EXIT_FAILURE));
-	i = 0;
+	tmp = add_to_tab_helper(&i, &len, &allocated, tab);
 	if (allocated == 1)
 	{
 		while ((*tab)[i])
@@ -129,23 +137,4 @@ void	rm_tab_line(char ***tab, char *line)
 		i++;
 	}
 	return ;
-}
-
-void	copy_tab(char ***taker, char **giver)
-{
-	int	i;
-
-	i = 0;
-	while (giver[i])
-		i++;
-	*taker = (char **)malloc((i + 1) * sizeof(char *));
-	if (!*taker)
-		(ft_putstr_fd("Malloc error copying tab\n", 2), exit(EXIT_FAILURE));
-	i = 0;
-	while (giver[i])
-	{
-			(*taker)[i] = ft_strdup(giver[i]);
-		i++;
-	}
-	(*taker)[i] = NULL;
 }

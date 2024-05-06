@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:40:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/28 18:37:44 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/06 17:22:26 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,18 @@ int	is_quoted(char *str, int i)
 	return (0);
 }
 
+void	sa_add(char **str, int *i)
+{
+	*str = ft_stradd(*str, (*i)++, " ");
+	*str = ft_stradd(*str, ++(*i), " ");
+}
 
+void	sa_add_extra(char **str, int *i)
+{
+	*str = ft_stradd(*str, (*i)++, " ");
+	(*i)++;
+	*str = ft_stradd(*str, ++(*i), " ");
+}
 
 void	space_adder(char **str)
 {
@@ -52,74 +63,20 @@ void	space_adder(char **str)
 		if (is_quoted(*str, i))
 			i++;
 		else if ((*str)[i] == '>' && (*str)[i + 1] && (*str)[i + 1] != '>')
-		{
-			*str = ft_stradd(*str, i++, " ");
-			*str = ft_stradd(*str, ++i, " ");
-		}
+			sa_add(str, &i);
 		else if ((*str)[i] == '<' && (*str)[i + 1] && (*str)[i + 1] != '<')
-		{
-			*str = ft_stradd(*str, i++, " ");
-			*str = ft_stradd(*str, ++i, " ");
-		}
+			sa_add(str, &i);
 		else if ((*str)[i] == '|' && (*str)[i + 1] && (*str)[i + 1] != '|')
-		{
-			*str = ft_stradd(*str, i++, " ");
-			*str = ft_stradd(*str, ++i, " ");
-		}
+			sa_add(str, &i);
 		else if ((*str)[i] == '>' && (*str)[i + 1] && (*str)[i + 1] == '>')
-		{
-			*str = ft_stradd(*str, i++, " ");
-			i++;
-			*str = ft_stradd(*str, ++i, " ");
-		}
+			sa_add_extra(str, &i);
 		else if ((*str)[i] == '<' && (*str)[i + 1] && (*str)[i + 1] == '<')
-		{
-			*str = ft_stradd(*str, i++, " ");
-			i++;
-			*str = ft_stradd(*str, ++i, " ");
-		}
+			sa_add_extra(str, &i);
 		else if ((*str)[i] == '|' && (*str)[i + 1] && (*str)[i + 1] == '|')
-		{
-			*str = ft_stradd(*str, i++, " ");
-			i++;
-			*str = ft_stradd(*str, ++i, " ");
-		}
+			sa_add_extra(str, &i);
 		else if ((*str)[i] == '&' && (*str)[i + 1] && (*str)[i + 1] == '&')
-		{
-			*str = ft_stradd(*str, i++, " ");
-			i++;
-			*str = ft_stradd(*str, ++i, " ");
-		}
+			sa_add_extra(str, &i);
 		else
 			i++;
-	}
-}
-
-void	swap(char **a, char **b)
-{
-	char	*tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
-
-void	sort_strings_by_first_char(char **arr, int n)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (i < n - 1)
-	{
-		while (j < n - i - 1)
-		{
-			if (arr[j][0] > arr[j + 1][0])
-				swap(&arr[j], &arr[j + 1]);
-			j++;
-		}
-		j = 0;
-		i++;
 	}
 }

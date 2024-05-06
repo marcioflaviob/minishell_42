@@ -6,47 +6,47 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 23:24:42 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/28 19:09:47 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/06 18:06:09 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+void	echo_helper(t_sh *sh, char **str, char **args)
+{
+	if (find_sp_par(&args[0], sh))
+		sh->echo_y = find_sp_par(&args[0], sh);
+	else
+		sh->echo_y = tab_len(args) - 1;
+	while (sh->echo_i < sh->echo_y)
+	{
+		*str = ft_strjoin_gnl(*str, args[sh->echo_i++]);
+		if (args[sh->echo_i])
+			*str = ft_strjoin_gnl(*str, " ");
+	}
+}
+
 char	*echo(char **args, t_sh *sh)
 {
-	int		i;
-	int		y;
 	char	*str;
 
-	i = 1;
+	sh->echo_i = 1;
 	str = 0;
-	if (!args[i])
+	if (!args[sh->echo_i])
 		return (str = ft_strjoin_gnl(str, "\n"), str);
-	else if (ft_equalstr(args[i++], "-n"))
-	{
-		if (find_sp_par(&args[0], sh))
-			y = find_sp_par(&args[0], sh);
-		else
-			y = tab_len(args) - 1;
-		while (i < y)
-		{
-			str = ft_strjoin_gnl(str, args[i++]);
-			if (args[i])
-				str = ft_strjoin_gnl(str, " ");
-		}
-		return (str);
-	}
+	else if (ft_equalstr(args[sh->echo_i++], "-n"))
+		return (echo_helper(sh, &str, args), str);
 	else
 	{
-		i = 1;
+		sh->echo_i = 1;
 		if (find_sp_par(&args[0], sh))
-			y = find_sp_par(&args[0], sh);
+			sh->echo_y = find_sp_par(&args[0], sh);
 		else
-			y = tab_len(args) - 1;
-		while (i < y)
+			sh->echo_y = tab_len(args) - 1;
+		while (sh->echo_i < sh->echo_y)
 		{
-			str = ft_strjoin_gnl(str, args[i++]);
-			if (args[i])
+			str = ft_strjoin_gnl(str, args[sh->echo_i++]);
+			if (args[sh->echo_i])
 				str = ft_strjoin_gnl(str, " ");
 		}
 		str = ft_strjoin_gnl(str, "\n");
