@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 12:41:46 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 04:49:45 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 19:25:02 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,7 @@
 
 void	ctrl_c_handler(int signum)
 {
-	// struct termios		term;
-
 	g_signal = signum;
-	// tcgetattr(STDIN_FILENO, &term);
-	// term.c_lflag |= ECHOCTL;
-	// tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	ft_putstr_fd("\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);

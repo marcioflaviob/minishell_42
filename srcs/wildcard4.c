@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard4.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:11:51 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/06 17:12:35 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:09:36 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
 
 int	wildcard_finder_2(char *str, t_wc *wc, int j, int *pass)
 {

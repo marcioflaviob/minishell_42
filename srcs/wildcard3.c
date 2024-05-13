@@ -3,21 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard3.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:09:29 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/06 17:11:02 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 19:25:22 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-
 // pos is defined as the position of the wildcard in the input
 // pos is 0 when the wildcard is the first argument
 // pos is -1 when the wildcard is in the middle of the arguments
 // pos is 1 when the wildcard is the last argument
-
 void	segment_fill_3(char *input, t_segfill *s, t_wc **wc)
 {
 	while (input[s->i] && (input[s->i] != '*' || s->in_quotes))
@@ -116,7 +114,6 @@ void	segment_fill(t_wc **wc, char *input)
 	{
 		segment_fill_5(input, &s, wc);
 		segment_fill_6(input, &s, wc);
-		s.i++;
 	}
 	(*wc)[s.j].segment = NULL;
 }

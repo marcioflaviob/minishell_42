@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 15:57:13 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/06 18:09:16 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 19:27:12 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ char	*ft_strjoin_tgnl(char *s1, char *s2)
 			return (0);
 		s1[0] = 0;
 	}
-	cat = (char *)malloc(((ft_strlen_tgnl(s1) + ft_strlen_tgnl(s2)) + 1) * sizeof(char));
+	cat = (char *)malloc(((ft_strlen_tgnl(s1)
+					+ ft_strlen_tgnl(s2)) + 1) * sizeof(char));
 	if (!cat)
 		return (0);
 	while (s1[i])

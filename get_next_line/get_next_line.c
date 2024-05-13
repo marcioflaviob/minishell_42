@@ -98,7 +98,7 @@ char	*get_next_line(int fd, int err)
 
 	if (err == 1)
 		return (free(str[fd]), NULL);
-	if (fd < 0 || BUFFER_SIZE <= 0 )
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	str[fd] = onenewline(fd, str[fd]);
 	if (!str[fd])

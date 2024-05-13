@@ -3,66 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/28 19:09:25 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:37:25 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+void	export_2(t_sh *shell, t_exp *exp, char **str)
+{
+	exp->str1 = get_substring_b(shell->env[exp->i], '=');
+	if (ft_equalstr(exp->str1, exp->str2) == 1)
+	{
+		if (!ft_strrchr(str[exp->y], '='))
+			exp->replace = 1;
+		else
+		{
+			free(shell->env[exp->i]);
+			shell->env[exp->i] = ft_strdup(str[exp->y]);
+			exp->replace = 1;
+		}
+	}
+	exp->i++;
+	free(exp->str1);
+}
+
 void	export(t_sh *shell, char **str)
 {
-	int		i;
-	int		y;
-	int		str_len;
-	int		replace;
-	char	*str1;
-	char	*str2;
+	t_exp	exp;
 
-	i = 0;
-	y = 0;
-	replace = 0;
+	exp.i = 0;
+	exp.y = 0;
+	exp.replace = 0;
 	if (!find_sp(str, shell))
-		str_len = tab_len(str) - 1;
+		exp.str_len = tab_len(str) - 1;
 	else
-		str_len = find_sp(str, shell);
-	while (y < str_len)
+		exp.str_len = find_sp(str, shell);
+	while (exp.y < exp.str_len)
 	{
-		if (!ft_strrchr(str[y], '='))
-			str2 = ft_strdup(str[y]);
+		if (!ft_strrchr(str[exp.y], '='))
+			exp.str2 = ft_strdup(str[exp.y]);
 		else
-			str2 = get_substring_b(str[y], '=');
-		while (shell->env[i])
+			exp.str2 = get_substring_b(str[exp.y], '=');
+		while (shell->env[exp.i])
+			export_2(shell, &exp, str);
+		if (exp.replace == 0)
 		{
-			str1 = get_substring_b(shell->env[i], '=');
-			if (ft_equalstr(str1, str2) == 1)
-			{
-				if (!ft_strrchr(str[y], '='))
-					replace = 1;
-				else
-				{
-					free(shell->env[i]);
-					shell->env[i] = ft_strdup(str[y]);
-					replace = 1;
-				}
-			}
-			i++;
-			free(str1);
+			if (!ft_strrchr(str[exp.y], '='))
+				(free(str[exp.y]), str[exp.y] = ft_strjoin(exp.str2, "="));
+			add_to_tab(&shell->env, str[exp.y]);
 		}
-		if (replace == 0)
-		{
-			if (!ft_strrchr(str[y], '='))
-			{
-				free(str[y]);
-				str[y] = ft_strjoin(str2, "=");
-			}
-			add_to_tab(&shell->env, str[y]);
-		}
-		free(str2);
-		replace = 0;
-		y++;
+		(free(exp.str2), exp.replace = 0, exp.y++);
 	}	
 }
 
@@ -70,31 +63,25 @@ char	*get_env(char *str, t_sh *shell)
 {
 	int		i;
 	int		y;
-	char	*tmp;
+	char	*t;
 
 	i = 0;
 	y = 0;
 	while (shell->variables[y])
 	{
-		tmp = get_substring_b(shell->variables[y], '=');
-		if (ft_equalstr(tmp, str) == 1)
-		{
-			(free(tmp), tmp = get_substring_a(shell->variables[y], '='));
-			return (tmp);
-		}
+		t = get_substring_b(shell->variables[y], '=');
+		if (ft_equalstr(t, str) == 1)
+			return (free(t), t = get_substring_a(shell->variables[y], '='), t);
 		y++;
 	}
 	if (shell->variables[y] == NULL)
 	{
 		while (shell->env[i])
 		{
-			tmp = get_substring_b(shell->env[i], '=');
-			if (ft_equalstr(tmp, str) == 1)
-			{
-				(free(tmp), tmp = get_substring_a(shell->env[i], '='));
-				return (tmp);
-			}
-			(free(tmp), i++);
+			t = get_substring_b(shell->env[i], '=');
+			if (ft_equalstr(t, str) == 1)
+				return (free(t), t = get_substring_a(shell->env[i], '='), t);
+			(free(t), i++);
 		}
 	}
 	return (NULL);
@@ -137,9 +124,4 @@ void	un_set(t_sh *shell, char **str)
 		}
 		y++;
 	}
-}
-
-void	env(t_sh *shell)
-{
-	print_tab(shell->env);
 }

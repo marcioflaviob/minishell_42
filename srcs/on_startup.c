@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/06 17:35:40 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:00:33 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*get_prompt(t_sh *sh)
 {
-	 int		random;
+	int		random;
 	char	*random_line;
 	char	*curr_dir;
 	char	*fixed_dir;

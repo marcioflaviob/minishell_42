@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard5.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:12:49 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/06 17:13:35 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:40:36 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	init_wc(t_sh *sh, t_segcheck *c)
 	c->buffer = ft_strdup("");
 	c->cmd = malloc(2 * sizeof(char *));
 	if (!c->cmd)
-		(ft_putstr_fd("Malloc error ls in wildcard", 2) , exit(EXIT_FAILURE));
+		(ft_putstr_fd("Malloc error ls in wildcard", 2), exit(EXIT_FAILURE));
 	c->cmd[0] = find_path("ls", sh);
 	c->cmd[1] = NULL;
 	return (0);

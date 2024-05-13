@@ -3,61 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_better_split.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:18:13 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/28 19:06:08 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 15:25:11 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-int	count_args(char const *str)
-{
-	int	i;
-	int	args;
-	int	quote_flag;
-
-	i = 0;
-	args = 0;
-	quote_flag = 0;
-	while (str[i])
-	{
-		while ((str[i] != 0) && (str[i] == ' '))
-			i++;
-		if (str[i])
-		{
-			if (str[i] == '\'' || str[i] == '"')
-			{
-				quote_flag = !quote_flag;
-				i++;
-				continue ;
-			}
-			else if ((str[i] == '(' || str[i] == ')') && !quote_flag)
-			{
-				args++;
-				i++;
-				continue ;
-			}
-			else if (!quote_flag)
-			{
-				args++;
-				while ((str[i] != 0) && (str[i] != ' ' && str[i] != '('
-						&& str[i] != ')') && !(str[i] == '\'' || str[i] == '"'))
-					i++;
-			}
-			else
-			{
-				args++;
-				while ((str[i] != 0) && (str[i] != '\'' && str[i] != '"'))
-					i++;
-				if (str[i] == '\'' || str[i] == '"')
-					i++;
-			}
-		}
-	}
-	return (args);
-}
 
 static int	word_len(char const *str)
 {
@@ -114,6 +67,12 @@ static int	null_handler(char **tab, int *i)
 	return (1);
 }
 
+void	ft_better_split_helper(int i, int *j, char ***tab, char *s)
+{
+	(*tab)[i][0] = s[(*j)++];
+	(*tab)[i][1] = '\0';
+}
+
 char	**ft_better_split(char *s)
 {
 	int		i;
@@ -127,25 +86,18 @@ char	**ft_better_split(char *s)
 	{
 		if (s[j] != ' ')
 		{
-			tab[i] = (char *) malloc((word_len(s + j) + 1) * sizeof(char));
+			tab[i] = (char *)malloc((word_len(s + j) + 1) * sizeof(char));
 			if (null_handler(tab, &i) == 0 || tab[i] == NULL)
 				return (NULL);
 			if (s[j] == '(' || s[j] == ')')
-			{
-				tab[i][0] = s[j];
-				tab[i][1] = '\0';
-				j++;
-			}
+				ft_better_split_helper(i, &j, &tab, s);
 			else
-			{
-				ft_strlcpy(tab[i], (char *) s + j, word_len(s + j) + 1);
-				j += word_len((s + j));
-			}
+				(ft_strlcpy(tab[i], (char *)s + j, word_len(s + j) + 1), j
+					+= word_len((s + j)));
 			i++;
 		}
 		else
 			j++;
 	}
-	(free(s), tab[i] = NULL);
-	return (tab);
+	return (free(s), tab[i] = NULL, tab);
 }

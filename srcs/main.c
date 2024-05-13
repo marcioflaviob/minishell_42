@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/26 14:15:30 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 19:34:49 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,22 +43,19 @@ int	main(void)
 	//	(write(2, "Failed opening permission file", 30));
 	//else
 	{
-		//buffer = get_next_line(permission_fd);
+		//buffer = get_next_line(permission_fd, 0);
 		//if (buffer[15] == '1')
 		//	new_terminal(&shell, buffer);
 		//else
 		{
 			shell.current_dir = get_cwd();
 			if (!shell.current_dir)
-				return (0); //RETURN ERROR HERE
+				return (0);
 			shell.emoji_path = ft_strjoin(shell.current_dir, "/assets/emojis");
-			print_minishell_art();
-			// free(buffer);
-			signal_initializer();
+			(print_minishell_art(), /*free(buffer), */signal_initializer());
 			get_input(&shell);
 			free(shell.current_dir);
 		}
 	}
 	return (0);
 }
-

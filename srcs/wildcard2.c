@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 18:27:24 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/06 17:13:27 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:40:54 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
 
 void	remove_quotes(char **str)
 {

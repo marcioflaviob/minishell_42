@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/06 18:05:42 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 19:28:03 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,51 @@
 
 extern int		g_signal;
 
-typedef struct s_wc {
+typedef struct exe
+{
+	pid_t	pid;
+	pid_t	pid2;
+	int		i;
+	char	*str;
+	char	**cmd;
+}	t_exe;
+
+typedef struct pars
+{
+	int		special;
+	int		fd;
+	char	*buffer;
+	char	*tmp;
+
+}	t_pars;
+
+typedef struct exp
+{
+	int		i;
+	int		y;
+	int		str_len;
+	int		replace;
+	char	*str1;
+	char	*str2;
+}	t_exp;
+
+typedef struct c_args
+{
+	int	i;
+	int	args;
+	int	quote_flag;
+}	t_c_args;
+
+typedef struct s_wc
+{
 	char	*segment;
 	char	*found_position;
 	char	*current_position;
 	int		pos;
 }	t_wc;
 
-typedef struct s_segfill {
+typedef struct s_segfill
+{
 	int		i;
 	int		j;
 	int		x;
@@ -53,7 +90,8 @@ typedef struct s_segfill {
 	char	quote_char;
 }	t_segfill;
 
-typedef struct s_segcheck {
+typedef struct s_segcheck
+{
 	int		fd[2];
 	int		i;
 	int		pos;
@@ -66,15 +104,8 @@ typedef struct s_segcheck {
 	t_wc	*wc;
 }	t_segcheck;
 
-// typedef struct s_segment_check {
-// 	char	*str;
-// 	t_wc	*wc;
-// 	int		j;
-// 	int		pass;
-// 	char	*current_position;
-// }	t_segment_check;
-
-typedef struct s_sh {
+typedef struct s_sh
+{
 	int		echo_i;
 	int		echo_y;
 	int		pipe[2];
@@ -156,6 +187,34 @@ char	*get_var_name(char *str);
 char	*sorted_tab(char **tab);
 void	sort_strings_by_first_char(char **arr, int n);
 
+void	exec_cmd_2(t_sh *sh, char **args);
+void	exec_cmd_4(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_5(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_6(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_7(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_8(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_9(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_10(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_11(t_sh *sh, t_exe *exe);
+void	exec_cmd_12(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_13(t_sh *sh, t_exe *exe);
+void	exec_cmd_14(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_15(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_18(t_sh *sh, t_exe *exe, char **args);
+void	echo_parent_4(t_sh *sh, t_exe *exe, char **args);
+void	pwd_parent_5(t_sh *sh, t_exe *exe, char **args);
+void	env_parent(t_sh *sh, char **args);
+void	env_parent_4(t_sh *sh, t_exe *exe, char **args);
+void	env_parent_5(t_sh *sh, t_exe *exe, char **args);
+void	env_parent_7(t_sh *sh, t_exe *exe, char **args);
+void	export_parent_4(t_sh *sh, t_exe *exe, char **args);
+void	exit_parent(t_sh *sh, t_exe *exe, char **args);
+void	unset_parent(t_sh *sh, char **args);
+void	child_cmd_handler(t_sh *sh, t_exe *exe, char **args);
+void	cd_parent_2(t_sh *sh, char **args);
+int		is_builtin(char *str);
+char	**cmd_args(t_sh *sh, char **args);
+
 //Redirection functions
 void	redir_out_trunc(char *outfile, char **args, t_sh *sh);
 void	redir_out_app(char *outfile, char **args, t_sh *sh);
@@ -174,6 +233,27 @@ void	add_env(t_sh *sh, char *variable);
 
 //Parsing functions
 void	arg(t_sh *sh);
+void	arg_2(t_pars *pars, t_sh *sh);
+void	arg_3(t_sh *sh);
+void	arg_4(t_sh *sh);
+void	arg_5(t_sh *sh);
+void	arg_6(t_sh *sh);
+void	arg_7(t_pars *pars, t_sh *sh);
+void	arg_8(t_pars *pars, t_sh *sh);
+void	arg_9(t_pars *pars, t_sh *sh);
+void	arg_10(t_sh *sh);
+void	arg_11(t_sh *sh);
+void	arg_12(t_sh *sh);
+void	arg_13(t_pars *pars, t_sh *sh);
+void	arg_14(t_sh *sh);
+void	arg_15(t_sh *sh);
+void	arg_16(t_sh *sh);
+int		go_af_par(char **args);
+int		check_sp_afpar(char **args);
+int		check_special(char *str, t_sh *sh);
+int		arg_checker(char *str);
+int		ft_find_first(const char *s, int c);
+int		count_args(char const *str);
 int		find_sp(char **args, t_sh *sh);
 int		check_sp_afpar(char **args);
 int		find_sp_par(char **args, t_sh *sh);
@@ -189,23 +269,16 @@ void	env(t_sh *shell);
 
 //Command functions
 void	exec_cmd(char **args, t_sh *sh);
-
-
 int		wildcard(t_sh *sh);
-
 int		ft_int_strchr(const char *s, int c);
 void	replace_env(char **str, t_sh *sh);
-
 int		ft_int_strstr_wc(char *str, char *to_find);
 int		find_sp_str(char *str);
-
 void	replace_var(t_sh *sh, char ***tab);
 void	set_sp_bool(t_sh *sh);
-
 
 // Term config
 void	term_config(void);
 void	term_reset(void);
-
 
 #endif
