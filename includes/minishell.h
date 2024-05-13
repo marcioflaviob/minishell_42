@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:28:03 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/14 00:12:39 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,8 @@ char	*get_substring_b(char *str, char c);
 char	*get_substring_a(char *str, char c);
 void	rm_tab_line(char ***tab, char *line);
 int		ft_part_len(char *str, char c);
+int		is_alscore_str(char *str);
+int		is_num_str(char *str);
 void	print_tab(char **tab);
 void	mod_checker(int *checker);
 int		ft_strlen_gnl(const char *s);
@@ -187,7 +189,7 @@ char	*get_var_name(char *str);
 char	*sorted_tab(char **tab);
 void	sort_strings_by_first_char(char **arr, int n);
 
-void	exec_cmd_2(t_sh *sh, char **args);
+void	exec_cmd_2(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_4(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_5(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_6(t_sh *sh, t_exe *exe, char **args);

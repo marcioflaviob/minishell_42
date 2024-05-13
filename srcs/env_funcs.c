@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_funcs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:07:09 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:07:40 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 23:39:11 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	env_parent_2(t_sh *sh, t_exe *exe)
 		ft_putstr_fd(sh->env[exe->i++], sh->pipe_par[1]);
 		write(sh->pipe_par[1], "\n", 1);
 	}
-	write(sh->pipe_par[1], "\x04", 1);
+	// write(sh->pipe_par[1], "\x04", 1);
 	close(sh->pipe_par[1]);
 }
 
@@ -44,7 +44,7 @@ void	env_parent_3(t_sh *sh, t_exe *exe)
 		ft_putstr_fd(sh->env[exe->i++], sh->pipe[1]);
 		write(sh->pipe[1], "\n", 1);
 	}
-	write(sh->pipe[1], "\x04", 1);
+	// write(sh->pipe[1], "\x04", 1);
 	close(sh->pipe[1]);
 }
 

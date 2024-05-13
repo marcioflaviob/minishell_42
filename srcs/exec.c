@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:04:45 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/14 00:12:21 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,31 @@ int	is_builtin(char *str)
 		return (0);
 }
 
-void	exec_cmd_2(t_sh *sh, char **args)
+void	exec_cmd_2(t_sh *sh, t_exe *exe,char **args)
 {
-	rm_tab_line(&sh->args, sh->args[find_sp(args, sh)]);
-	rm_tab_line(&sh->args, sh->args[find_sp(args, sh) + 1]);
+	int	fd;
+	// rm_tab_line(&sh->args, sh->args[find_sp(args, sh)]);
+	// rm_tab_line(&sh->args, sh->args[find_sp(args, sh) + 1]);
+	fd = 0;
+	if (args[find_sp(args, sh) + 1])
+	{
+		fd = open(args[find_sp(args, sh) + 1], O_RDONLY);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
+	fd = find_sp(args, sh) + 1;
+	if (args[find_sp(&args[fd], sh)]
+		&& ft_equalstr(args[find_sp(&args[fd], sh)], "|"))
+		dup2(sh->pipe[1], STDOUT_FILENO);
 	if (sh->fd_input != -2)
 		close(sh->fd_input);
 	if (sh->fd_output != -2)
 		close(sh->fd_output);
 	close(sh->pipe[0]);
 	close(sh->pipe[1]);
-	exit(0);
+	exe->cmd = cmd_args(sh, args);
+	execve(exe->cmd[0], exe->cmd, NULL);
+	exit(EXIT_FAILURE);
 }
 
 void	exec_cmd_3(t_sh *sh, t_exe *exe, char **args)

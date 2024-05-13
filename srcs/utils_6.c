@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:27:26 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/06 17:35:48 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 23:10:20 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,3 +48,34 @@ int	get_random_number(void)
 		random = 1;
 	return (random);
 }
+
+int	is_alscore_str(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isalpha(str[i]) || str[i] == '_')
+			i++;
+		else
+			return (0);
+	}
+	return (1);
+}
+
+int	is_num_str(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isdigit(str[i]) || str[i] == '-' || str[i] == '+')
+			i++;
+		else
+			return (0);
+	}
+	return (1);
+}
+

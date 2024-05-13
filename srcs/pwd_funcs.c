@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd_funcs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:08:55 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:09:10 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 21:34:36 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,5 @@ void	pwd_parent_5(t_sh *sh, t_exe *exe, char **args)
 	exe->str = get_cwd();
 	if (sh->out_par)
 		(dup2(sh->fd_output, STDOUT_FILENO));
-	if (args[1] && find_sp(args, sh) != 1)
-	{
-		ft_putstr_fd("pwd: too many arguments\n", 2);
-		sh->bool_result = 0;
-		sh->last_cmd_st = 1;
-		if (find_sp(args, sh) == 0)
-			sh->position = tab_len(sh->args) - 1;
-		else
-			sh->position += find_sp_par(args, sh);
-	}
-	else
-		pwd_parent_4(sh, exe, args);
+	pwd_parent_4(sh, exe, args);
 }

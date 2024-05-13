@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 15:00:33 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 23:28:17 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void	buffer_dealer(t_sh *sh, char **buffer, char *prompt)
 	}
 	if (*buffer && *buffer[0])
 		add_history(*buffer);
+	else
+		get_input(sh);
 	sh->args = ft_better_split(*buffer);
 }
 

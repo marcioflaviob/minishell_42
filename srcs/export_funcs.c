@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_funcs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:08:05 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:08:36 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 22:17:04 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,16 @@ void	export_parent_2(t_sh *sh, t_exe *exe, char **args)
 		export_parent(sh, exe, args);
 	else if (ft_equalstr(args[find_sp(args, sh)], ">"))
 	{
+		if (args[find_sp(args, sh) + 1])
+			sh->position += find_sp(args, sh) + 2;
+		else
+		{
+			sh->position += tab_len(sh->args) - 1;
+			ft_putstr_fd
+				("minishell: syntax error near unexpected token `newline'\n", 2);
+			free(exe->str);
+			return ;
+		}
 		sh->fd_output = open(args[find_sp(args, sh) + 1],
 				O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		if (sh->fd_output == -1)
@@ -48,7 +58,6 @@ void	export_parent_2(t_sh *sh, t_exe *exe, char **args)
 		exe->i = -1;
 		write(sh->fd_output, exe->str, ft_strlen(exe->str));
 		close(sh->fd_output);
-		sh->position += find_sp(args, sh) + 2;
 	}
 	else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
 	{
@@ -58,7 +67,10 @@ void	export_parent_2(t_sh *sh, t_exe *exe, char **args)
 			ft_putstr_fd("Couldn't open file->\n", 2);
 		write(sh->fd_output, exe->str, ft_strlen(exe->str));
 		(write(sh->fd_output, "\n", 1), close(sh->fd_output));
-		sh->position += find_sp(args, sh) + 2;
+		if (args[find_sp(args, sh) + 2])
+			sh->position += find_sp(args, sh) + 2;
+		else
+			sh->position += find_sp(args, sh);
 	}
 	free(exe->str);
 }

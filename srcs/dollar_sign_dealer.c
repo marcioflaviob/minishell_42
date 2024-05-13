@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 18:30:25 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/16 20:20:05 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/13 21:22:37 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	replace_env(char **str, t_sh *sh)
 {
 	int		i;
 	int		j;
+	int		tmp;
 
 	i = 0;
 	j = has_dollar_sign(*str);
@@ -69,7 +70,11 @@ void	replace_env(char **str, t_sh *sh)
 			;
 		else
 			replace_env_helper(&str, sh);
-		j = has_dollar_sign(*str + (j + 1));
+		tmp = j;
+		if (has_dollar_sign(*str + (j + 1)) != -1)
+			j = has_dollar_sign(*str + (j + 1)) + tmp + 1;
+		else
+			j = -1;
 	}
 }
 

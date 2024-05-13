@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_funcs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:09:50 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:10:06 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 22:47:21 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ void	cd_parent(t_sh *sh, char **args)
 
 void	cd_parent_2(t_sh *sh, char **args)
 {
-	if (find_sp(args, sh) > 2)
+	if (find_sp(args, sh) > 2 || (tab_len(args) - 1) > 2)
 	{
-		ft_putstr_fd("cd: too many arguments\n", 2);
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		sh->bool_result = 0;
 		sh->last_cmd_st = 1;
 	}

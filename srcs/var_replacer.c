@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_replacer.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 17:59:46 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/23 05:02:59 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 21:53:50 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ void	add_env(t_sh *sh, char *variable)
 	{
 		tmp = get_env(variable, sh);
 		if (!tmp)
-			add_to_tab(&(sh->variables), variable);
+		{
+			if (name)
+				add_to_tab(&(sh->variables), variable);
+		}
 		else
 			export(sh, &variable);
 		free(tmp);
@@ -57,16 +60,20 @@ void	add_env(t_sh *sh, char *variable)
 void	replace_var(t_sh *sh, char ***tab)
 {
 	int		i;
+	int		index;
 	char	*tmp;
 
 	i = 0;
 	tmp = NULL;
 	while ((*tab)[i])
 	{
+		index = ft_int_strchr((*tab)[i], '$');
 		if (ft_int_strchr((*tab)[i], '=') != -1
 			&& !is_quoted((*tab)[i], ft_int_strchr((*tab)[i], '=')))
 			add_env(sh, (*tab)[i]);
-		else if (ft_int_strchr((*tab)[i], '$') != -1)
+		else if (index != -1 && (*tab)[i][index + 1]
+			&& (*tab)[i][index + 1] != ' ' && (*tab)[i][index + 1] != '\''
+			&& (*tab)[i][index + 1] != '\"' && (*tab)[i][index + 1] != ';')
 			replace_env(&(*tab)[i], sh);
 		i++;
 	}

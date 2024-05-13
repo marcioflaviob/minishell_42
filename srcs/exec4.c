@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec4.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:06:13 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/14 00:17:07 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	exec_cmd_18(t_sh *sh, t_exe *exe, char **args)
 		exec_cmd_15(sh, exe, args);
 	else if (ft_equalstr(args[find_sp(args, sh)], "<"))
 	{
-		sh->position += find_sp(args, sh) + 1;
+		sh->position += find_sp(args, sh) + 2;
 		close(sh->pipe[0]);
 		close(sh->pipe[1]);
 	}

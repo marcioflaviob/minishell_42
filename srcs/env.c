@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 15:37:25 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 22:42:28 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,35 @@ void	export(t_sh *shell, char **str)
 	while (exp.y < exp.str_len)
 	{
 		if (!ft_strrchr(str[exp.y], '='))
+		{
 			exp.str2 = ft_strdup(str[exp.y]);
+			if (!is_alscore_str(exp.str2))
+			{
+				shell->last_cmd_st = 1;
+				shell->bool_result = 0;
+				ft_putstr_fd("minishell: export: `", 2);
+				ft_putstr_fd(exp.str2, 2);
+				ft_putstr_fd("\': not a valid identifier\n", 2);
+				free(exp.str2);
+				return ;
+			}
+		}
 		else
+		{
 			exp.str2 = get_substring_b(str[exp.y], '=');
+			if (!is_alscore_str(exp.str2) || ft_equalstr(str[exp.y], "="))
+			{
+				shell->last_cmd_st = 1;
+				shell->bool_result = 0;
+				ft_putstr_fd("minishell: export: `", 2);
+				if (ft_equalstr(str[exp.y], "="))
+					ft_putstr_fd("=", 2);
+				ft_putstr_fd(exp.str2, 2);
+				ft_putstr_fd("\': not a valid identifier\n", 2);
+				free(exp.str2);
+				return ;
+			}
+		}
 		while (shell->env[exp.i])
 			export_2(shell, &exp, str);
 		if (exp.replace == 0)

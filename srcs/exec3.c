@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec3.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:05:47 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/13 23:58:02 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,28 @@ void	exec_cmd_11(t_sh *sh, t_exe *exe)
 
 void	exec_cmd_12(t_sh *sh, t_exe *exe, char **args)
 {
-	write(1, "exit", ft_strlen("exit"));
+	int	a;
+
+	a = ft_atoi(args[1]);
+	write(2, "exit", ft_strlen("exit"));
+	if (args[1] && !is_num_str(args[1]))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		a = 2;
+	}
+	else if (ft_strchr(args[1], '-'))
+		a = ft_atoi(args[1]);
+	else if (ft_strchr(args[1], '+'))
+		a = ft_atoi(args[1]);
+	if (find_sp(args, sh) > 2 || (tab_len(args) - 1) > 2)
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		sh->bool_result = 0;
+		sh->last_cmd_st = 1;
+		return ;
+	}
 	freetab(sh->env);
 	free(sh->sp_bool);
 	freetab(sh->args);
@@ -57,14 +78,15 @@ void	exec_cmd_12(t_sh *sh, t_exe *exe, char **args)
 	}
 	close(sh->true_stdin);
 	close(sh->true_stdout);
-	exit(ft_atoi(args[1]));
+	exit(a);
 }
 
 void	exec_cmd_13(t_sh *sh, t_exe *exe)
 {
 	waitpid(exe->pid, &sh->last_cmd_st, 0);
+	sh->last_cmd_st = WEXITSTATUS(sh->last_cmd_st);
 	if (sh->last_cmd_st == 131)
-		write(1, "Quit (core dumped)\n", 19);
+		write(2, "Quit (core dumped)\n", 19);
 	close(sh->pipe[1]);
 	close(sh->pipe[0]);
 	if (sh->op_pipe)
