@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 23:24:42 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/06 18:06:09 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/14 19:46:04 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ char	*echo(char **args, t_sh *sh)
 	else
 	{
 		sh->echo_i = 1;
-		if (find_sp_par(&args[0], sh))
-			sh->echo_y = find_sp_par(&args[0], sh);
+		if (find_sp_echo(args))
+			sh->echo_y = find_sp_echo(args);
 		else
 			sh->echo_y = tab_len(args) - 1;
 		while (sh->echo_i < sh->echo_y)
 		{
 			str = ft_strjoin_gnl(str, args[sh->echo_i++]);
-			if (args[sh->echo_i])
+			if (args[sh->echo_i] && sh->echo_i < sh->echo_y)
 				str = ft_strjoin_gnl(str, " ");
 		}
 		str = ft_strjoin_gnl(str, "\n");

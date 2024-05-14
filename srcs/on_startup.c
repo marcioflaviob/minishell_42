@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   on_startup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 23:28:17 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/14 21:14:33 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ void	get_input(t_sh *sh)
 	write(STDOUT_FILENO, "\033[s", 3);
 	buffer_dealer(sh, &buffer, prompt);
 	checkers(sh, &buffer, &prompt);
+	while (sh->args[sh->position] && !sh->args[sh->position][0])
+		sh->position++;
 	arg(sh);
 	return ;
 }

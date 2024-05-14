@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:05:16 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/14 17:05:57 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	exec_cmd_6(t_sh *sh, t_exe *exe, char **args)
 		close(sh->fd_input);
 	(close(sh->pipe[0]), close(sh->pipe[1]));
 	exe->cmd = cmd_args(sh, args);
-	execve(exe->cmd[0], exe->cmd, NULL);
+	execve(exe->cmd[0], exe->cmd, sh->env);
 	exit(EXIT_FAILURE);
 }
 
@@ -57,7 +57,7 @@ void	exec_cmd_7(t_sh *sh, t_exe *exe, char **args)
 	exe->cmd = cmd_args(sh, args);
 	if (sh->wrong_file != NULL)
 		add_to_tab(&exe->cmd, sh->wrong_file);
-	execve(exe->cmd[0], exe->cmd, NULL);
+	execve(exe->cmd[0], exe->cmd, sh->env);
 }
 
 void	exec_cmd_8(t_sh *sh, t_exe *exe, char **args)
@@ -77,7 +77,7 @@ void	exec_cmd_8(t_sh *sh, t_exe *exe, char **args)
 	close(sh->pipe[0]);
 	close(sh->pipe[1]);
 	exe->cmd = cmd_args(sh, args);
-	execve(exe->cmd[0], exe->cmd, NULL);
+	execve(exe->cmd[0], exe->cmd, sh->env);
 	exit(EXIT_FAILURE);
 }
 
@@ -100,7 +100,7 @@ void	exec_cmd_9(t_sh *sh, t_exe *exe, char **args)
 	close(sh->pipe[0]);
 	close(sh->pipe[1]);
 	exe->cmd = cmd_args(sh, args);
-	execve(exe->cmd[0], exe->cmd, NULL);
+	execve(exe->cmd[0], exe->cmd, sh->env);
 	exit(EXIT_FAILURE);
 }
 
@@ -123,6 +123,6 @@ void	exec_cmd_10(t_sh *sh, t_exe *exe, char **args)
 	close(sh->true_stdin);
 	close(sh->true_stdout);
 	exe->cmd = cmd_args(sh, args);
-	execve(exe->cmd[0], exe->cmd, NULL);
+	execve(exe->cmd[0], exe->cmd, sh->env);
 	exit(EXIT_FAILURE);
 }

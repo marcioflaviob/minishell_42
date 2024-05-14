@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/14 00:12:39 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/14 19:02:56 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,11 @@ char	*ft_strjoin_gnl(char *s1, char *s2);
 char	*get_var_name(char *str);
 char	*sorted_tab(char **tab);
 void	sort_strings_by_first_char(char **arr, int n);
+int		check_special_redirect(char *str);
+
+int		find_sp_redir(char **args, t_sh *sh, int j);
+int		find_sp_echo(char **args);
+int		find_non_redir(char **args, t_sh *sh);
 
 void	exec_cmd_2(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_4(t_sh *sh, t_exe *exe, char **args);
