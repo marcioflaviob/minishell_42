@@ -3,87 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   echo_funcs.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:09:24 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/14 21:06:58 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 14:19:04 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-int	redirect(t_sh *sh, char **args)
-{
-	int	i;
-	int	y;
-	int	fd_input;
-	int	fd_output;
-	int	tmp;
-	int	error_out;
-	int	error_in;
-
-	fd_output = 0;
-	fd_input = 0;
-	i = 0;
-	error_in = 1;
-	error_out = 1;
-	y = find_sp(&args[i], sh);
-	while (ft_equalstr(args[y], "<") || ft_equalstr(args[y], ">") || ft_equalstr(args[y], ">>"))
-	{
-		tmp = i;
-		if (args[y] && ft_equalstr(args[y], "<"))
-		{
-			i += find_sp(&args[i], sh) + 1;
-			fd_input = open(args[i], O_RDONLY);
-			if (fd_input == -1)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(args[i], 2);
-				ft_putstr_fd(": No such file or directory\n", 2);
-				error_in = 0;
-			}
-		}
-		if (args[y] && ft_equalstr(args[y], ">"))
-		{
-			i += find_sp(&args[i], sh) + 1;
-			fd_output = open(args[i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-			if (fd_output == -1)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(args[i], 2);
-				ft_putstr_fd(": Permission denied\n", 2);
-				error_out = 0;
-			}
-		}
-		if (args[y] && ft_equalstr(args[y], ">>"))
-		{
-			i += find_sp(&args[i], sh) + 1;
-			fd_output = open(args[i], O_WRONLY | O_CREAT | O_APPEND, 0666);
-			if (fd_output == -1)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(args[i], 2);
-				ft_putstr_fd(": Permission denied\n", 2);
-				error_out = 0;
-			}
-		}
-		sh->position += i - tmp;
-		y = find_sp(&args[i], sh) + i;
-	}
-	if (args[y]
-		&& ft_equalstr(args[y], "|") && !fd_output)
-		dup2(sh->pipe[1], STDOUT_FILENO);
-	else if (args[y]
-		&& ft_equalstr(args[y], "|") && fd_output)
-		sh->position = y;
-	if (!error_in || !error_out)
-		return (0);
-	if (fd_output != -1)
-		(dup2(fd_output, STDOUT_FILENO), close(fd_output));
-	if (fd_input && fd_input != -1)
-		(dup2(fd_input, STDIN_FILENO), close(fd_input));
-	return (1);
-}
 
 void	echo_parent(t_sh *sh, t_exe *exe, char **args)
 {
@@ -110,6 +37,25 @@ void	echo_parent(t_sh *sh, t_exe *exe, char **args)
 		sh->position += find_sp_par(args, sh);
 }
 
+void	echo_par_2_help(t_sh *sh, t_exe *exe)
+{
+	if (ft_equalstr(sh->args[sh->position], "|")
+		|| ft_equalstr(sh->args[sh->position], "||")
+		|| ft_equalstr(sh->args[sh->position], "&&"))
+	{
+		write(1, exe->str, (ft_strlen(exe->str)));
+		free(exe->str);
+	}
+	else
+	{
+		write(1, exe->str, (ft_strlen(exe->str) - 1));
+		if (exe->str && exe->str[0] != '\n')
+			write(1, " ", 1);
+		free(exe->str);
+		echo_parent_4(sh, exe, &sh->args[(sh->position)]);
+	}
+}
+
 void	echo_parent_2(t_sh *sh, t_exe *exe, char **args)
 {
 	if (!redirect(sh, args))
@@ -125,21 +71,8 @@ void	echo_parent_2(t_sh *sh, t_exe *exe, char **args)
 			free(exe->str);
 			sh->position = tab_len(sh->args) - 1;
 		}
-		else if (ft_equalstr(sh->args[sh->position], "|")
-			|| ft_equalstr(sh->args[sh->position], "||")
-			|| ft_equalstr(sh->args[sh->position], "&&"))
-		{
-			write(1, exe->str, (ft_strlen(exe->str)));
-			free(exe->str);
-		}
 		else
-		{
-			write(1, exe->str, (ft_strlen(exe->str) - 1));
-			if (exe->str && exe->str[0] != '\n')
-				write(1, " ", 1);
-			free(exe->str);
-			echo_parent_4(sh, exe, &sh->args[(sh->position)]);
-		}
+			echo_par_2_help(sh, exe);
 	}
 }
 
@@ -180,4 +113,3 @@ void	echo_parent_4(t_sh *sh, t_exe *exe, char **args)
 		free(exe->str);
 	}
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/14 12:40:53 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 13:43:29 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,10 @@ void	child_cmd_handler(t_sh *sh, t_exe *exe, char **args)
 		exit(EXIT_SUCCESS);
 	if (find_sp(args, sh))
 	{
-		if (ft_equalstr(args[find_sp(args, sh)], "<") || ft_equalstr(args[find_sp(args, sh)], ">") || ft_equalstr(args[find_sp(args, sh)], ">>"))
+		if (ft_equalstr(args[find_sp(args, sh)], "<")
+			|| ft_equalstr(args[find_sp(args, sh)], ">")
+			|| ft_equalstr(args[find_sp(args, sh)], ">>"))
 			exec_cmd_2(sh, exe, args);
-		//else if (ft_equalstr(args[find_sp(args, sh)], ">"))
-		//	exec_cmd_4(sh, exe, args);
-		//else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
-		//	exec_cmd_6(sh, exe, args);
 		else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 			exec_cmd_7(sh, exe, args);
 		else if (ft_equalstr(args[find_sp(args, sh)], "&&"))

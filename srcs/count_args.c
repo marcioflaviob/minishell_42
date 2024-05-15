@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   count_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:24:23 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 13:31:14 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 13:45:46 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,21 @@ void	count_args_3(char const *str, t_c_args *c)
 	}
 }
 
+void	count_args_5(char const *str, t_c_args *c)
+{
+	while ((str[c->i] != 0) && (str[c->i] == ' '))
+	{
+		c->args++;
+		while ((str[c->i] != 0) && (str[c->i] == ' '))
+			c->i++;
+	}
+}
+
 void	count_args_4(char const *str, t_c_args *c)
 {
 	while (str[c->i])
 	{
-		while ((str[c->i] != 0) && (str[c->i] == ' '))
-		{
-			c->args++;
-			while ((str[c->i] != 0) && (str[c->i] == ' '))
-				c->i++;
-		}
+		count_args_5(str, c);
 		if (str[c->i])
 		{
 			if (str[c->i] == '\'' || str[c->i] == '"')
@@ -71,6 +76,5 @@ int	count_args(char const *str)
 	c.args = 1;
 	c.quote_flag = 0;
 	count_args_4(str, &c);
-	//printf("args: %d\n", c.args);
 	return (c.args);
 }

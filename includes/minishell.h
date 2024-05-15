@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/14 19:02:56 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 14:43:15 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,26 @@
 # define CYAN_BACK "\033[48;5;9m"
 
 extern int		g_signal;
+
+typedef struct e_h
+{
+	int	fd_input;
+	int	fd_output;
+	int	i;
+	int	y;
+	int	position;
+}	t_h;
+
+typedef struct redir
+{
+	int	i;
+	int	y;
+	int	fd_input;
+	int	fd_output;
+	int	tmp;
+	int	error_out;
+	int	error_in;
+}	t_redir;
 
 typedef struct exe
 {
@@ -194,6 +214,9 @@ int		find_sp_redir(char **args, t_sh *sh, int j);
 int		find_sp_echo(char **args);
 int		find_non_redir(char **args, t_sh *sh);
 
+int		redirect(t_sh *sh, char **args);
+
+void	exec_cmd_3(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_2(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_4(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_5(t_sh *sh, t_exe *exe, char **args);

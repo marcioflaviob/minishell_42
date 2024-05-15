@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:27:26 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/13 23:10:20 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 14:41:32 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,3 +79,22 @@ int	is_num_str(char *str)
 	return (1);
 }
 
+int	is_builtin(char *str)
+{
+	if (ft_equalstr(str, "echo"))
+		return (1);
+	else if (ft_equalstr(str, "cd"))
+		return (1);
+	else if (ft_equalstr(str, "pwd"))
+		return (1);
+	else if (ft_equalstr(str, "export"))
+		return (1);
+	else if (ft_equalstr(str, "unset"))
+		return (1);
+	else if (ft_equalstr(str, "env"))
+		return (1);
+	else if (ft_equalstr(str, "exit"))
+		return (1);
+	else
+		return (0);
+}

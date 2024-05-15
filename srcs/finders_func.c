@@ -3,122 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   finders_func.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:10:19 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 13:02:26 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 14:56:17 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-int	find_sp(char **args, t_sh *sh)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = sh->position;
-	while (args[i])
-	{
-		if ((args[i][0] == '<' && sh->sp_bool[j] == 1)
-			|| (args[i][0] == '>' && sh->sp_bool[j] == 1)
-			|| (args[i][0] == '|' && sh->sp_bool[j] == 1))
-			return (i);
-		if ((ft_equalstr(args[i], "||") && sh->sp_bool[j] == 1)
-			|| (ft_equalstr(args[i], ">>") && sh->sp_bool[j] == 1)
-			|| (ft_equalstr(args[i], "&&") && sh->sp_bool[j] == 1))
-			return (i);
-		i++;
-		j++;
-	}
-	return (0);
-}
-
-int	find_sp_redir(char **args, t_sh *sh, int j)
-{
-	int	i;
-
-	i = 0;
-	while (args[i])
-	{
-		if ((args[i][0] == '<' && sh->sp_bool[j] == 1)
-			|| (args[i][0] == '>' && sh->sp_bool[j] == 1)
-			|| (args[i][0] == '|' && sh->sp_bool[j] == 1))
-			return (i);
-		if ((ft_equalstr(args[i], "||") && sh->sp_bool[j] == 1)
-			|| (ft_equalstr(args[i], ">>") && sh->sp_bool[j] == 1)
-			|| (ft_equalstr(args[i], "&&") && sh->sp_bool[j] == 1))
-			return (i);
-		i++;
-		j++;
-	}
-	return (0);
-}
-
-int	find_non_redir(char **args, t_sh *sh)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = sh->position;
-	while (args[i])
-	{
-		if ((args[i][0] == '|' && sh->sp_bool[j] == 1))
-			return (i);
-		if ((ft_equalstr(args[i], "||") && sh->sp_bool[j] == 1)
-			|| (ft_equalstr(args[i], "&&") && sh->sp_bool[j] == 1))
-			return (i);
-		i++;
-		j++;
-	}
-	return (tab_len(sh->args) - 1 - sh->position);
-}
-
-int	find_sp_echo(char **args)
-{
-	int	i;
-
-	i = 0;
-	while (args[i])
-	{
-		if (ft_equalstr(args[i], ">")
-			|| ft_equalstr(args[i], "|")
-			|| ft_equalstr(args[i], "<"))
-			return (i);
-		if ((ft_equalstr(args[i], "||"))
-			|| (ft_equalstr(args[i], ">>"))
-			|| (ft_equalstr(args[i], "&&")))
-			return (i);
-		i++;
-	}
-	return (0);
-}
-
-int	find_sp_par(char **args, t_sh *sh)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = sh->position;
-	while (args[i])
-	{
-		if ((args[i][0] == '<' && sh->sp_bool[j] == 1)
-			|| (args[i][0] == '>' && sh->sp_bool[j] == 1)
-			|| (args[i][0] == '|' && sh->sp_bool[j] == 1)
-			|| (args[i][0] == ')' && sh->sp_bool[j] == 1))
-			return (i);
-		if ((ft_equalstr(args[i], "||") && sh->sp_bool[j] == 1)
-			|| (ft_equalstr(args[i], ">>") && sh->sp_bool[j] == 1)
-			|| (ft_equalstr(args[i], "&&") && sh->sp_bool[j] == 1))
-			return (i);
-		i++;
-		j++;
-	}
-	return (0);
-}
 
 int	find_sp_str(char *str)
 {
@@ -147,6 +39,24 @@ int	find_sp_str(char *str)
 	}
 }
 
+void	fp_helper(char *command)
+{
+	if (get_type(command) == 1)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(command, 2);
+		ft_putstr_fd(": Is a directory\nz", 2);
+		exit(126);
+	}
+	if (access(command, X_OK) == -1)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(command, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+		exit(126);
+	}
+}
+
 char	*find_path(char *command, t_sh *sh)
 {
 	int		i;
@@ -156,22 +66,9 @@ char	*find_path(char *command, t_sh *sh)
 	i = 0;
 	if (get_type(command) != -1 && ft_strchr(command, '/'))
 	{
-		if (get_type(command) == 1)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(command, 2);
-			ft_putstr_fd(": Is a directory\nz", 2);
-			exit(126);
-		}
+		fp_helper(command);
 		if (access(command, X_OK) != -1)
 			return (command);
-		if (access(command, X_OK) == -1)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(command, 2);
-			ft_putstr_fd(": Permission denied\n", 2);
-			exit(126);
-		}
 	}
 	paths = ft_split(get_env("PATH", sh), ':');
 	while (paths[i])
@@ -185,7 +82,6 @@ char	*find_path(char *command, t_sh *sh)
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(command, 2);
 	ft_putstr_fd(": command not found", 2);
-	ft_putstr_fd("\n", 2);
-	freetab(paths);
+	(ft_putstr_fd("\n", 2), freetab(paths));
 	return (NULL);
 }

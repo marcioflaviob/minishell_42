@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:08:05 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 22:17:04 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 14:01:37 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,9 @@ void	export_parent(t_sh *sh, t_exe *exe, char **args)
 	sh->position += find_sp(args, sh);
 }
 
-void	export_parent_2(t_sh *sh, t_exe *exe, char **args)
+void	export_par_2_help(t_sh *sh, t_exe *exe, char **args)
 {
-	exe->str = sorted_tab(sh->env);
-	if (ft_equalstr(args[find_sp(args, sh)], "|"))
-		export_parent(sh, exe, args);
-	else if (ft_equalstr(args[find_sp(args, sh)], ">"))
+	if (ft_equalstr(args[find_sp(args, sh)], ">"))
 	{
 		if (args[find_sp(args, sh) + 1])
 			sh->position += find_sp(args, sh) + 2;
@@ -59,6 +56,13 @@ void	export_parent_2(t_sh *sh, t_exe *exe, char **args)
 		write(sh->fd_output, exe->str, ft_strlen(exe->str));
 		close(sh->fd_output);
 	}
+}
+
+void	export_parent_2(t_sh *sh, t_exe *exe, char **args)
+{
+	exe->str = sorted_tab(sh->env);
+	if (ft_equalstr(args[find_sp(args, sh)], "|"))
+		export_parent(sh, exe, args);
 	else if (ft_equalstr(args[find_sp(args, sh)], ">>"))
 	{
 		sh->fd_output = open(args[find_sp(args, sh) + 1],
@@ -72,6 +76,8 @@ void	export_parent_2(t_sh *sh, t_exe *exe, char **args)
 		else
 			sh->position += find_sp(args, sh);
 	}
+	else
+		export_par_2_help(sh, exe, args);
 	free(exe->str);
 }
 

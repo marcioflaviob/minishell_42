@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/14 21:30:16 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 13:43:46 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,6 @@ void	exec_cmd(char **args, t_sh *sh)
 	t_exe	exe;
 
 	exe.i = 0;
-	//if (get_type(args[0]) != -1)
-	//{
-	//	sh->last_cmd_st = 126;
-	//	return ;
-	//}
 	if (pipe(sh->pipe) != 0)
 		(perror("pipe error"), exit(EXIT_FAILURE));
 	exe.pid = fork();
