@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec5.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 14:42:24 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/15 14:52:27 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 15:59:17 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	exec_cmd_4(t_sh *sh, t_exe *exe, char **args)
 	close(sh->true_stdout);
 	exe->cmd = cmd_args(sh, args);
 	execve(exe->cmd[0], exe->cmd, sh->env);
+	child_free(sh);
 	exit(EXIT_FAILURE);
 }
 
@@ -42,7 +43,7 @@ void	exec_cmd_5(t_sh *sh, t_exe *exe, char **args)
 {
 	exe->pid2 = fork();
 	if (exe->pid2 == -1)
-		(perror("fork error"), exit(EXIT_FAILURE));
+		(perror("fork error"), child_free(sh), exit(EXIT_FAILURE));
 	if (exe->pid2 == 0)
 	{
 		dup2(sh->true_stdout, STDOUT_FILENO);
@@ -53,6 +54,7 @@ void	exec_cmd_5(t_sh *sh, t_exe *exe, char **args)
 		close(sh->pipe[1]);
 		exe->cmd = cmd_args(sh, args);
 		execve(exe->cmd[0], exe->cmd, sh->env);
+		child_free(sh);
 		exit(EXIT_FAILURE);
 	}
 	else

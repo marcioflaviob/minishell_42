@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:09:29 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/13 19:25:22 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 16:05:12 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	segment_fill_4(char *input, t_segfill *s, t_wc **wc)
 	}
 }
 
-void	segment_fill_5(char *input, t_segfill *s, t_wc **wc)
+void	segment_fill_5(char *input, t_segfill *s, t_wc **wc, t_sh *sh)
 {
 	if (s->i == 0 && input[s->i] != '*')
 	{
@@ -68,7 +68,7 @@ void	segment_fill_5(char *input, t_segfill *s, t_wc **wc)
 				+ 1 * sizeof(char));
 		if (!((*wc)[s->j].segment))
 			(ft_putstr_fd("Malloc error segment in segment fill", 2),
-				free(*wc), exit(EXIT_FAILURE));
+				free(*wc), child_free(sh), exit(EXIT_FAILURE));
 		segment_fill_3(input, s, wc);
 		(*wc)[s->j].segment[s->x] = '\0';
 		quotes_removal_helper(&(*wc)[s->j].segment);
@@ -76,7 +76,7 @@ void	segment_fill_5(char *input, t_segfill *s, t_wc **wc)
 	}
 }
 
-void	segment_fill_6(char *input, t_segfill *s, t_wc **wc)
+void	segment_fill_6(char *input, t_segfill *s, t_wc **wc, t_sh *sh)
 {
 	if (input[s->i] == '*' && !s->in_quotes)
 	{
@@ -86,7 +86,7 @@ void	segment_fill_6(char *input, t_segfill *s, t_wc **wc)
 				+ 1 * sizeof(char));
 		if (!((*wc)[s->j].segment))
 			(ft_putstr_fd("Malloc error segment in segment fill", 2),
-				free(*wc), exit(EXIT_FAILURE));
+				free(*wc), child_free(sh), exit(EXIT_FAILURE));
 		segment_fill_4(input, s, wc);
 		(*wc)[s->j].segment[s->x] = '\0';
 		quotes_removal_helper(&(*wc)[s->j].segment);
@@ -94,7 +94,7 @@ void	segment_fill_6(char *input, t_segfill *s, t_wc **wc)
 	}
 }
 
-void	segment_fill(t_wc **wc, char *input)
+void	segment_fill(t_wc **wc, char *input, t_sh *sh)
 {
 	t_segfill	s;
 
@@ -107,13 +107,13 @@ void	segment_fill(t_wc **wc, char *input)
 	*wc = malloc((s.seg_count + 2) * sizeof(t_wc));
 	if (!*wc)
 		(ft_putstr_fd("Malloc error tab in segment fill", 2),
-			exit(EXIT_FAILURE));
+			child_free(sh), exit(EXIT_FAILURE));
 	s.i = 0;
 	s.j = 0;
 	while (input[s.i])
 	{
-		segment_fill_5(input, &s, wc);
-		segment_fill_6(input, &s, wc);
+		segment_fill_5(input, &s, wc, sh);
+		segment_fill_6(input, &s, wc, sh);
 	}
 	(*wc)[s.j].segment = NULL;
 }

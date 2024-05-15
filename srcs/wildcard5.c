@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:12:49 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/13 16:40:36 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 16:09:47 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int	init_wc(t_sh *sh, t_segcheck *c)
 	c->buffer = ft_strdup("");
 	c->cmd = malloc(2 * sizeof(char *));
 	if (!c->cmd)
-		(ft_putstr_fd("Malloc error ls in wildcard", 2), exit(EXIT_FAILURE));
+		(ft_putstr_fd("Malloc error ls in wildcard", 2),
+			child_free(sh), exit(EXIT_FAILURE));
 	c->cmd[0] = find_path("ls", sh);
 	c->cmd[1] = NULL;
 	return (0);
@@ -55,16 +56,16 @@ void	wc_else(t_sh *sh, t_segcheck *c)
 	close(c->fd[0]);
 	c->result = ft_split(c->buffer, '\n');
 	free(c->buffer);
-	segment_fill(&(c->wc), sh->args[c->pos]);
+	segment_fill(&(c->wc), sh->args[c->pos], sh);
 	wildcard_finder(&(c->result), c->wc);
-	remove_from_tab(&sh->args, c->pos);
+	remove_from_tab(&sh->args, c->pos, sh);
 	c->i = 0;
 	while (c->result[c->i])
 	{
 		c->result[c->i] = ft_stradd(c->result[c->i], 0, "'");
 		c->result[c->i] = ft_stradd(c->result[c->i],
 				ft_strlen_gnl(c->result[c->i]), "'");
-		add_to_tab_pos(&sh->args, c->result[c->i++], c->pos);
+		add_to_tab_pos(&sh->args, c->result[c->i++], c->pos, sh);
 	}
 }
 

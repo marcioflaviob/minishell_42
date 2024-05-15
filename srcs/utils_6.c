@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_6.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:27:26 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/15 14:41:32 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 15:31:01 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	copy_tab(char ***taker, char **giver)
 	i = 0;
 	while (giver[i])
 	{
-			(*taker)[i] = ft_strdup(giver[i]);
+		(*taker)[i] = ft_strdup(giver[i]);
 		i++;
 	}
 	(*taker)[i] = NULL;

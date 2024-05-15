@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   finders_func.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:10:19 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 14:56:17 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 16:30:08 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,14 @@ int	find_sp_str(char *str)
 	}
 }
 
-void	fp_helper(char *command)
+void	fp_helper(char *command, t_sh *sh)
 {
 	if (get_type(command) == 1)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(command, 2);
 		ft_putstr_fd(": Is a directory\nz", 2);
+		child_free(sh);
 		exit(126);
 	}
 	if (access(command, X_OK) == -1)
@@ -53,6 +54,7 @@ void	fp_helper(char *command)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(command, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
+		child_free(sh);
 		exit(126);
 	}
 }
@@ -66,11 +68,13 @@ char	*find_path(char *command, t_sh *sh)
 	i = 0;
 	if (get_type(command) != -1 && ft_strchr(command, '/'))
 	{
-		fp_helper(command);
+		fp_helper(command, sh);
 		if (access(command, X_OK) != -1)
 			return (command);
 	}
-	paths = ft_split(get_env("PATH", sh), ':');
+	str = get_env("PATH", sh);
+	paths = ft_split(str, ':');
+	free(str);
 	while (paths[i])
 	{
 		str = ft_strjoin(paths[i++], "/");
@@ -80,8 +84,6 @@ char	*find_path(char *command, t_sh *sh)
 		free(str);
 	}
 	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(command, 2);
-	ft_putstr_fd(": command not found", 2);
-	(ft_putstr_fd("\n", 2), freetab(paths));
-	return (NULL);
+	(ft_putstr_fd(command, 2), ft_putstr_fd(": command not found", 2));
+	return (ft_putstr_fd("\n", 2), freetab(paths), NULL);
 }

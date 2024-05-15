@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 14:57:10 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 16:11:43 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,25 @@ void	var_start(t_sh *sh)
 int	main(void)
 {
 	t_sh	shell;
-	int		permission_fd;
-	char	*buffer;
+	//int		permission_fd;
+	//char	*buffer;
 
 	var_start(&shell);
-	permission_fd = open("./assets/permission", O_RDWR);
-	if (permission_fd == -1)
-		(write(2, "Failed opening permission file", 30));
-	else
+	//permission_fd = open("./assets/permission", O_RDWR);
+	//if (permission_fd == -1)
+	//	(write(2, "Failed opening permission file", 30));
+	//else
 	{
-		buffer = get_next_line(permission_fd, 0);
-		if (buffer[15] == '1')
-			new_terminal(&shell, buffer);
-		else
+		//buffer = get_next_line(permission_fd, 0);
+		//if (buffer[15] == '1')
+		//	new_terminal(&shell, buffer);
+		//else
 		{
 			shell.current_dir = get_cwd();
 			if (!shell.current_dir)
 				return (0);
 			shell.emoji_path = ft_strjoin(shell.current_dir, "/assets/emojis");
-			(print_minishell_art(), free(buffer), signal_initializer());
+			(print_minishell_art(),/* free(buffer),*/ signal_initializer());
 			get_input(&shell);
 			free(shell.current_dir);
 		}

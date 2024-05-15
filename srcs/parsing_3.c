@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:27:46 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 16:28:27 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 16:00:11 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	arg_9(t_pars *pars, t_sh *sh)
 	dup2(sh->true_stdin, STDIN_FILENO);
 	dup2(sh->true_stdout, STDOUT_FILENO);
 	if (pipe(sh->pipe) != 0)
-		(perror("pipe error"), exit(EXIT_FAILURE));
+		(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
 	pars->buffer = redir_in_heredoc(sh->args[sh->position + 1]);
 	if (!pars->buffer && g_signal)
 	{

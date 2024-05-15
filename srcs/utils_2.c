@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:23:01 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/06 17:27:18 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 16:15:57 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	remove_from_tab(char ***tab, int pos)
+void	remove_from_tab(char ***tab, int pos, t_sh *sh)
 {
 	int		i;
 	int		y;
@@ -22,7 +22,8 @@ void	remove_from_tab(char ***tab, int pos)
 	y = -1;
 	tmp_tab = (char **)malloc((tab_len(*tab)) * sizeof(char *));
 	if (!tmp_tab)
-		(ft_putstr_fd("Malloc error remove_from_tab\n", 2), exit(EXIT_FAILURE));
+		(ft_putstr_fd("Malloc error remove_from_tab\n", 2), child_free(sh),
+			exit(EXIT_FAILURE));
 	while ((*tab)[i])
 	{
 		if (i != pos)
@@ -34,7 +35,7 @@ void	remove_from_tab(char ***tab, int pos)
 	*tab = tmp_tab;
 }
 
-void	add_to_tab_pos(char ***tab, char *str, int pos)
+void	add_to_tab_pos(char ***tab, char *str, int pos, t_sh *sh)
 {
 	int		i;
 	int		len;
@@ -48,7 +49,8 @@ void	add_to_tab_pos(char ***tab, char *str, int pos)
 	len = i + 2;
 	tmp = (char **)malloc(len * sizeof(char *));
 	if (!tmp)
-		(ft_putstr_fd("Malloc error add_to_tab_pos\n", 2), exit(EXIT_FAILURE));
+		(ft_putstr_fd("Malloc error add_to_tab_pos\n", 2),
+			child_free(sh), exit(EXIT_FAILURE));
 	i = -1;
 	while ((*tab)[++i] && i < pos)
 		tmp[i] = ft_strdup((*tab)[i]);
@@ -58,8 +60,7 @@ void	add_to_tab_pos(char ***tab, char *str, int pos)
 		tmp[i + 1] = ft_strdup((*tab)[i]);
 		i++;
 	}
-	tmp[i + 1] = NULL;
-	freetab(*tab);
+	(freetab(*tab), tmp[i + 1] = NULL);
 	*tab = tmp;
 }
 
@@ -110,7 +111,7 @@ void	add_to_tab(char ***tab, char *str)
 	*tab = tmp;
 }
 
-void	rm_tab_line(char ***tab, char *line)
+void	rm_tab_line(char ***tab, char *line, t_sh *sh)
 {
 	int		i;
 	int		y;
@@ -125,7 +126,7 @@ void	rm_tab_line(char ***tab, char *line)
 			tmp_tab = (char **)malloc((tab_len(*tab) - 1) * sizeof(char *));
 			if (!tmp_tab)
 				(ft_putstr_fd("Malloc error rm_tab_line\n", 2),
-					exit(EXIT_FAILURE));
+					child_free(sh), exit(EXIT_FAILURE));
 			while (++y < i)
 				tmp_tab[y] = ft_strdup((*tab)[y]);
 			while ((*tab)[++y])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:37:02 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 13:54:36 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 17:07:49 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,12 @@ void	set_env(t_sh *shell)
 	shell->variables[1] = NULL;
 }
 
+void	env_init(int *i, int *y)
+{
+	*i = 0;
+	*y = 0;
+}
+
 void	un_set(t_sh *shell, char **str)
 {
 	int		i;
@@ -34,8 +40,7 @@ void	un_set(t_sh *shell, char **str)
 	int		str_len;
 	char	*tmp_subchar;
 
-	i = 0;
-	y = 0;
+	env_init(&i, &y);
 	if (!find_sp(str, shell))
 		str_len = tab_len(str) - 1;
 	else
@@ -44,10 +49,11 @@ void	un_set(t_sh *shell, char **str)
 	{
 		while (shell->env[i])
 		{
-			tmp_subchar = get_substring_b(shell->env[i], '=');
+			tmp_subchar = get_substring_b(shell->env[i], '=', shell);
 			if (ft_equalstr(tmp_subchar, str[y]) == 1)
 			{
-				(free(tmp_subchar), rm_tab_line(&shell->env, shell->env[i]));
+				(free(tmp_subchar),
+					rm_tab_line(&shell->env, shell->env[i], shell));
 				break ;
 			}
 			(free(tmp_subchar), i++);
@@ -56,28 +62,30 @@ void	un_set(t_sh *shell, char **str)
 	}
 }
 
+
 char	*get_env(char *str, t_sh *shell)
 {
 	int		i;
 	int		y;
 	char	*t;
 
-	i = 0;
-	y = 0;
+	env_init(&i, &y);
 	while (shell->variables[y])
 	{
-		t = get_substring_b(shell->variables[y], '=');
+		t = get_substring_b(shell->variables[y], '=', shell);
 		if (ft_equalstr(t, str) == 1)
-			return (free(t), t = get_substring_a(shell->variables[y], '='), t);
+			return (free(t),
+				t = get_substring_a(shell->variables[y], '=', shell), t);
 		y++;
 	}
 	if (shell->variables[y] == NULL)
 	{
 		while (shell->env[i])
 		{
-			t = get_substring_b(shell->env[i], '=');
+			t = get_substring_b(shell->env[i], '=', shell);
 			if (ft_equalstr(t, str) == 1)
-				return (free(t), t = get_substring_a(shell->env[i], '='), t);
+				return (free(t),
+					t = get_substring_a(shell->env[i], '=', shell), t);
 			(free(t), i++);
 		}
 	}

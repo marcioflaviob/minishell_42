@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd_funcs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:08:55 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 21:34:36 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 16:00:18 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	pwd_parent(t_sh *sh, t_exe *exe, char **args)
 	else
 	{
 		if (pipe(sh->pipe) != 0)
-			(perror("pipe error"), exit(EXIT_FAILURE));
+			(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
 		write(sh->pipe[1], exe-> str, ft_strlen(exe->str));
 		write(sh->pipe[1], "\n", 1);
 		write(sh->pipe[1], "\x04", 1);

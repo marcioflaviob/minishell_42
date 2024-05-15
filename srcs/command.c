@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/15 13:43:46 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 15:56:23 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ char	**cmd_args(t_sh *sh, char **args)
 	tab = NULL;
 	temp = find_path(args[0], sh);
 	if (!temp)
+	{
+		child_free(sh);
 		exit(127);
+	}
 	add_to_tab(&tab, temp);
 	free(temp);
 	while (i < sp_index && args[i])
@@ -58,10 +61,10 @@ void	exec_cmd(char **args, t_sh *sh)
 
 	exe.i = 0;
 	if (pipe(sh->pipe) != 0)
-		(perror("pipe error"), exit(EXIT_FAILURE));
+		(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
 	exe.pid = fork();
 	if (exe.pid == -1)
-		(perror("fork error"), exit(EXIT_FAILURE));
+		(perror("fork error"), child_free(sh), exit(EXIT_FAILURE));
 	if (exe.pid == 0)
 		child_cmd_handler(sh, &exe, args);
 	else

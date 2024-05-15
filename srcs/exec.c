@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 14:44:36 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 15:57:42 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	exec_helper(t_sh *sh, t_h *hp, char **args)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(args[hp->i], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
-		exit(1);
+		(child_free(sh), exit(1));
 	}
 	if (hp->fd_output && hp->fd_output != -1)
 		(dup2(hp->fd_output, STDOUT_FILENO), close(hp->fd_output));
@@ -31,7 +31,7 @@ void	exec_helper(t_sh *sh, t_h *hp, char **args)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(args[hp->i], 2);
 		ft_putstr_fd(": Permission denied\n", 2);
-		exit(1);
+		(child_free(sh), exit(1));
 	}
 	if (hp->fd_input && hp->fd_input != -1)
 		(dup2(hp->fd_input, STDIN_FILENO), close(hp->fd_input));
@@ -102,14 +102,15 @@ void	exec_cmd_2(t_sh *sh, t_exe *exe, char **args)
 	(close(sh->pipe[1]), exe->cmd = cmd_args(sh, args));
 	if (hp.fd_input && hp.fd_input == -1)
 		(add_to_tab(&exe->cmd, args[hp.i]));
-	(execve(exe->cmd[0], exe->cmd, sh->env), exit(EXIT_FAILURE));
+	(execve(exe->cmd[0], exe->cmd, sh->env), child_free(sh));
+	(child_free(sh), exit(EXIT_FAILURE));
 }
 
 void	exec_cmd_3(t_sh *sh, t_exe *exe, char **args)
 {
 	exe->pid2 = fork();
 	if (exe->pid2 == -1)
-		(perror("fork error"), exit(EXIT_FAILURE));
+		(perror("fork error"), child_free(sh), exit(EXIT_FAILURE));
 	if (exe->pid2 == 0)
 	{
 		dup2(sh->true_stdout, STDOUT_FILENO);
@@ -120,6 +121,7 @@ void	exec_cmd_3(t_sh *sh, t_exe *exe, char **args)
 		close(sh->pipe[1]);
 		exe->cmd = cmd_args(sh, args);
 		execve(exe->cmd[0], exe->cmd, sh->env);
+		child_free(sh);
 		exit(EXIT_FAILURE);
 	}
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 18:41:50 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/04/28 19:04:55 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 16:06:25 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,24 @@ void	redir_help2(int line, char *delimiter, char *content)
 	free(content);
 }
 
-void	redir_init(char **content, int *line)
+void	redir_init(char **content, int *line, t_sh *sh)
 {
 	term_config();
 	*content = (char *) malloc(sizeof(char));
 	if (!*content)
 		(ft_putstr_fd("Malloc error redirect here_doc\n", 2),
-			exit(EXIT_FAILURE));
+			child_free(sh), exit(EXIT_FAILURE));
 	*content[0] = 0;
 	*line = 1;
 }
 
-char	*redir_in_heredoc(char *delimiter)
+char	*redir_in_heredoc(char *delimiter, t_sh *sh)
 {
 	char	*buffer;
 	char	*content;
 	int		line;
 
-	redir_init(&content, &line);
+	redir_init(&content, &line, sh);
 	while (1)
 	{
 		buffer = get_next_line(STDIN_FILENO, 0);

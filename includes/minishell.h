@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 14:43:15 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 16:09:30 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ char	*find_path(char *command, t_sh *sh);
 void	freetab(char **tab);
 char	*get_cwd(void);
 void	segment_fill_2(char *input, t_segfill *s);
-void	segment_fill(t_wc **wc, char *input);
+void	segment_fill(t_wc **wc, char *input, t_sh *sh);
 void	wildcard_finder(char ***tab, t_wc *wc);
 int		get_type(char *path);
 char	*get_curr_dir(char *path);
@@ -192,12 +192,12 @@ int		is_quoted(char *str, int i);
 void	space_adder(char **str);
 int		find_first_squote_back(char *str, int pos);
 void	add_to_tab(char ***tab, char *str);
-void	add_to_tab_pos(char ***tab, char *str, int pos);
-void	remove_from_tab(char ***tab, int pos);
+void	add_to_tab_pos(char ***tab, char *str, int pos, t_sh *sh);
+void	remove_from_tab(char ***tab, int pos, t_sh *sh);
 void	copy_tab(char ***taker, char **giver);
-char	*get_substring_b(char *str, char c);
-char	*get_substring_a(char *str, char c);
-void	rm_tab_line(char ***tab, char *line);
+char	*get_substring_b(char *str, char c, t_sh *sh);
+char	*get_substring_a(char *str, char c, t_sh *sh);
+void	rm_tab_line(char ***tab, char *line, t_sh *sh);
 int		ft_part_len(char *str, char c);
 int		is_alscore_str(char *str);
 int		is_num_str(char *str);
@@ -244,6 +244,7 @@ void	child_cmd_handler(t_sh *sh, t_exe *exe, char **args);
 void	cd_parent_2(t_sh *sh, char **args);
 int		is_builtin(char *str);
 char	**cmd_args(t_sh *sh, char **args);
+void	child_free(t_sh *sh);
 
 //Redirection functions
 void	redir_out_trunc(char *outfile, char **args, t_sh *sh);
@@ -251,7 +252,7 @@ void	redir_out_app(char *outfile, char **args, t_sh *sh);
 void	redir_out_trunc_p(char *outfile, char **args, t_sh *sh);
 void	redir_out_app_p(char *outfile, char **args, t_sh *sh);
 void	redir_in(char *infile, char **args, t_sh *sh);
-char	*redir_in_heredoc(char *delimiter);
+char	*redir_in_heredoc(char *delimiter, t_sh *sh);
 int		ft_tabchr(char **tab, char c);
 char	*ft_strstr_wc(char *str, char *to_find);
 void	clean_gnl(int fd);

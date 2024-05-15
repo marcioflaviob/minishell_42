@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   finders_func2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:10:19 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 14:56:04 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 15:27:03 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ int	find_sp_echo(char **args)
 			return (i);
 		if ((ft_equalstr(args[i], "||"))
 			|| (ft_equalstr(args[i], ">>"))
+			|| (ft_equalstr(args[i], "("))
+			|| (ft_equalstr(args[i], ")"))
 			|| (ft_equalstr(args[i], "&&")))
 			return (i);
 		i++;

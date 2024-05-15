@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_5.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/28 18:37:46 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/06 17:22:34 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/15 16:04:11 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*sorted_tab(char **tab)
 	return (str);
 }
 
-char	*get_substring_b(char *str, char c)
+char	*get_substring_b(char *str, char c, t_sh *sh)
 {
 	int		i;
 	char	*substr;
@@ -41,7 +41,7 @@ char	*get_substring_b(char *str, char c)
 	substr = (char *)malloc((i + 1) * sizeof(char));
 	if (!substr)
 		(ft_putstr_fd("Malloc error getting substring\n", 2),
-			exit(EXIT_FAILURE));
+			child_free(sh), exit(EXIT_FAILURE));
 	i = 0;
 	while (str[i] != c)
 	{
@@ -52,7 +52,7 @@ char	*get_substring_b(char *str, char c)
 	return (substr);
 }
 
-char	*get_substring_a(char *str, char c)
+char	*get_substring_a(char *str, char c, t_sh *sh)
 {
 	int		i;
 	int		y;
@@ -69,7 +69,7 @@ char	*get_substring_a(char *str, char c)
 	substr = (char *)malloc((y + 1) * sizeof(char));
 	if (!substr)
 		(ft_putstr_fd("Malloc error getting substring\n", 2),
-			exit(EXIT_FAILURE));
+			child_free(sh), exit(EXIT_FAILURE));
 	y = 0;
 	while (str[i])
 		substr[y++] = str[i++];
