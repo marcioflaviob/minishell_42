@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:10:19 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/14 21:47:56 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 13:02:26 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ char	*find_path(char *command, t_sh *sh)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(command, 2);
-			ft_putstr_fd(": Is a directory\n", 2);
+			ft_putstr_fd(": Is a directory\nz", 2);
 			exit(126);
 		}
 		if (access(command, X_OK) != -1)

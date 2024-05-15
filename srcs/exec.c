@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/14 17:14:40 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 13:39:15 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,13 @@ void	exec_cmd_2(t_sh *sh, t_exe *exe,char **args)
 	if (args[y]
 		&& ft_equalstr(args[y], "|") && !fd_output)
 		dup2(sh->pipe[1], STDOUT_FILENO);
+	if (fd_input == -1)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(args[i], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		exit(1);
+	}
 	if (fd_output && fd_output != -1)
 		(dup2(fd_output, STDOUT_FILENO), close(fd_output));
 	if (fd_output == -1)

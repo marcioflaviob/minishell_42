@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/14 21:24:42 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/15 13:35:33 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,11 +109,23 @@ void	exec_cmd_14(t_sh *sh, t_exe *exe, char **args)
 	{
 		tmp = i;
 		if (args[y] && ft_equalstr(args[y], "<"))
+		{
 			i += find_sp(&args[i], sh) + 1;
+			while (args[i + 1] && !check_special_redirect(args[i + 1]))
+				i++;
+		}
 		else if (args[y] && ft_equalstr(args[y], ">"))
+		{
 			i += find_sp(&args[i], sh) + 1;
+			while (args[i + 1] && !check_special_redirect(args[i + 1]))
+				i++;
+		}
 		else if (args[y] && ft_equalstr(args[y], ">>"))
+		{
 			i += find_sp(&args[i], sh) + 1;
+			while (args[i + 1] && !check_special_redirect(args[i + 1]))
+				i++;
+		}
 		sh->position += i - tmp;
 		y = find_sp(&args[i], sh) + i;
 	}
