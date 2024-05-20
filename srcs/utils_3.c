@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:54:50 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 16:03:24 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 15:51:52 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,14 @@ int	is_around_dquotes(char *str, int pos)
 	i = 0;
 	checker = 0;
 	while (i < pos)
-		if (str[i++] == '"')
-			mod_checker(&checker);
-	return (checker);
+	{
+		if (str[i] == '"')
+			checker = !checker;
+		i++;
+	}
+	if (checker)
+		return (1);
+	return (0);
 }
 
 int	is_around_squotes(char *str, int pos)
@@ -33,16 +38,14 @@ int	is_around_squotes(char *str, int pos)
 	i = 0;
 	checker = 0;
 	while (i < pos)
-		if (str[i++] == '\'')
-			mod_checker(&checker);
-	if (checker)
 	{
-		while (str[i])
-			if (str[i++] == '\'')
-				return (checker);
-		return (0);
+		if (str[i] == '\'')
+			checker = !checker;
+		i++;
 	}
-	return (checker);
+	if (checker)
+		return (1);
+	return (0);
 }
 
 int	find_first_squote_back(char *str, int pos)

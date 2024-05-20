@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 18:50:22 by trimize           #+#    #+#             */
-/*   Updated: 2024/04/02 17:55:18 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 16:06:54 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,29 @@ char	*ft_stradd(char *str, int start, char *add)
 	return (result);
 }
 
-void	mod_checker(int *checker)
+int	is_dquote_in_squote(char *str, int pos)
 {
-	if (*checker == 0)
-		*checker = 1;
-	else
-		*checker = 0;
+	int	i;
+	int	dquote_pos;
+	int	squote;
+	int	dquote;
+
+	i = 0;
+	dquote_pos = -1;
+	squote = 0;
+	dquote = 0;
+	while (i < pos)
+	{
+		if (str[i] == '"')
+		{
+			dquote = !dquote;
+			dquote_pos = i;
+		}
+		else if (str[i] == '\'')
+			squote = !squote;
+		i++;
+	}
+	if (dquote_pos > -1 && is_around_squotes(str, dquote))
+		return (1);
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/13 16:35:26 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 13:19:53 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	arg(t_sh *sh)
 	else
 	{
 		pars.special = check_special(sh->args[sh->position], sh);
-		if (arg_checker(sh->args[sh->position]) && !pars.special)
+		if (arg_checker(sh->args[sh->position], sh) && !pars.special)
 			sh->position++;
 		else if (pars.special && !sh->args[sh->position + 1])
 			arg_3(sh);

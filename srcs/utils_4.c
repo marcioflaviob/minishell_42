@@ -6,7 +6,7 @@
 /*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 14:40:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/06 17:22:26 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:40:22 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,22 @@ void	set_sp_bool(t_sh *sh)
 
 int	is_quoted(char *str, int i)
 {
-	if (is_around_dquotes(str, i) || is_around_squotes(str, i))
+	int	j;
+	int	s_quote;
+	int	d_quote;
+
+	j = 0;
+	s_quote = 0;
+	d_quote = 0;
+	while (j < i)
+	{
+		if (str[j] == '"' && !s_quote)
+			d_quote = !d_quote;
+		else if (str[j] == '\'')
+			s_quote = !s_quote;
+		j++;
+	}
+	if (s_quote || d_quote)
 		return (1);
 	return (0);
 }

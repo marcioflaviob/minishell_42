@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/20 12:47:19 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 16:07:06 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ typedef struct c_args
 {
 	int	i;
 	int	args;
-	int	quote_flag;
+	int	squote_flag;
+	int	dquote_flag;
 }	t_c_args;
 
 typedef struct s_wc
@@ -188,6 +189,7 @@ void	ft_strerase(char **str, int start, int num);
 char	*ft_stradd(char *str, int start, char *add);
 int		is_around_squotes(char *str, int pos);
 int		is_around_dquotes(char *str, int pos);
+int		is_dquote_in_squote(char *str, int pos);
 int		is_quoted(char *str, int i);
 void	space_adder(char **str);
 int		find_first_squote_back(char *str, int pos);
@@ -202,7 +204,6 @@ int		ft_part_len(char *str, char c);
 int		is_alscore_str(char *str);
 int		is_num_str(char *str);
 void	print_tab(char **tab);
-void	mod_checker(int *checker);
 int		ft_strlen_gnl(const char *s);
 char	*ft_strjoin_gnl(char *s1, char *s2);
 char	*get_var_name(char *str);

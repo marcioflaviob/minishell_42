@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_better_split.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:18:13 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 15:25:11 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 15:30:15 by mbrandao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,24 @@
 static int	word_len(char const *str)
 {
 	int	i;
-	int	quote_flag;
+	int	squote_flag;
+	int	dquote_flag;
 
 	i = 0;
-	quote_flag = 0;
-	while (str[i] && (str[i] != ' ' || quote_flag))
+	squote_flag = 0;
+	dquote_flag = 0;
+	while (str[i] && (str[i] != ' ' || (squote_flag || dquote_flag)))
 	{
 		if (str[i] == '\'' || str[i] == '"')
 		{
-			quote_flag = !quote_flag;
+			if (str[i] == '"' && !squote_flag)
+				dquote_flag = !dquote_flag;
+			else if (str[i] == '\'')
+				squote_flag = !squote_flag;
 			i++;
 			continue ;
 		}
-		if ((str[i] == '(' || str[i] == ')') && !quote_flag)
+		if ((str[i] == '(' || str[i] == ')') && !squote_flag && !dquote_flag)
 		{
 			if (i != 0)
 				break ;
