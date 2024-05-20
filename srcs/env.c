@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 13:57:40 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/20 12:45:33 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	export_2(t_sh *shell, t_exp *exp, char **str)
 {
-	exp->str1 = get_substring_b(shell->env[exp->i], '=');
+	exp->str1 = get_substring_b(shell->env[exp->i], '=', shell);
 	if (ft_equalstr(exp->str1, exp->str2) == 1)
 	{
 		if (!ft_strrchr(str[exp->y], '='))
@@ -86,7 +86,7 @@ void	export(t_sh *shell, char **str)
 		}
 		else
 		{
-			exp.str2 = get_substring_b(str[exp.y], '=');
+			exp.str2 = get_substring_b(str[exp.y], '=', shell);
 			if (!is_alscore_str(exp.str2) || ft_equalstr(str[exp.y], "="))
 				return (export_3(shell, str, &exp));
 		}

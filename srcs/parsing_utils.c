@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:31:48 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 13:47:39 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/20 12:46:05 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ int	ft_find_first(const char *s, int c)
 	return (0);
 }
 
-int	arg_checker(char *str)
+int	arg_checker(char *str, t_sh *sh)
 {
 	char	*sub;
 
 	if (!ft_find_first(str, '='))
 		return (0);
-	sub = get_substring_b(str, '=');
+	sub = get_substring_b(str, '=', sh);
 	if (ft_find_first(sub, '\'') || ft_find_first(sub, '"'))
 		return (0);
 	return (1);

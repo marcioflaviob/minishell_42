@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:11:51 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/13 15:09:36 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 12:47:03 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	wildcard_finder_4(t_wc *wc, char *str, int *pass, int j)
 	}
 }
 
-void	wildcard_finder(char ***tab, t_wc *wc)
+void	wildcard_finder(char ***tab, t_wc *wc, t_sh *sh)
 {
 	int		i;
 	int		j;
@@ -76,7 +76,7 @@ void	wildcard_finder(char ***tab, t_wc *wc)
 		j = 0;
 		wildcard_finder_4(wc, str, &pass, j);
 		if (!pass)
-			remove_from_tab(tab, i--);
+			remove_from_tab(tab, i--, sh);
 		i++;
 	}
 }

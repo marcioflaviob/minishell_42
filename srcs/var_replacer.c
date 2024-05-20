@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   var_replacer.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 17:59:46 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/13 21:53:50 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/20 12:46:45 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	find_variable_index(char **variables, char *name)
+int	find_variable_index(char **variables, char *name, t_sh *sh)
 {
 	int		i;
 	char	*tmp;
@@ -20,7 +20,7 @@ int	find_variable_index(char **variables, char *name)
 	i = 0;
 	while (variables[i])
 	{
-		tmp = get_substring_b(variables[i], '=');
+		tmp = get_substring_b(variables[i], '=', sh);
 		if (ft_equalstr(tmp, name))
 			return (free(tmp), i);
 		i++;
@@ -36,10 +36,10 @@ void	add_env(t_sh *sh, char *variable)
 	char	*tmp;
 
 	name = get_var_name(variable);
-	index = find_variable_index(sh->variables, name);
+	index = find_variable_index(sh->variables, name, sh);
 	if (index != -1)
 	{
-		remove_from_tab(&(sh->variables), index);
+		remove_from_tab(&(sh->variables), index, sh);
 		add_to_tab(&(sh->variables), variable);
 	}
 	else

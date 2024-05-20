@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   count_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:24:23 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 13:45:46 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:16:11 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,6 @@ int	count_args(char const *str)
 	c.args = 1;
 	c.quote_flag = 0;
 	count_args_4(str, &c);
+	//printf("\narg counter: %d\n", c.args);
 	return (c.args);
 }

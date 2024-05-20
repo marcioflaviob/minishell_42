@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:12:49 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/15 16:09:47 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 12:47:25 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	wc_else(t_sh *sh, t_segcheck *c)
 	c->result = ft_split(c->buffer, '\n');
 	free(c->buffer);
 	segment_fill(&(c->wc), sh->args[c->pos], sh);
-	wildcard_finder(&(c->result), c->wc);
+	wildcard_finder(&(c->result), c->wc, sh);
 	remove_from_tab(&sh->args, c->pos, sh);
 	c->i = 0;
 	while (c->result[c->i])

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 16:09:30 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 12:47:19 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ void	freetab(char **tab);
 char	*get_cwd(void);
 void	segment_fill_2(char *input, t_segfill *s);
 void	segment_fill(t_wc **wc, char *input, t_sh *sh);
-void	wildcard_finder(char ***tab, t_wc *wc);
+void	wildcard_finder(char ***tab, t_wc *wc, t_sh *sh);
 int		get_type(char *path);
 char	*get_curr_dir(char *path);
 //void	builtin_dealer(t_sh *sh, char *cmd);
@@ -282,7 +282,7 @@ void	arg_16(t_sh *sh);
 int		go_af_par(char **args);
 int		check_sp_afpar(char **args);
 int		check_special(char *str, t_sh *sh);
-int		arg_checker(char *str);
+int		arg_checker(char *str, t_sh *sh);
 int		ft_find_first(const char *s, int c);
 int		count_args(char const *str);
 int		find_sp(char **args, t_sh *sh);
