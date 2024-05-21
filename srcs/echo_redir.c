@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 14:16:05 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/21 14:37:43 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 17:19:32 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,8 @@ int	redirect(t_sh *sh, char **args)
 	if (!redir.error_in || !redir.error_out)
 		return (0);
 	if (redir.fd_output && redir.fd_output != -1)
-		(dup2(redir.fd_output, STDOUT_FILENO), close(redir.fd_output), close(sh->pipe[1]));
+		(dup2(redir.fd_output, STDOUT_FILENO), close(redir.fd_output),
+			close(sh->pipe[1]));
 	if (redir.fd_input && redir.fd_input != -1)
 		(dup2(redir.fd_input, STDIN_FILENO), close(redir.fd_input));
 	return (1);

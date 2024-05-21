@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:27:46 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 13:22:25 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 17:34:49 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,18 @@ void	arg_7(t_pars *pars, t_sh *sh)
 		&sh->args[sh->position], sh);
 	sh->position += 2;
 	if (check_special(sh->args[sh->position], sh))
-		arg(sh);
-	exec_cmd(&sh->args[sh->position], sh);
-	free(sh->wrong_file);
-	sh->wrong_file = NULL;
+	{
+		if (ft_equalstr(sh->args[sh->position], "|"))
+			if (pipe(sh->pipe) != 0)
+				(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
+		close(sh->pipe[1]);
+	}
+	else
+	{
+		exec_cmd(&sh->args[sh->position], sh);
+		free(sh->wrong_file);
+		sh->wrong_file = NULL;
+	}
 }
 
 void	arg_8(t_pars *pars, t_sh *sh)

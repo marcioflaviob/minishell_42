@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 15:56:06 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 17:30:55 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ void	child_cmd_handler(t_sh *sh, t_exe *exe, char **args)
 {
 	before_command();
 	if (is_builtin(args[0]))
-		(child_free(sh), exit(EXIT_SUCCESS));
+		(child_free(sh), close(sh->pipe[1]), close(sh->pipe[0]),
+			close(sh->true_stdin), close(sh->true_stdout), exit(EXIT_SUCCESS));
 	if (find_sp(args, sh))
 	{
 		if (ft_equalstr(args[find_sp(args, sh)], "<")

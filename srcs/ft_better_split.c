@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_better_split.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 12:18:13 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/20 15:30:15 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:39:40 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,13 @@
 
 static int	word_len(char const *str)
 {
-	int	i;
-	int	squote_flag;
-	int	dquote_flag;
+	t_word	w;
 
-	i = 0;
-	squote_flag = 0;
-	dquote_flag = 0;
-	while (str[i] && (str[i] != ' ' || (squote_flag || dquote_flag)))
-	{
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			if (str[i] == '"' && !squote_flag)
-				dquote_flag = !dquote_flag;
-			else if (str[i] == '\'')
-				squote_flag = !squote_flag;
-			i++;
-			continue ;
-		}
-		if ((str[i] == '(' || str[i] == ')') && !squote_flag && !dquote_flag)
-		{
-			if (i != 0)
-				break ;
-			else
-				i++;
-			continue ;
-		}
-		i++;
-	}
-	return (i);
+	w.i = 0;
+	w.squote_flag = 0;
+	w.dquote_flag = 0;
+	word_len_2(str, &w);
+	return (w.i);
 }
 
 static int	initial_config(int *i, int *j, int size, char ***tab)

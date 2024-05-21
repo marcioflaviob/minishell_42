@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/20 16:33:21 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 17:42:54 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@
 # define CYAN_BACK "\033[48;5;9m"
 
 extern int		g_signal;
+
+typedef struct s_word
+{
+	int	i;
+	int	squote_flag;
+	int	dquote_flag;
+}	t_word;
 
 typedef struct e_h
 {
@@ -216,7 +223,7 @@ int		find_sp_echo(char **args, t_sh *sh);
 int		find_non_redir(char **args, t_sh *sh);
 
 int		redirect(t_sh *sh, char **args);
-
+void	word_len_2(const char *str, t_word *w);
 void	exec_cmd_3(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_2(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_4(t_sh *sh, t_exe *exe, char **args);
@@ -290,6 +297,7 @@ int		find_sp(char **args, t_sh *sh);
 int		check_sp_afpar(char **args);
 int		find_sp_par(char **args, t_sh *sh);
 int		par_check_all(char **str, t_sh *sh);
+void	count_args_4(char const *str, t_c_args *c);
 
 //Built-in functions
 void	pwd(void);

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:37:02 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 17:07:49 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 17:39:58 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	un_set(t_sh *shell, char **str)
 		y++;
 	}
 }
-
 
 char	*get_env(char *str, t_sh *shell)
 {

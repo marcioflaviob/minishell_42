@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_sign_dealer.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 18:30:25 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/20 16:09:44 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:43:28 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ void	replace_env(char **str, t_sh *sh)
 	j = has_dollar_sign(*str);
 	while (j != -1)
 	{	
-		if (is_around_squotes(*str, j) && (!is_around_dquotes(*str, j) || is_dquote_in_squote(*str, j)))
+		if (is_around_squotes(*str, j) && (!is_around_dquotes(*str, j)
+				|| is_dquote_in_squote(*str, j)))
 			;
 		else
 			replace_env_helper(&str, sh);

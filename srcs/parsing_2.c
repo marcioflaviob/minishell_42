@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:24:32 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 14:43:46 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 17:26:45 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,12 @@ void	arg_4(t_sh *sh)
 		&sh->args[sh->position], sh);
 	sh->position += 2;
 	if (check_special(sh->args[sh->position], sh))
-		arg(sh);
+	{
+		if (ft_equalstr(sh->args[sh->position], "|"))
+			if (pipe(sh->pipe) != 0)
+				(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
+		close(sh->pipe[1]);
+	}
 	else if (sh->position != tab_len(sh->args) - 1)
 		exec_cmd(&sh->args[sh->position], sh);
 }
@@ -58,7 +63,12 @@ void	arg_5(t_sh *sh)
 		&sh->args[sh->position], sh);
 	sh->position += 2;
 	if (check_special(sh->args[sh->position], sh))
-		arg(sh);
+	{
+		if (ft_equalstr(sh->args[sh->position], "|"))
+			if (pipe(sh->pipe) != 0)
+				(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
+		close(sh->pipe[1]);
+	}
 	else if (sh->position != tab_len(sh->args) - 1)
 		exec_cmd(&sh->args[sh->position], sh);
 }

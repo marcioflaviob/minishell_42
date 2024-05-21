@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard5.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:12:49 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/20 13:40:51 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:34:30 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,16 @@ void	wc_while(t_sh *sh, t_segcheck *c)
 	}
 }
 
+void	wc_else_2(t_sh *sh, t_segcheck *c)
+{
+	sh->args[c->pos] = ft_stradd(sh->args[c->pos], 0, "\"");
+	sh->args[c->pos] = ft_stradd(sh->args[c->pos],
+			ft_strlen_gnl(sh->args[c->pos]), "\"");
+}
+
 void	wc_else(t_sh *sh, t_segcheck *c)
 {
-	waitpid(c->pid, NULL, 0);
-	close(c->fd[1]);
+	(waitpid(c->pid, NULL, 0), close(c->fd[1]));
 	while (1)
 	{
 		c->tmp = get_next_line(c->fd[0], 0);
@@ -53,15 +59,12 @@ void	wc_else(t_sh *sh, t_segcheck *c)
 		c->buffer = ft_strjoin_gnl(c->buffer, c->tmp);
 		free(c->tmp);
 	}
-	close(c->fd[0]);
-	c->result = ft_split(c->buffer, '\n');
-	free(c->buffer);
-	segment_fill(&(c->wc), sh->args[c->pos], sh);
+	(close(c->fd[0]), c->result = ft_split(c->buffer, '\n'));
+	(free(c->buffer), segment_fill(&(c->wc), sh->args[c->pos], sh));
 	wildcard_finder(&(c->result), c->wc, sh);
 	if (c->result && c->result[0])
 	{
-		remove_from_tab(&sh->args, c->pos, sh);
-		c->i = 0;
+		(remove_from_tab(&sh->args, c->pos, sh), c->i = 0);
 		while (c->result[c->i])
 		{
 			c->result[c->i] = ft_stradd(c->result[c->i], 0, "'");
@@ -71,10 +74,7 @@ void	wc_else(t_sh *sh, t_segcheck *c)
 		}
 	}
 	else
-	{
-		sh->args[c->pos] = ft_stradd(sh->args[c->pos], 0, "\"");
-		sh->args[c->pos] = ft_stradd(sh->args[c->pos], ft_strlen_gnl(sh->args[c->pos]), "\"");
-	}
+		wc_else_2(sh, c);
 }
 
 int	wildcard(t_sh *sh)
