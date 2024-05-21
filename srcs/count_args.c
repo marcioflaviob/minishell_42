@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   count_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:24:23 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/20 14:51:07 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/21 14:49:23 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	count_args_5(char const *str, t_c_args *c)
 {
 	while ((str[c->i] != 0) && (str[c->i] == ' '))
 	{
-		if (!c->dquote_flag && !c->squote_flag)
+		if (!c->dquote_flag && !c->squote_flag && c->i > 0)
 			c->args++;
 		while ((str[c->i] != 0) && (str[c->i] == ' '))
 			c->i++;

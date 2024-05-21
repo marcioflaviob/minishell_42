@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 15:57:42 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 12:17:04 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	exec_helper2(t_sh *sh, t_h *hp, char **args)
 {
 	if (args[hp->y] && ft_equalstr(args[hp->y], "<"))
 	{
-		hp->i += find_sp_redir(&args[hp->i], sh, hp->position) + 1;
+		hp->i += find_sp_redir(&args[hp->i], sh, hp->position + hp->i) + 1;
 		while (args[hp->i + 1] && !check_special_redirect(args[hp->i + 1]))
 			hp->i++;
 		hp->fd_input = open(args[hp->i], O_RDONLY);
@@ -54,7 +54,7 @@ int	exec_helper2(t_sh *sh, t_h *hp, char **args)
 	}
 	if (args[hp->y] && ft_equalstr(args[hp->y], ">"))
 	{
-		hp->i += find_sp_redir(&args[hp->i], sh, hp->position) + 1;
+		hp->i += find_sp_redir(&args[hp->i], sh, hp->position + hp->i) + 1;
 		while (args[hp->i + 1] && !check_special_redirect(args[hp->i + 1]))
 			hp->i++;
 		hp->fd_output = open(args[hp->i], O_WRONLY | O_CREAT | O_TRUNC, 0666);
@@ -68,7 +68,7 @@ int	exec_helper3(t_sh *sh, t_h *hp, char **args)
 {
 	if (args[hp->y] && ft_equalstr(args[hp->y], ">>"))
 	{
-		hp->i += find_sp_redir(&args[hp->i], sh, hp->position) + 1;
+		hp->i += find_sp_redir(&args[hp->i], sh, hp->position + hp->i) + 1;
 		while (args[hp->i + 1] && !check_special_redirect(args[hp->i + 1]))
 			hp->i++;
 		hp->fd_output = open(args[hp->i],
@@ -86,7 +86,7 @@ void	exec_cmd_2(t_sh *sh, t_exe *exe, char **args)
 	hp.fd_output = 0;
 	hp.fd_input = 0;
 	hp.i = 0;
-	hp.position = hp.i;
+	hp.position = sh->position;
 	hp.y = find_sp(&args[hp.i], sh);
 	while (ft_equalstr(args[hp.y], "<")
 		|| ft_equalstr(args[hp.y], ">") || ft_equalstr(args[hp.y], ">>"))
@@ -95,8 +95,7 @@ void	exec_cmd_2(t_sh *sh, t_exe *exe, char **args)
 			break ;
 		if (exec_helper3(sh, &hp, args))
 			break ;
-		hp.position = hp.i;
-		hp.y = find_sp_redir(&args[hp.i], sh, hp.position) + hp.i;
+		hp.y += find_sp_redir(&args[hp.i], sh, hp.position + hp.i) + 1;
 	}
 	(exec_helper(sh, &hp, args), close(sh->pipe[0]));
 	(close(sh->pipe[1]), exe->cmd = cmd_args(sh, args));

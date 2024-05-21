@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:24:32 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 16:25:12 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 14:43:46 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 void	arg_2(t_pars *pars, t_sh *sh)
 {
+	if (ft_equalstr(sh->args[0], "|"))
+	{
+		sh->last_cmd_st = 2;
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+	}
 	pars->buffer = ft_itoa(sh->last_cmd_st);
 	pars->tmp = ft_strjoin("?=", pars->buffer);
 	free(pars->buffer);
@@ -40,7 +45,10 @@ void	arg_4(t_sh *sh)
 	redir_out_trunc_p(sh->args[sh->position + 1],
 		&sh->args[sh->position], sh);
 	sh->position += 2;
-	exec_cmd(&sh->args[sh->position], sh);
+	if (check_special(sh->args[sh->position], sh))
+		arg(sh);
+	else if (sh->position != tab_len(sh->args) - 1)
+		exec_cmd(&sh->args[sh->position], sh);
 }
 
 void	arg_5(t_sh *sh)
@@ -49,7 +57,10 @@ void	arg_5(t_sh *sh)
 	redir_out_app_p(sh->args[sh->position + 1],
 		&sh->args[sh->position], sh);
 	sh->position += 2;
-	exec_cmd(&sh->args[sh->position], sh);
+	if (check_special(sh->args[sh->position], sh))
+		arg(sh);
+	else if (sh->position != tab_len(sh->args) - 1)
+		exec_cmd(&sh->args[sh->position], sh);
 }
 
 void	arg_6(t_sh *sh)
@@ -57,5 +68,6 @@ void	arg_6(t_sh *sh)
 	ft_putstr_fd("minishell: no such file or directory: ", 2);
 	ft_putstr_fd(sh->args[sh->position + 1], 2);
 	ft_putstr_fd("\n", 2);
+	sh->last_cmd_st = 1;
 	sh->position = tab_len(sh->args) - 1;
 }

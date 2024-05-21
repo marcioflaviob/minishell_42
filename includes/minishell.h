@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/20 16:07:06 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/20 16:33:21 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,7 @@ void	sort_strings_by_first_char(char **arr, int n);
 int		check_special_redirect(char *str);
 
 int		find_sp_redir(char **args, t_sh *sh, int j);
-int		find_sp_echo(char **args);
+int		find_sp_echo(char **args, t_sh *sh);
 int		find_non_redir(char **args, t_sh *sh);
 
 int		redirect(t_sh *sh, char **args);

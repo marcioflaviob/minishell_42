@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:30:19 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 16:30:33 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 14:07:32 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	arg_13(t_pars *pars, t_sh *sh)
 		arg_5(sh);
 	else if (pars->special == 3 && !sh->args[sh->position + 2])
 		(dup2(sh->true_stdin, STDIN_FILENO),
-			redir_in(sh->args[sh->position + 1], &sh->args[0], sh));
+			redir_in(sh->args[sh->position + 1], &sh->args[0], sh),
+			sh->position = tab_len(sh->args) - 1);
 	else if (pars->special == 3 && sh->args[sh->position + 2])
 		arg_8(pars, sh);
 	else if (pars->special == 4)

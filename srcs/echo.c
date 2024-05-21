@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 23:24:42 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/14 19:46:04 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 16:24:50 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ char	*echo(char **args, t_sh *sh)
 	else
 	{
 		sh->echo_i = 1;
-		if (find_sp_echo(args))
-			sh->echo_y = find_sp_echo(args);
+		if (find_sp_echo(args, sh))
+			sh->echo_y = find_sp_echo(args, sh);
 		else
 			sh->echo_y = tab_len(args) - 1;
 		while (sh->echo_i < sh->echo_y)

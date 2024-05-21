@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 15:58:17 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 12:59:51 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	exec_cmd_7(t_sh *sh, t_exe *exe, char **args)
 	else
 		(dup2(sh->pipe[1], STDOUT_FILENO),
 			close(sh->pipe[1]), close(sh->pipe[0]));
-	(close(sh->pipe[1]), close(sh->pipe[0]));
 	exe->cmd = cmd_args(sh, args);
 	if (sh->wrong_file != NULL)
 		add_to_tab(&exe->cmd, sh->wrong_file);

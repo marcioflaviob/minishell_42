@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:10:19 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 15:27:03 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/20 18:00:57 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,22 +76,22 @@ int	find_non_redir(char **args, t_sh *sh)
 	return (tab_len(sh->args) - 1 - sh->position);
 }
 
-int	find_sp_echo(char **args)
+int	find_sp_echo(char **args, t_sh *sh)
 {
 	int	i;
 
 	i = 0;
 	while (args[i])
 	{
-		if (ft_equalstr(args[i], ">")
-			|| ft_equalstr(args[i], "|")
-			|| ft_equalstr(args[i], "<"))
+		if ((ft_equalstr(args[i], ">") && sh->sp_bool[sh->position + i])
+			|| (ft_equalstr(args[i], "|") && sh->sp_bool[sh->position + i])
+			|| (ft_equalstr(args[i], "<") && sh->sp_bool[sh->position + i]))
 			return (i);
-		if ((ft_equalstr(args[i], "||"))
-			|| (ft_equalstr(args[i], ">>"))
-			|| (ft_equalstr(args[i], "("))
-			|| (ft_equalstr(args[i], ")"))
-			|| (ft_equalstr(args[i], "&&")))
+		if ((ft_equalstr(args[i], "||") && sh->sp_bool[sh->position + i])
+			|| (ft_equalstr(args[i], ">>") && sh->sp_bool[sh->position + i])
+			|| (ft_equalstr(args[i], "(") && sh->sp_bool[sh->position + i])
+			|| (ft_equalstr(args[i], ")") && sh->sp_bool[sh->position + i])
+			|| (ft_equalstr(args[i], "&&") && sh->sp_bool[sh->position + i]))
 			return (i);
 		i++;
 	}

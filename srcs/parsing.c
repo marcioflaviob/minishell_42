@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 18:55:56 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/20 13:19:53 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/20 17:00:03 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	arg(t_sh *sh)
 	t_pars	pars;
 
 	pars.fd = 0;
-	if (sh->position == tab_len(sh->args) - 1)
+	if (sh->position == tab_len(sh->args) - 1 || ft_equalstr(sh->args[0], "|"))
 		arg_2(&pars, sh);
 	else
 	{

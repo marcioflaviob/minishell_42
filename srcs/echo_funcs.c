@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:09:24 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 15:56:38 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/21 14:33:56 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	echo_parent(t_sh *sh, t_exe *exe, char **args)
 		if (pipe(sh->pipe_par) != 0)
 			(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
 		write(sh->pipe_par[1], exe->str, ft_strlen(exe->str));
-		write(sh->pipe_par[1], "\x04", 1);
 		close(sh->pipe_par[1]);
 	}
 	else
@@ -28,7 +27,6 @@ void	echo_parent(t_sh *sh, t_exe *exe, char **args)
 		if (pipe(sh->pipe) != 0)
 			(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
 		write(sh->pipe[1], exe->str, ft_strlen(exe->str));
-		write(sh->pipe[1], "\x04", 1);
 		close(sh->pipe[1]);
 	}
 	if (find_sp(args, sh) == 0)
@@ -94,14 +92,16 @@ void	echo_parent_4(t_sh *sh, t_exe *exe, char **args)
 {
 	if (sh->out_par)
 		(dup2(sh->fd_output, STDOUT_FILENO));
+	dup2(sh->true_stdin, STDIN_FILENO);
 	exe->str = echo(args, sh);
 	sh->last_cmd_st = 0;
 	sh->bool_result = 1;
-	if (ft_equalstr(args[find_sp(args, sh)], "|"))
-		echo_parent(sh, exe, args);
-	else if (ft_equalstr(args[find_sp_echo(args)], ">")
-		|| ft_equalstr(args[find_sp_echo(args)], ">>")
-		|| ft_equalstr(args[find_sp_echo(args)], "<"))
+	//if (ft_equalstr(args[find_sp(args, sh)], "|"))
+	//	echo_parent(sh, exe, args);
+	if (ft_equalstr(args[find_sp_echo(args, sh)], ">")
+		|| ft_equalstr(args[find_sp_echo(args, sh)], ">>")
+		|| ft_equalstr(args[find_sp_echo(args, sh)], "<")
+		|| ft_equalstr(args[find_sp_echo(args, sh)], "|"))
 		echo_parent_2(sh, exe, args);
 	else
 	{
