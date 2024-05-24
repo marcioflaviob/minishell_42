@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 17:42:54 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 16:23:41 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ void	signal_initializer(void);
 void	fill_color(char **color);
 char	*find_path(char *command, t_sh *sh);
 void	freetab(char **tab);
+void	free_wc(t_wc *wc);
 char	*get_cwd(void);
 void	segment_fill_2(char *input, t_segfill *s);
 void	segment_fill(t_wc **wc, char *input, t_sh *sh);

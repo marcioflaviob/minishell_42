@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:37:02 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 17:39:58 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 15:41:47 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*get_env(char *str, t_sh *shell)
 		if (ft_equalstr(t, str) == 1)
 			return (free(t),
 				t = get_substring_a(shell->variables[y], '=', shell), t);
-		y++;
+		(free(t), y++);
 	}
 	if (shell->variables[y] == NULL)
 	{

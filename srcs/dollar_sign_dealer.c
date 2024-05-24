@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 18:30:25 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/21 17:43:28 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 16:08:24 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ void	replace_env_helper(char ***str, t_sh *sh)
 		ft_strerase(*str, j, ft_strlen(var_name) + 1);
 		**str = ft_stradd(**str, j, var_val);
 	}
+	free(var_name);
+	free(var_val);
 }
 
 void	replace_env(char **str, t_sh *sh)

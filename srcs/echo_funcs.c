@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:09:24 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 17:19:02 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 16:01:21 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void	echo_parent_4(t_sh *sh, t_exe *exe, char **args)
 	else
 	{
 		ft_putstr_fd(exe->str, 1);
+		close(sh->pipe[1]);
 		if (find_sp(args, sh) == 0)
 			sh->position = tab_len(sh->args) - 1;
 		else

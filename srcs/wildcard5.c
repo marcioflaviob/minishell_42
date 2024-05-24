@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:12:49 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/21 17:34:30 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 16:23:54 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	init_wc(t_sh *sh, t_segcheck *c)
 	c->cmd = malloc(2 * sizeof(char *));
 	if (!c->cmd)
 		(ft_putstr_fd("Malloc error ls in wildcard", 2),
-			child_free(sh), exit(EXIT_FAILURE));
+			free(c->buffer), child_free(sh), exit(EXIT_FAILURE));
 	c->cmd[0] = find_path("ls", sh);
 	c->cmd[1] = NULL;
 	return (0);
@@ -91,14 +91,17 @@ int	wildcard(t_sh *sh)
 		if (c.pid == 0)
 		{
 			dup2(c.fd[1], 1);
-			close(c.fd[0]);
-			close(c.fd[1]);
+			(close(c.fd[0]), close(c.fd[1]));
+			free(c.buffer);
 			execve(c.cmd[0], c.cmd, sh->env);
+			freetab(c.cmd);
 			return (1);
 		}
 		else
-			return (wc_else(sh, &c), 1);
+			return (wc_else(sh, &c), close(c.fd[0]), close(c.fd[1]),
+				freetab(c.result), freetab(c.cmd), free_wc(c.wc), 1);
 	}
 	else
-		return (0);
+		return (close(c.fd[0]), close(c.fd[1]),
+			free(c.buffer), freetab(c.cmd), 0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 18:50:22 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/20 16:06:54 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/24 16:17:35 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	ft_strerase(char **str, int start, int num)
 	while ((*str)[j])
 		result[i++] = (*str)[j++];
 	result[i] = 0;
+	free(*str);
 	*str = result;
 }
 
