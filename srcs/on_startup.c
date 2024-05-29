@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/29 13:28:45 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 16:38:06 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ void	get_input(t_sh *sh)
 	if (sh->fd_output != -2)
 		(close(sh->fd_output), sh->fd_output = -2);
 	sh->position = 0;
-	waitpid(-1, &sh->last_cmd_st, 0);
 	prompt = get_prompt(sh);
 	write(STDOUT_FILENO, "\033[s", 3);
 	buffer_dealer(sh, &buffer, prompt);

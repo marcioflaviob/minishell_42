@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/29 13:58:45 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 16:53:39 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,15 @@ void	exec_cmd_13(t_sh *sh)
 	size_t	i;
 
 	i = 0;
-	close(sh->pipe[1]); //dd
+	close(sh->pipe[1]);
 	close(sh->pipe[0]);
 	if (sh->op_pipe)
 	{
 		close(sh->pipe_par[0]);
 		close(sh->pipe_par[1]);
 	}
-	while (i <= sh->nb_cmd - 1)
+	//waitpid(sh->pid[sh->nb_cmd - 1], &sh->last_cmd_st, 0);
+	while (i < sh->nb_cmd)
 		waitpid(sh->pid[i++], &sh->last_cmd_st, 0);
 	sh->last_cmd_st = WEXITSTATUS(sh->last_cmd_st);
 	if (sh->last_cmd_st == 131)

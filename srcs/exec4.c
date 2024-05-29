@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/29 13:20:56 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 16:27:46 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	exec_cmd_18(t_sh *sh, char **args)
 		|| ft_equalstr(args[find_sp(args, sh)], ">>")
 		|| ft_equalstr(args[find_sp(args, sh)], "<"))
 		exec_cmd_14(sh, args);
+	else if (ft_equalstr(args[find_sp(args, sh)], "<<"))
+		exec_cmd_20(sh);
 	else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 	{
 		close(sh->pipe[1]);

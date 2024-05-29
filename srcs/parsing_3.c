@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:27:46 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 17:34:49 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 16:04:22 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void	arg_9(t_pars *pars, t_sh *sh)
 	dup2(sh->pipe[0], STDIN_FILENO);
 	close(sh->pipe[0]);
 	sh->position += 2;
-	exec_cmd(&sh->args[sh->position], sh);
 }
 
 void	arg_10(t_sh *sh)

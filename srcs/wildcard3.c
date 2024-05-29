@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:09:29 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/15 16:05:12 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 15:34:04 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	segment_fill_5(char *input, t_segfill *s, t_wc **wc, t_sh *sh)
 	if (s->i == 0 && input[s->i] != '*')
 	{
 		s->x = 0;
-		(*wc)[s->j].segment = malloc (ft_part_len(input, '*')
+		(*wc)[s->j].segment = malloc (ft_part_len(input + s->i, '*')
 				+ 1 * sizeof(char));
 		if (!((*wc)[s->j].segment))
 			(ft_putstr_fd("Malloc error segment in segment fill", 2),
@@ -82,7 +82,7 @@ void	segment_fill_6(char *input, t_segfill *s, t_wc **wc, t_sh *sh)
 	{
 		s->i++;
 		s->x = 0;
-		(*wc)[s->j].segment = malloc (ft_part_len(input + 1, '*')
+		(*wc)[s->j].segment = malloc (ft_part_len(input + s->i, '*')
 				+ 1 * sizeof(char));
 		if (!((*wc)[s->j].segment))
 			(ft_putstr_fd("Malloc error segment in segment fill", 2),

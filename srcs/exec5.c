@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 14:42:24 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/29 13:20:56 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 15:51:08 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,29 @@ void	exec_cmd_15(t_sh *sh, t_exe *exe, char **args)
 		else
 			sh->position += find_sp(args, sh) + 2;
 	}
+}
+
+void	exec_cmd_20(t_sh *sh)
+{
+	char	*buffer;
+
+	dup2(sh->true_stdin, STDIN_FILENO);
+	dup2(sh->true_stdout, STDOUT_FILENO);
+	if (pipe(sh->pipe) != 0)
+		(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
+	buffer = redir_in_heredoc(sh->args[sh->position + 1], sh);
+	if (!buffer && g_signal)
+	{
+		close(sh->pipe[0]);
+		close(sh->pipe[1]);
+		freetab(sh->args);
+		free(sh->sp_bool);
+		get_input(sh);
+	}
+	write(sh->pipe[1], buffer, ft_strlen(buffer));
+	close(sh->pipe[1]);
+	free(buffer);
+	dup2(sh->pipe[0], STDIN_FILENO);
+	close(sh->pipe[0]);
+	sh->position += 2;
 }

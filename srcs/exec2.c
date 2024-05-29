@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 12:59:51 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 16:59:39 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,16 @@ void	exec_cmd_7(t_sh *sh, t_exe *exe, char **args)
 		(dup2(sh->pipe_par[1], STDOUT_FILENO),
 			close(sh->pipe_par[1]), close(sh->pipe_par[0]));
 	else
-		(dup2(sh->pipe[1], STDOUT_FILENO),
-			close(sh->pipe[1]), close(sh->pipe[0]));
+	{
+		close(sh->pipe[0]);
+		dup2(sh->pipe[1], STDOUT_FILENO);
+		close(sh->pipe[1]);
+	}
 	exe->cmd = cmd_args(sh, args);
 	if (sh->wrong_file != NULL)
 		add_to_tab(&exe->cmd, sh->wrong_file);
+	close(sh->true_stdin);
+	close(sh->true_stdout);
 	execve(exe->cmd[0], exe->cmd, sh->env);
 	child_free(sh);
 	exit(EXIT_FAILURE);
@@ -110,6 +115,7 @@ void	exec_cmd_9(t_sh *sh, t_exe *exe, char **args)
 void	exec_cmd_10(t_sh *sh, t_exe *exe, char **args)
 {
 	dup2(sh->true_stdout, STDOUT_FILENO);
+	close(sh->true_stdout);
 	if (sh->fd_input != -2)
 		close(sh->fd_input);
 	if (sh->op_pipe)
@@ -124,7 +130,6 @@ void	exec_cmd_10(t_sh *sh, t_exe *exe, char **args)
 	close(sh->pipe[0]);
 	close(sh->pipe[1]);
 	close(sh->true_stdin);
-	close(sh->true_stdout);
 	exe->cmd = cmd_args(sh, args);
 	execve(exe->cmd[0], exe->cmd, sh->env);
 	child_free(sh);
