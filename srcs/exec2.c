@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/29 16:59:39 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 17:10:44 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	exec_cmd_8(t_sh *sh, t_exe *exe, char **args)
 		close(sh->pipe_par[1]);
 		close(sh->pipe_par[0]);
 	}
-	else if (sh->out_par)
+	else if (sh->out_par && sh->position < sh->out_par)
 		dup2(sh->fd_output, STDOUT_FILENO);
 	if (sh->fd_output != -2)
 		close(sh->fd_output);
@@ -98,7 +98,7 @@ void	exec_cmd_9(t_sh *sh, t_exe *exe, char **args)
 		close(sh->pipe_par[1]);
 		close(sh->pipe_par[0]);
 	}
-	else if (sh->out_par)
+	else if (sh->out_par && sh->position < sh->out_par)
 		dup2(sh->fd_output, STDOUT_FILENO);
 	if (sh->fd_output != -2)
 		close(sh->fd_output);
@@ -123,7 +123,7 @@ void	exec_cmd_10(t_sh *sh, t_exe *exe, char **args)
 		close(sh->pipe_par[1]);
 		close(sh->pipe_par[0]);
 	}
-	if (sh->out_par)
+	if (sh->out_par && sh->position < sh->out_par)
 		dup2(sh->fd_output, STDOUT_FILENO);
 	if (sh->fd_output != -2)
 		close(sh->fd_output);

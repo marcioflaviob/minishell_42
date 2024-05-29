@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:24:23 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 17:42:39 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 17:15:56 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	count_args_5(char const *str, t_c_args *c)
 			c->args++;
 		while ((str[c->i] != 0) && (str[c->i] == ' '))
 			c->i++;
+		if (!str[c->i])
+			c->args--;
 	}
 }
 
