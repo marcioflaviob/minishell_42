@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/20 12:45:33 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 19:12:42 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	export(t_sh *shell, char **str)
 	exp.i = 0;
 	exp.y = 0;
 	exp.replace = 0;
+	shell->position++;
 	if (!find_sp(str, shell))
 		exp.str_len = tab_len(str) - 1;
 	else

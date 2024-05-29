@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:10:19 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 16:30:08 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 18:36:14 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,9 @@ char	*find_path(char *command, t_sh *sh)
 			return (command);
 	}
 	str = get_env("PATH", sh);
+	if (!str)
+		(child_free(sh), ft_putstr_fd("minishell: command not found", 2),
+			exit(1));
 	paths = ft_split(str, ':');
 	free(str);
 	while (paths[i])

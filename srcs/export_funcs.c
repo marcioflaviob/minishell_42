@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_funcs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:08:05 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 14:01:37 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/24 19:14:24 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ void	export_parent_4(t_sh *sh, t_exe *exe, char **args)
 	else
 	{
 		export(sh, &args[1]);
+		sh->position--;
 		if (find_sp(args, sh) == 0)
 			sh->position = tab_len(sh->args) - 1;
 		else

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:51:29 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 17:30:22 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 13:17:06 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	g_signal = 0;
 void	var_start(t_sh *sh)
 {
 	set_env(sh);
+	sh->nb_cmd = 0;
 	sh->fd_input = -2;
 	sh->fd_output = -2;
 	sh->last_cmd_st = 0;
@@ -27,6 +28,7 @@ void	var_start(t_sh *sh)
 	sh->out_par = 0;
 	sh->bool_result = 1;
 	sh->op_pipe = 0;
+	sh->pid = (pid_t *)malloc(sizeof(pid_t));
 	sh->true_stdin = dup(STDIN_FILENO);
 	sh->true_stdout = dup(STDOUT_FILENO);
 }

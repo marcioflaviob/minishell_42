@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 14:42:24 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/15 15:59:17 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 13:20:56 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	exec_cmd_11(t_sh *sh, t_exe *exe)
 	exe->i = open(sh->emoji_path, O_RDONLY);
 	get_next_line(exe->i, 1);
 	close(exe->i);
+	free(sh->pid);
 	free(sh->emoji_path);
 	if (sh->op_pipe)
 	{
@@ -97,7 +98,7 @@ void	exec_cmd_15(t_sh *sh, t_exe *exe, char **args)
 	}
 	else
 	{
-		waitpid(exe->pid, &sh->last_cmd_st, 0);
+		waitpid(sh->pid[sh->nb_cmd - 1], &sh->last_cmd_st, 0);
 		close(sh->pipe[0]);
 		close(sh->pipe[1]);
 		if (sh->last_cmd_st != 0)

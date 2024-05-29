@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:19:22 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/24 16:23:29 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 20:29:32 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	child_free(t_sh *sh)
 	freetab(sh->args);
 	free(sh->sp_bool);
 	free(sh->emoji_path);
+	free(sh->pid);
 }
 
 void	free_wc(t_wc *wc)

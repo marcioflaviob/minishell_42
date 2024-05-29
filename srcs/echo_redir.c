@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 14:16:05 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/21 17:19:32 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 19:24:43 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	redirect_2(t_sh *sh, t_redir *redir, char **args)
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(args[redir->i], 2);
 			ft_putstr_fd(": Permission denied\n", 2);
+			sh->position += find_sp_echo(&sh->args[sh->position], sh);
 			redir->error_out = 0;
 		}
 	}
@@ -94,6 +95,8 @@ int	redirect(t_sh *sh, char **args)
 	if (redir.fd_output && redir.fd_output != -1)
 		(dup2(redir.fd_output, STDOUT_FILENO), close(redir.fd_output),
 			close(sh->pipe[1]));
+	else if (redir.fd_output == -1)
+		(close(sh->pipe[1]));
 	if (redir.fd_input && redir.fd_input != -1)
 		(dup2(redir.fd_input, STDIN_FILENO), close(redir.fd_input));
 	return (1);

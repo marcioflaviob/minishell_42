@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:09:24 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/24 16:01:21 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 18:53:07 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	echo_parent_2(t_sh *sh, t_exe *exe, char **args)
 	if (!redirect(sh, args))
 	{
 		sh->last_cmd_st = 1;
+		free(exe->str);
 		sh->position += find_non_redir(&(sh->args[sh->position]), sh);
 	}
 	else

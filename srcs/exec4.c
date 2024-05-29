@@ -6,15 +6,15 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/15 15:58:55 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 13:20:56 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	exec_cmd_16(t_sh *sh, t_exe *exe, char **args)
+void	exec_cmd_16(t_sh *sh, char **args)
 {
-	waitpid(exe->pid, &sh->last_cmd_st, 0);
+	waitpid(sh->pid[sh->nb_cmd - 1], &sh->last_cmd_st, 0);
 	close(sh->pipe[0]);
 	close(sh->pipe[1]);
 	if (sh->last_cmd_st != 0)
@@ -29,9 +29,9 @@ void	exec_cmd_16(t_sh *sh, t_exe *exe, char **args)
 	}
 }
 
-void	exec_cmd_17(t_sh *sh, t_exe *exe, char **args)
+void	exec_cmd_17(t_sh *sh, char **args)
 {
-	waitpid(exe->pid, &sh->last_cmd_st, 0);
+	waitpid(sh->pid[sh->nb_cmd - 1], &sh->last_cmd_st, 0);
 	close(sh->pipe[0]);
 	close(sh->pipe[1]);
 	if (sh->last_cmd_st != 0)
@@ -46,12 +46,12 @@ void	exec_cmd_17(t_sh *sh, t_exe *exe, char **args)
 	}
 }
 
-void	exec_cmd_18(t_sh *sh, t_exe *exe, char **args)
+void	exec_cmd_18(t_sh *sh, char **args)
 {
 	if (ft_equalstr(args[find_sp(args, sh)], ">")
 		|| ft_equalstr(args[find_sp(args, sh)], ">>")
 		|| ft_equalstr(args[find_sp(args, sh)], "<"))
-		exec_cmd_14(sh, exe, args);
+		exec_cmd_14(sh, args);
 	else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 	{
 		close(sh->pipe[1]);
@@ -60,10 +60,10 @@ void	exec_cmd_18(t_sh *sh, t_exe *exe, char **args)
 		sh->position += find_sp(args, sh);
 	}
 	else if (ft_equalstr(args[find_sp(args, sh)], "||"))
-		exec_cmd_16(sh, exe, args);
+		exec_cmd_16(sh, args);
 	else if (ft_equalstr(args[find_sp(args, sh)], "&&"))
 	{
-		exec_cmd_17(sh, exe, args);
+		exec_cmd_17(sh, args);
 	}
 }
 

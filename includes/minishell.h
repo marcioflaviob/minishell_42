@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/24 16:23:41 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/24 20:06:52 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ typedef struct redir
 
 typedef struct exe
 {
-	pid_t	pid;
 	pid_t	pid2;
 	int		i;
 	char	*str;
@@ -161,6 +160,8 @@ typedef struct s_sh
 	char	**env;
 	char	**variables;
 	char	**term_command;
+	size_t	nb_cmd;
+	pid_t	*pid;
 	pid_t	parent_pid;
 	t_wc	*wc;
 }	t_sh;
@@ -236,10 +237,10 @@ void	exec_cmd_9(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_10(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_11(t_sh *sh, t_exe *exe);
 void	exec_cmd_12(t_sh *sh, t_exe *exe, char **args);
-void	exec_cmd_13(t_sh *sh, t_exe *exe);
-void	exec_cmd_14(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_13(t_sh *sh);
+void	exec_cmd_14(t_sh *sh, char **args);
 void	exec_cmd_15(t_sh *sh, t_exe *exe, char **args);
-void	exec_cmd_18(t_sh *sh, t_exe *exe, char **args);
+void	exec_cmd_18(t_sh *sh, char **args);
 void	echo_parent_4(t_sh *sh, t_exe *exe, char **args);
 void	pwd_parent_5(t_sh *sh, t_exe *exe, char **args);
 void	env_parent(t_sh *sh, char **args);
@@ -265,6 +266,7 @@ char	*redir_in_heredoc(char *delimiter, t_sh *sh);
 int		ft_tabchr(char **tab, char c);
 char	*ft_strstr_wc(char *str, char *to_find);
 void	clean_gnl(int fd);
+void	add_pid(size_t size, t_sh *sh);
 
 //env functions
 char	*get_env(char *str, t_sh *shell);

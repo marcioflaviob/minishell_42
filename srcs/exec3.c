@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/20 17:13:16 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 13:58:45 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	helper_12(t_sh *sh, t_exe *exe)
 	freetab(sh->args);
 	free(sh->current_dir);
 	freetab(sh->variables);
+	free(sh->pid);
 	close(sh->pipe[0]);
 	close(sh->pipe[1]);
 	exe->i = open(sh->emoji_path, O_RDONLY);
@@ -62,19 +63,23 @@ void	exec_cmd_12(t_sh *sh, t_exe *exe, char **args)
 	exit(a);
 }
 
-void	exec_cmd_13(t_sh *sh, t_exe *exe)
+void	exec_cmd_13(t_sh *sh)
 {
-	waitpid(exe->pid, &sh->last_cmd_st, 0);
-	sh->last_cmd_st = WEXITSTATUS(sh->last_cmd_st);
-	if (sh->last_cmd_st == 131)
-		write(2, "Quit (core dumped)\n", 19);
-	close(sh->pipe[1]);
+	size_t	i;
+
+	i = 0;
+	close(sh->pipe[1]); //dd
 	close(sh->pipe[0]);
 	if (sh->op_pipe)
 	{
 		close(sh->pipe_par[0]);
 		close(sh->pipe_par[1]);
 	}
+	while (i <= sh->nb_cmd - 1)
+		waitpid(sh->pid[i++], &sh->last_cmd_st, 0);
+	sh->last_cmd_st = WEXITSTATUS(sh->last_cmd_st);
+	if (sh->last_cmd_st == 131)
+		write(2, "Quit (core dumped)\n", 19);
 	sh->position = tab_len(sh->args) - 1;
 }
 
@@ -105,7 +110,7 @@ void	helper_14(t_sh *sh, char **args, int *i, int *y)
 	*y = find_sp(&args[*i], sh) + *i;
 }
 
-void	exec_cmd_14(t_sh *sh, t_exe *exe, char **args)
+void	exec_cmd_14(t_sh *sh, char **args)
 {
 	int	i;
 	int	y;
@@ -119,7 +124,7 @@ void	exec_cmd_14(t_sh *sh, t_exe *exe, char **args)
 		close(sh->pipe[1]);
 	else
 	{
-		waitpid(exe->pid, &sh->last_cmd_st, 0);
+		waitpid(sh->pid[sh->nb_cmd - 1], &sh->last_cmd_st, 0);
 		sh->last_cmd_st = WEXITSTATUS(sh->last_cmd_st);
 	}
 	if (args[y])

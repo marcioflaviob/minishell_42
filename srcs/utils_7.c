@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 17:38:31 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 17:41:57 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 13:26:57 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,26 @@ int	count_args(char const *str)
 	c.dquote_flag = 0;
 	count_args_4(str, &c);
 	return (c.args);
+}
+
+void	add_pid(size_t size, t_sh *sh)
+{
+	pid_t	*tmp;
+	size_t	i;
+
+	i = -1;
+	if (size == 1)
+		return ;
+	else
+	{
+		tmp = (pid_t *)malloc((size) * sizeof(pid_t));
+		while (++i < size - 1)
+			tmp[i] = sh->pid[i];
+		free(sh->pid);
+		i = -1;
+		sh->pid = (pid_t *)malloc((size) * sizeof(pid_t));
+		while (++i < size - 1)
+			sh->pid[i] = tmp[i];
+		free(tmp);
+	}
 }

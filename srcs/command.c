@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 22:23:53 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/15 15:56:23 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 13:20:56 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,14 @@ void	exec_cmd(char **args, t_sh *sh)
 	t_exe	exe;
 
 	exe.i = 0;
+	sh->nb_cmd++;
 	if (pipe(sh->pipe) != 0)
 		(perror("pipe error"), child_free(sh), exit(EXIT_FAILURE));
-	exe.pid = fork();
-	if (exe.pid == -1)
+	add_pid(sh->nb_cmd, sh);
+	sh->pid[sh->nb_cmd - 1] = fork();
+	if (sh->pid[sh->nb_cmd - 1] == -1)
 		(perror("fork error"), child_free(sh), exit(EXIT_FAILURE));
-	if (exe.pid == 0)
+	if (sh->pid[sh->nb_cmd - 1] == 0)
 		child_cmd_handler(sh, &exe, args);
 	else
 	{
@@ -73,8 +75,8 @@ void	exec_cmd(char **args, t_sh *sh)
 		if (is_builtin(args[0]))
 			builtin_handler(sh, &exe, args);
 		else if (!find_sp(args, sh))
-			exec_cmd_13(sh, &exe);
+			exec_cmd_13(sh);
 		else
-			exec_cmd_18(sh, &exe, args);
+			exec_cmd_18(sh, args);
 	}
 }

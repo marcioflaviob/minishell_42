@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:46:03 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/24 16:10:21 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 13:28:45 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	get_input(t_sh *sh)
 	char	*buffer;
 	char	*prompt;
 
+	sh->nb_cmd = 0;
 	if (g_signal == 2)
 	{
 		add_env(sh, "?=130");

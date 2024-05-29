@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:24:32 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 17:26:45 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/29 13:29:39 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ void	arg_2(t_pars *pars, t_sh *sh)
 	free(pars->tmp);
 	freetab(sh->args);
 	free(sh->sp_bool);
+	free(sh->pid);
 	close(sh->pipe[0]);
 	close(sh->pipe[1]);
+	sh->pid = (pid_t *)malloc(sizeof(pid_t));
 	get_input(sh);
 }
 
