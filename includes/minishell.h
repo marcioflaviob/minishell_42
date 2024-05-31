@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/29 15:51:21 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/31 21:06:04 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,8 @@ void	env_parent(t_sh *sh, char **args);
 void	env_parent_4(t_sh *sh, t_exe *exe, char **args);
 void	env_parent_5(t_sh *sh, t_exe *exe, char **args);
 void	env_parent_7(t_sh *sh, t_exe *exe, char **args);
+void	export_5(t_sh *shell, t_exp *exp, char **str);
+void	export_2(t_sh *shell, t_exp *exp, char **str);
 void	export_parent_4(t_sh *sh, t_exe *exe, char **args);
 void	exit_parent(t_sh *sh, t_exe *exe, char **args);
 void	unset_parent(t_sh *sh, char **args);

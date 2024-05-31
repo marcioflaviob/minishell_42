@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrandao <mbrandao@student.42.fr>          +#+  +:+       +#+        */
+/*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 17:54:50 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/20 15:51:52 by mbrandao         ###   ########.fr       */
+/*   Updated: 2024/05/31 20:52:40 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,19 @@ int	is_around_squotes(char *str, int pos)
 {
 	int	i;
 	int	checker;
+	int	d_quote;
 
 	i = 0;
 	checker = 0;
+	d_quote = 0;
 	while (i < pos)
 	{
+		if (str[i] == '"')
+		{
+			d_quote = !d_quote;
+			if (!d_quote && checker)
+				checker = !checker;
+		}
 		if (str[i] == '\'')
 			checker = !checker;
 		i++;

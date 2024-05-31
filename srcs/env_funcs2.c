@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:07:09 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/13 19:07:55 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/31 20:59:11 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,17 @@ void	env_parent_7(t_sh *sh, t_exe *exe, char **args)
 				sh->position += find_sp_par(args, sh);
 		}
 	}
+}
+
+void	export_5(t_sh *shell, t_exp *exp, char **str)
+{
+	while (shell->env[exp->i])
+		export_2(shell, exp, str);
+	if (exp->replace == 0)
+	{
+		if (!ft_strrchr(str[exp->y], '='))
+			(free(str[exp->y]), str[exp->y] = ft_strjoin(exp->str2, "="));
+		add_to_tab(&shell->env, str[exp->y]);
+	}
+	(free(exp->str2), exp->replace = 0, exp->y++);
 }

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/29 17:10:44 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/31 19:59:23 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	exec_cmd_6(t_sh *sh, t_exe *exe, char **args)
 
 void	exec_cmd_7(t_sh *sh, t_exe *exe, char **args)
 {
+	close(sh->pipe[0]);
 	if (sh->fd_input != -2)
 		close(sh->fd_input);
 	if (sh->fd_output != -2)
@@ -52,7 +53,6 @@ void	exec_cmd_7(t_sh *sh, t_exe *exe, char **args)
 			close(sh->pipe_par[1]), close(sh->pipe_par[0]));
 	else
 	{
-		close(sh->pipe[0]);
 		dup2(sh->pipe[1], STDOUT_FILENO);
 		close(sh->pipe[1]);
 	}
@@ -114,6 +114,8 @@ void	exec_cmd_9(t_sh *sh, t_exe *exe, char **args)
 
 void	exec_cmd_10(t_sh *sh, t_exe *exe, char **args)
 {
+	close(sh->pipe[1]);
+	close(sh->pipe[0]);
 	dup2(sh->true_stdout, STDOUT_FILENO);
 	close(sh->true_stdout);
 	if (sh->fd_input != -2)
@@ -127,8 +129,6 @@ void	exec_cmd_10(t_sh *sh, t_exe *exe, char **args)
 		dup2(sh->fd_output, STDOUT_FILENO);
 	if (sh->fd_output != -2)
 		close(sh->fd_output);
-	close(sh->pipe[0]);
-	close(sh->pipe[1]);
 	close(sh->true_stdin);
 	exe->cmd = cmd_args(sh, args);
 	execve(exe->cmd[0], exe->cmd, sh->env);

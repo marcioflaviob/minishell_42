@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 14:16:05 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/24 19:24:43 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/31 21:06:46 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ void	redirect_2(t_sh *sh, t_redir *redir, char **args)
 		redir->fd_input = open(args[redir->i], O_RDONLY);
 		if (redir->fd_input == -1)
 		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(args[redir->i], 2);
+			(ft_putstr_fd("minishell: ", 2), ft_putstr_fd(args[redir->i], 2));
 			ft_putstr_fd(": No such file or directory\n", 2);
 			redir->error_in = 0;
 		}
@@ -69,6 +68,13 @@ void	redirect_init(t_redir *redir, char **args, t_sh *sh)
 	redir->error_in = 1;
 	redir->error_out = 1;
 	redir->y = find_sp(&args[redir->i], sh);
+	while (ft_equalstr(args[redir->y], "<")
+		|| ft_equalstr(args[redir->y], ">")
+		|| ft_equalstr(args[redir->y], ">>"))
+	{
+		redir->tmp = redir->i;
+		(redirect_2(sh, redir, args), redirect_3(sh, redir, args));
+	}
 }
 
 int	redirect(t_sh *sh, char **args)
@@ -76,13 +82,6 @@ int	redirect(t_sh *sh, char **args)
 	t_redir	redir;
 
 	redirect_init(&redir, args, sh);
-	while (ft_equalstr(args[redir.y], "<")
-		|| ft_equalstr(args[redir.y], ">") || ft_equalstr(args[redir.y], ">>"))
-	{
-		redir.tmp = redir.i;
-		redirect_2(sh, &redir, args);
-		redirect_3(sh, &redir, args);
-	}
 	if (args[redir.y]
 		&& ft_equalstr(args[redir.y], "|") && !redir.fd_output)
 		(dup2(sh->pipe[1], STDOUT_FILENO), close(sh->pipe[1]),

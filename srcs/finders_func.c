@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:10:19 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/24 18:36:14 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/31 21:03:59 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,18 @@ void	fp_helper(char *command, t_sh *sh)
 	}
 }
 
+void	fp_helper2(char ***paths, t_sh *sh)
+{
+	char	*str;
+
+	str = get_env("PATH", sh);
+	if (!str)
+		(child_free(sh), ft_putstr_fd("minishell: command not found", 2),
+			exit(1));
+	*paths = ft_split(str, ':');
+	free(str);
+}
+
 char	*find_path(char *command, t_sh *sh)
 {
 	int		i;
@@ -72,12 +84,7 @@ char	*find_path(char *command, t_sh *sh)
 		if (access(command, X_OK) != -1)
 			return (command);
 	}
-	str = get_env("PATH", sh);
-	if (!str)
-		(child_free(sh), ft_putstr_fd("minishell: command not found", 2),
-			exit(1));
-	paths = ft_split(str, ':');
-	free(str);
+	fp_helper2(&paths, sh);
 	while (paths[i])
 	{
 		str = ft_strjoin(paths[i++], "/");

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 16:27:46 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/29 17:08:32 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/31 19:58:25 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	arg_10(t_sh *sh)
 	}
 	else
 	{
+		close(sh->pipe[1]);
 		dup2(sh->pipe[0], STDIN_FILENO);
 		close(sh->pipe[0]);
 	}

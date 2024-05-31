@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/24 19:12:42 by trimize          ###   ########.fr       */
+/*   Updated: 2024/05/31 21:05:48 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,26 +52,18 @@ void	export_4(t_sh *shell, t_exp *exp)
 	free(exp->str2);
 }
 
-void	export_5(t_sh *shell, t_exp *exp, char **str)
+void	export_init(t_exp *exp)
 {
-	while (shell->env[exp->i])
-		export_2(shell, exp, str);
-	if (exp->replace == 0)
-	{
-		if (!ft_strrchr(str[exp->y], '='))
-			(free(str[exp->y]), str[exp->y] = ft_strjoin(exp->str2, "="));
-		add_to_tab(&shell->env, str[exp->y]);
-	}
-	(free(exp->str2), exp->replace = 0, exp->y++);
+	exp->i = 0;
+	exp->y = 0;
+	exp->replace = 0;
 }
 
 void	export(t_sh *shell, char **str)
 {
 	t_exp	exp;
 
-	exp.i = 0;
-	exp.y = 0;
-	exp.replace = 0;
+	export_init(&exp);
 	shell->position++;
 	if (!find_sp(str, shell))
 		exp.str_len = tab_len(str) - 1;
