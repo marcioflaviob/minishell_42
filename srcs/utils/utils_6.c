@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:27:26 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/15 15:31:01 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 13:17:22 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	is_alscore_str(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (ft_isalpha(str[i]) || str[i] == '_')
+		if (ft_isalnum_or_score(str[i]))
 			i++;
 		else
 			return (0);

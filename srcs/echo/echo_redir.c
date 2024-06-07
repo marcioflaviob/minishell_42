@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 14:16:05 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/31 21:06:46 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 17:01:44 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,12 @@ void	redirect_3(t_sh *sh, t_redir *redir, char **args)
 			redir->error_out = 0;
 		}
 	}
+	if (args[redir->y] && ft_equalstr(args[redir->y], "<<"))
+	{
+		dup2(sh->true_stdin, STDIN_FILENO);
+		redir->i += find_sp(&args[redir->i], sh) + 1;
+		redir_in_heredoc(args[redir->i], sh);
+	}
 	sh->position += redir->i - redir->tmp;
 	redir->y = find_sp(&args[redir->i], sh) + redir->i;
 }
@@ -70,6 +76,7 @@ void	redirect_init(t_redir *redir, char **args, t_sh *sh)
 	redir->y = find_sp(&args[redir->i], sh);
 	while (ft_equalstr(args[redir->y], "<")
 		|| ft_equalstr(args[redir->y], ">")
+		|| ft_equalstr(args[redir->y], "<<")
 		|| ft_equalstr(args[redir->y], ">>"))
 	{
 		redir->tmp = redir->i;

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 11:19:52 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/31 21:05:48 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 13:24:58 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,7 @@ void	export(t_sh *shell, char **str)
 {
 	t_exp	exp;
 
-	export_init(&exp);
-	shell->position++;
+	(export_init(&exp), shell->position++);
 	if (!find_sp(str, shell))
 		exp.str_len = tab_len(str) - 1;
 	else
@@ -74,7 +73,9 @@ void	export(t_sh *shell, char **str)
 		if (!ft_strrchr(str[exp.y], '='))
 		{
 			exp.str2 = ft_strdup(str[exp.y]);
-			if (!is_alscore_str(exp.str2))
+			if (is_alscore_str(exp.str2))
+				(free(exp.str2), exp.y++);
+			else
 				return (export_4(shell, &exp));
 		}
 		else
@@ -82,7 +83,7 @@ void	export(t_sh *shell, char **str)
 			exp.str2 = get_substring_b(str[exp.y], '=', shell);
 			if (!is_alscore_str(exp.str2) || ft_equalstr(str[exp.y], "="))
 				return (export_3(shell, str, &exp));
+			export_5(shell, &exp, str);
 		}
-		export_5(shell, &exp, str);
 	}
 }

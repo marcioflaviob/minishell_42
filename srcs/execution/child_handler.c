@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/29 16:30:27 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/05 15:13:40 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	child_cmd_handler(t_sh *sh, t_exe *exe, char **args)
 	{
 		if (ft_equalstr(args[find_sp(args, sh)], "<")
 			|| ft_equalstr(args[find_sp(args, sh)], ">")
-			|| ft_equalstr(args[find_sp(args, sh)], ">>"))
+			|| ft_equalstr(args[find_sp(args, sh)], ">>")
+			|| ft_equalstr(args[find_sp(args, sh)], "<<"))
 			exec_cmd_2(sh, exe, args);
 		else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 			exec_cmd_7(sh, exe, args);

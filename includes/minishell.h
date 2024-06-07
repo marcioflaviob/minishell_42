@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 22:47:28 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/31 21:06:04 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 18:34:09 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,6 @@ typedef struct s_sh
 }	t_sh;
 
 void	before_command(void);
-
 int		get_random_number(void);
 char	*get_a_line(char *filename, int line_number);
 void	get_input(t_sh *sh);
@@ -176,56 +175,61 @@ char	*get_prompt(t_sh *sh);
 void	signal_initializer(void);
 void	fill_color(char **color);
 char	*find_path(char *command, t_sh *sh);
-void	freetab(char **tab);
-void	free_wc(t_wc *wc);
 char	*get_cwd(void);
-void	segment_fill_2(char *input, t_segfill *s);
-void	segment_fill(t_wc **wc, char *input, t_sh *sh);
-void	wildcard_finder(char ***tab, t_wc *wc, t_sh *sh);
 int		get_type(char *path);
 char	*get_curr_dir(char *path);
-//void	builtin_dealer(t_sh *sh, char *cmd);
-void	dollar_sign_dealer(char ***commands, t_sh *sh);
-void	quotes_removal_helper(char **str);
-void	quotes_removal(char ***cmds);
 void	new_terminal(t_sh *shell, char *buffer);
 void	initialize(int *i, int *j);
-//Utils
-int		tab_len(char **tab);
+
+// Utils
 char	**ft_better_split(char *s);
+int		ft_find_first(const char *s, int c);
 int		ft_isalnum_or_score(int c);
+int		ft_tabchr(char **tab, char c);
 void	ft_strerase(char **str, int start, int num);
+char	*ft_strstr_wc(char *str, char *to_find);
 char	*ft_stradd(char *str, int start, char *add);
+char	*ft_strjoin_gnl(char *s1, char *s2);
+int		ft_int_strchr(const char *s, int c);
+int		ft_int_strstr_wc(char *str, char *to_find);
+int		ft_strlen_gnl(const char *s);
+int		ft_part_len(char *str, char c);
+
 int		is_around_squotes(char *str, int pos);
 int		is_around_dquotes(char *str, int pos);
 int		is_dquote_in_squote(char *str, int pos);
 int		is_quoted(char *str, int i);
-void	space_adder(char **str);
-int		find_first_squote_back(char *str, int pos);
+int		is_alscore_str(char *str);
+int		is_num_str(char *str);
+int		is_builtin(char *str);
+
+void	word_len_2(const char *str, t_word *w);
 void	add_to_tab(char ***tab, char *str);
 void	add_to_tab_pos(char ***tab, char *str, int pos, t_sh *sh);
 void	remove_from_tab(char ***tab, int pos, t_sh *sh);
+void	space_adder(char **str);
 void	copy_tab(char ***taker, char **giver);
 char	*get_substring_b(char *str, char c, t_sh *sh);
 char	*get_substring_a(char *str, char c, t_sh *sh);
 void	rm_tab_line(char ***tab, char *line, t_sh *sh);
-int		ft_part_len(char *str, char c);
-int		is_alscore_str(char *str);
-int		is_num_str(char *str);
 void	print_tab(char **tab);
-int		ft_strlen_gnl(const char *s);
-char	*ft_strjoin_gnl(char *s1, char *s2);
+void	helper20(int *i, char **args, t_sh *sh);
+int		tab_len(char **tab);
 char	*get_var_name(char *str);
 char	*sorted_tab(char **tab);
 void	sort_strings_by_first_char(char **arr, int n);
 int		check_special_redirect(char *str);
 
+int		find_first_squote_back(char *str, int pos);
 int		find_sp_redir(char **args, t_sh *sh, int j);
+int		find_sp(char **args, t_sh *sh);
+int		find_sp_par(char **args, t_sh *sh);
 int		find_sp_echo(char **args, t_sh *sh);
+int		find_sp_str(char *str);
 int		find_non_redir(char **args, t_sh *sh);
 
-int		redirect(t_sh *sh, char **args);
-void	word_len_2(const char *str, t_word *w);
+// Execution functions
+void	exec_cmd(char **args, t_sh *sh);
 void	exec_cmd_3(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_2(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_4(t_sh *sh, t_exe *exe, char **args);
@@ -242,39 +246,51 @@ void	exec_cmd_14(t_sh *sh, char **args);
 void	exec_cmd_15(t_sh *sh, t_exe *exe, char **args);
 void	exec_cmd_18(t_sh *sh, char **args);
 void	exec_cmd_20(t_sh *sh);
-void	echo_parent_4(t_sh *sh, t_exe *exe, char **args);
-void	pwd_parent_5(t_sh *sh, t_exe *exe, char **args);
+
+// Environment variable functions
+char	*get_env(char *str, t_sh *shell);
+void	set_env(t_sh *shell);
+void	add_env(t_sh *sh, char *variable);
 void	env_parent(t_sh *sh, char **args);
 void	env_parent_4(t_sh *sh, t_exe *exe, char **args);
 void	env_parent_5(t_sh *sh, t_exe *exe, char **args);
 void	env_parent_7(t_sh *sh, t_exe *exe, char **args);
+void	dollar_sign_dealer(char ***commands, t_sh *sh);
+void	quotes_removal_helper(char **str);
+void	quotes_removal(char ***cmds);
+
+void	child_cmd_handler(t_sh *sh, t_exe *exe, char **args);
+void	cd_parent_2(t_sh *sh, char **args);
+char	**cmd_args(t_sh *sh, char **args);
+
+// Exit functions
+void	exit_parent(t_sh *sh, t_exe *exe, char **args);
+
+// Echo functions
+void	echo_parent_4(t_sh *sh, t_exe *exe, char **args);
+
+// PWD functions
+void	pwd_parent_5(t_sh *sh, t_exe *exe, char **args);
+
+// Unset functions
+void	unset_parent(t_sh *sh, char **args);
+
+// Export functions
 void	export_5(t_sh *shell, t_exp *exp, char **str);
 void	export_2(t_sh *shell, t_exp *exp, char **str);
 void	export_parent_4(t_sh *sh, t_exe *exe, char **args);
-void	exit_parent(t_sh *sh, t_exe *exe, char **args);
-void	unset_parent(t_sh *sh, char **args);
-void	child_cmd_handler(t_sh *sh, t_exe *exe, char **args);
-void	cd_parent_2(t_sh *sh, char **args);
-int		is_builtin(char *str);
-char	**cmd_args(t_sh *sh, char **args);
-void	child_free(t_sh *sh);
+void	print_tab_export(t_sh *sh);
 
 //Redirection functions
+int		redirect(t_sh *sh, char **args);
 void	redir_out_trunc(char *outfile, char **args, t_sh *sh);
 void	redir_out_app(char *outfile, char **args, t_sh *sh);
 void	redir_out_trunc_p(char *outfile, char **args, t_sh *sh);
 void	redir_out_app_p(char *outfile, char **args, t_sh *sh);
 void	redir_in(char *infile, char **args, t_sh *sh);
 char	*redir_in_heredoc(char *delimiter, t_sh *sh);
-int		ft_tabchr(char **tab, char c);
-char	*ft_strstr_wc(char *str, char *to_find);
 void	clean_gnl(int fd);
 void	add_pid(size_t size, t_sh *sh);
-
-//env functions
-char	*get_env(char *str, t_sh *shell);
-void	set_env(t_sh *shell);
-void	add_env(t_sh *sh, char *variable);
 
 //Parsing functions
 void	arg(t_sh *sh);
@@ -293,15 +309,13 @@ void	arg_13(t_pars *pars, t_sh *sh);
 void	arg_14(t_sh *sh);
 void	arg_15(t_sh *sh);
 void	arg_16(t_sh *sh);
+
 int		go_af_par(char **args);
 int		check_sp_afpar(char **args);
 int		check_special(char *str, t_sh *sh);
 int		arg_checker(char *str, t_sh *sh);
-int		ft_find_first(const char *s, int c);
 int		count_args(char const *str);
-int		find_sp(char **args, t_sh *sh);
 int		check_sp_afpar(char **args);
-int		find_sp_par(char **args, t_sh *sh);
 int		par_check_all(char **str, t_sh *sh);
 void	count_args_4(char const *str, t_c_args *c);
 
@@ -314,17 +328,23 @@ void	un_set(t_sh *shell, char **str);
 void	env(t_sh *shell);
 
 //Command functions
-void	exec_cmd(char **args, t_sh *sh);
 int		wildcard(t_sh *sh);
-int		ft_int_strchr(const char *s, int c);
 void	replace_env(char **str, t_sh *sh);
-int		ft_int_strstr_wc(char *str, char *to_find);
-int		find_sp_str(char *str);
 void	replace_var(t_sh *sh, char ***tab);
 void	set_sp_bool(t_sh *sh);
+
+// Wildcard functions
+void	segment_fill_2(char *input, t_segfill *s);
+void	segment_fill(t_wc **wc, char *input, t_sh *sh);
+void	wildcard_finder(char ***tab, t_wc *wc, t_sh *sh);
 
 // Term config
 void	term_config(void);
 void	term_reset(void);
+
+// Freeing functions
+void	child_free(t_sh *sh);
+void	freetab(char **tab);
+void	free_wc(t_wc *wc);
 
 #endif

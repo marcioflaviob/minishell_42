@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:10:19 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/24 19:11:29 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 13:41:50 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	find_sp(char **args, t_sh *sh)
 			return (i);
 		if ((ft_equalstr(args[i], "||") && sh->sp_bool[j] == 1)
 			|| (ft_equalstr(args[i], ">>") && sh->sp_bool[j] == 1)
+			|| (ft_equalstr(args[i], "<<") && sh->sp_bool[j] == 1)
 			|| (ft_equalstr(args[i], "&&") && sh->sp_bool[j] == 1))
 			return (i);
 		i++;
@@ -48,6 +49,7 @@ int	find_sp_redir(char **args, t_sh *sh, int j)
 			return (i);
 		if ((ft_equalstr(args[i], "||") && sh->sp_bool[j] == 1)
 			|| (ft_equalstr(args[i], ">>") && sh->sp_bool[j] == 1)
+			|| (ft_equalstr(args[i], "<<") && sh->sp_bool[j] == 1)
 			|| (ft_equalstr(args[i], "&&") && sh->sp_bool[j] == 1))
 			return (i);
 		i++;
@@ -89,6 +91,7 @@ int	find_sp_echo(char **args, t_sh *sh)
 			return (i);
 		if ((ft_equalstr(args[i], "||") && sh->sp_bool[sh->position + i])
 			|| (ft_equalstr(args[i], ">>") && sh->sp_bool[sh->position + i])
+			|| (ft_equalstr(args[i], "<<") && sh->sp_bool[sh->position + i])
 			|| (ft_equalstr(args[i], "(") && sh->sp_bool[sh->position + i])
 			|| (ft_equalstr(args[i], ")") && sh->sp_bool[sh->position + i])
 			|| (ft_equalstr(args[i], "&&") && sh->sp_bool[sh->position + i]))
@@ -114,6 +117,7 @@ int	find_sp_par(char **args, t_sh *sh)
 			return (i);
 		if ((ft_equalstr(args[i], "||") && sh->sp_bool[j] == 1)
 			|| (ft_equalstr(args[i], ">>") && sh->sp_bool[j] == 1)
+			|| (ft_equalstr(args[i], "<<") && sh->sp_bool[j] == 1)
 			|| (ft_equalstr(args[i], "&&") && sh->sp_bool[j] == 1))
 			return (i);
 		i++;

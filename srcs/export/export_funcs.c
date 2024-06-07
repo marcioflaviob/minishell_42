@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:08:05 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/24 19:14:24 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 13:29:59 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,11 @@ void	export_par_2_help(t_sh *sh, t_exe *exe, char **args)
 		exe->i = -1;
 		write(sh->fd_output, exe->str, ft_strlen(exe->str));
 		close(sh->fd_output);
+	}
+	else if (!args[1])
+	{
+		sh->position = tab_len(sh->args) - 1;
+		print_tab_export(sh);
 	}
 }
 

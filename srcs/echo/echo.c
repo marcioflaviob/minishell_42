@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 23:24:42 by mbrandao          #+#    #+#             */
-/*   Updated: 2024/05/20 16:24:50 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 18:39:22 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,21 @@ void	echo_helper(t_sh *sh, char **str, char **args)
 	else
 		sh->echo_y = tab_len(args) - 1;
 	while (sh->echo_i < sh->echo_y)
+	{
+		*str = ft_strjoin_gnl(*str, args[sh->echo_i++]);
+		if (args[sh->echo_i])
+			*str = ft_strjoin_gnl(*str, " ");
+	}
+}
+
+void	echo_helper_2(t_sh *sh, char **str, char **args)
+{
+	if (ft_equalstr(args[sh->echo_i], "<")
+		|| ft_equalstr(args[sh->echo_i], "<<")
+		|| ft_equalstr(args[sh->echo_i], ">")
+		|| ft_equalstr(args[sh->echo_i], "<<"))
+		sh->echo_i += 2;
+	if (args[sh->echo_i])
 	{
 		*str = ft_strjoin_gnl(*str, args[sh->echo_i++]);
 		if (args[sh->echo_i])
@@ -39,16 +54,10 @@ char	*echo(char **args, t_sh *sh)
 	else
 	{
 		sh->echo_i = 1;
-		if (find_sp_echo(args, sh))
-			sh->echo_y = find_sp_echo(args, sh);
-		else
-			sh->echo_y = tab_len(args) - 1;
-		while (sh->echo_i < sh->echo_y)
-		{
-			str = ft_strjoin_gnl(str, args[sh->echo_i++]);
-			if (args[sh->echo_i] && sh->echo_i < sh->echo_y)
-				str = ft_strjoin_gnl(str, " ");
-		}
+		while (!ft_equalstr(args[sh->echo_i], "|")
+			&& !ft_equalstr(args[sh->echo_i], "||")
+			&& !ft_equalstr(args[sh->echo_i], "&&") && args[sh->echo_i])
+			echo_helper_2(sh, &str, args);
 		str = ft_strjoin_gnl(str, "\n");
 		return (str);
 	}

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 17:38:31 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/29 14:25:00 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 13:45:30 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,24 @@ void	add_pid(size_t size, t_sh *sh)
 			sh->pid[i] = tmp[i];
 		free(tmp);
 	}
+}
+
+void	print_tab_export(t_sh *sh)
+{
+	int	i;
+
+	i = 0;
+	while (sh->env[i])
+	{
+		ft_putstr_fd("declare -x ", 1);
+		ft_putstr_fd(sh->env[i++], 1);
+		ft_putstr_fd("\n", 1);
+	}
+}
+
+void	helper20(int *i, char **args, t_sh *sh)
+{
+	*i += find_sp(&args[*i], sh) + 1;
+	while (args[*i + 1] && !check_special_redirect(args[*i + 1]))
+		(*i)++;
 }

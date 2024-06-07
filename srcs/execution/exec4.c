@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/31 17:39:36 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 13:42:51 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,9 @@ void	exec_cmd_18(t_sh *sh, char **args)
 {
 	if (ft_equalstr(args[find_sp(args, sh)], ">")
 		|| ft_equalstr(args[find_sp(args, sh)], ">>")
-		|| ft_equalstr(args[find_sp(args, sh)], "<"))
+		|| ft_equalstr(args[find_sp(args, sh)], "<")
+		|| ft_equalstr(args[find_sp(args, sh)], "<<"))
 		exec_cmd_14(sh, args);
-	else if (ft_equalstr(args[find_sp(args, sh)], "<<"))
-		exec_cmd_20(sh);
 	else if (ft_equalstr(args[find_sp(args, sh)], "|"))
 	{
 		if (sh->position + find_sp(args, sh) == sh->pipe_par_bool)

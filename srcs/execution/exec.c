@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:03:47 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/21 12:17:04 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 13:49:41 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,11 @@ int	exec_helper2(t_sh *sh, t_h *hp, char **args)
 
 int	exec_helper3(t_sh *sh, t_h *hp, char **args)
 {
+	char	*buffer;
+
 	if (args[hp->y] && ft_equalstr(args[hp->y], ">>"))
 	{
+		(void)buffer;
 		hp->i += find_sp_redir(&args[hp->i], sh, hp->position + hp->i) + 1;
 		while (args[hp->i + 1] && !check_special_redirect(args[hp->i + 1]))
 			hp->i++;
@@ -75,6 +78,17 @@ int	exec_helper3(t_sh *sh, t_h *hp, char **args)
 				O_WRONLY | O_CREAT | O_APPEND, 0666);
 		if (hp->fd_output == -1)
 			return (1);
+	}
+	else if (args[hp->y] && ft_equalstr(args[hp->y], "<<"))
+	{
+		(dup2(sh->true_stdin, STDIN_FILENO), close(sh->pipe[0]));
+		(close(sh->pipe[1]), pipe(sh->pipe));
+		hp->i += find_sp_redir(&args[hp->i], sh, hp->position + hp->i) + 1;
+		buffer = redir_in_heredoc(sh->args[hp->i], sh);
+		if (!buffer && g_signal)
+			(close(sh->pipe[0]), close(sh->pipe[1]), child_free(sh), exit(1));
+		write(sh->pipe[1], buffer, ft_strlen(buffer));
+		(free(buffer), dup2(sh->pipe[0], STDIN_FILENO));
 	}
 	return (0);
 }
@@ -89,7 +103,8 @@ void	exec_cmd_2(t_sh *sh, t_exe *exe, char **args)
 	hp.position = sh->position;
 	hp.y = find_sp(&args[hp.i], sh);
 	while (ft_equalstr(args[hp.y], "<")
-		|| ft_equalstr(args[hp.y], ">") || ft_equalstr(args[hp.y], ">>"))
+		|| ft_equalstr(args[hp.y], ">") || ft_equalstr(args[hp.y], ">>")
+		|| ft_equalstr(args[hp.y], "<<"))
 	{
 		if (exec_helper2(sh, &hp, args))
 			break ;

@@ -6,7 +6,7 @@
 /*   By: trimize <trimize@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 19:09:24 by trimize           #+#    #+#             */
-/*   Updated: 2024/05/24 18:53:07 by trimize          ###   ########.fr       */
+/*   Updated: 2024/06/07 13:32:39 by trimize          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void	echo_parent_4(t_sh *sh, t_exe *exe, char **args)
 	if (ft_equalstr(args[find_sp_echo(args, sh)], ">")
 		|| ft_equalstr(args[find_sp_echo(args, sh)], ">>")
 		|| ft_equalstr(args[find_sp_echo(args, sh)], "<")
+		|| ft_equalstr(args[find_sp_echo(args, sh)], "<<")
 		|| ft_equalstr(args[find_sp_echo(args, sh)], "|"))
 		echo_parent_2(sh, exe, args);
 	else

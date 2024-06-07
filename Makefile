@@ -6,13 +6,18 @@ GNLDIR = ./get_next_line/
 SRCSDIR = ./srcs/
 OBJDIR = ./objs/
 
-SOURCES = $(wildcard $(SRCSDIR)*.c)
+# Find all source files, keeping their relative paths
+SOURCES = $(wildcard $(SRCSDIR)**/*.c)
+SOURCES += $(wildcard $(SRCSDIR)*.c)
 SOURCES += $(wildcard $(GNLDIR)*.c)
-OBJECTS = $(addprefix $(OBJDIR), $(notdir $(SOURCES:.c=.o)))
+
+# Create a list of object files with their relative paths preserved
+OBJECTS = $(patsubst $(SRCSDIR)%.c, $(OBJDIR)%.o, $(SOURCES))
+OBJECTS := $(patsubst $(GNLDIR)%.c, $(OBJDIR)%.o, $(OBJECTS))
 
 CC = cc
 LDFLAGS := -lreadline
-CFLAGS = -Wall -Wextra -Werror -I$(INCDIR)$(GNL_DIR) -g3
+CFLAGS = -Wall -Wextra -Werror -I$(INCDIR) -I$(GNLDIR) -g3
 
 all: $(NAME)
 
@@ -27,10 +32,13 @@ $(LIBFT):
 	@echo "Building $(LIBFT) library"
 	@make -C $(LIBFT_PATH) >/dev/null 2>&1
 
+# Rule to compile .c files to .o files, preserving the directory structure
 $(OBJDIR)%.o: $(SRCSDIR)%.c | $(OBJDIR)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)%.o: $(GNLDIR)%.c | $(OBJDIR)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR):
