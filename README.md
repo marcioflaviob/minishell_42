@@ -13,7 +13,7 @@ Use `make` to create the executable and run it using:
 ```
 After that you can execute any command just like you would do in your terminal.
 
-On a Linux environment, you can change the variable in the `permission` file inside `/assets/` to 1, and the minishell will open on a new window.
+On a Linux environment, you can change the variable in the `permission` file inside `./assets/` to 1, and the minishell will open on a new window.
 
 ## List of requirements 🫡
 
